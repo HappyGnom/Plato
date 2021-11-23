@@ -1,0 +1,15 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.Plato" parent="Theme.MaterialComponents.DayNight">
+        <item name="android:statusBarColor" tools:targetApi="l">@color/brand</item>
+    </style>
+
+    <style name="Theme.Plato.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Plato.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.Plato.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>

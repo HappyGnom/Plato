@@ -1,0 +1,110 @@
+package by.happygnom.plato.ui.screens.main
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import by.happygnom.plato.ui.navigation.MainNavigation
+import by.happygnom.plato.ui.navigation.MainScreen
+import by.happygnom.plato.ui.navigation.addMainGraph
+import by.happygnom.plato.ui.theme.*
+
+@Composable
+fun MainScreen(viewModel: MainViewModel) {
+    val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+    val currentDestinationRoute = currentDestination?.route ?: ""
+
+    val bottomNavigationItems = listOf(
+        MainScreen.Routes,
+        MainScreen.Projects,
+        MainScreen.Profile,
+        MainScreen.Settings
+    )
+
+    Scaffold(
+        bottomBar = {
+            BottomNavigation(
+                backgroundColor = Teal1,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(BottomNavBarShape)
+            ) {
+                bottomNavigationItems.forEach { screen ->
+                    BottomNavBarItem(
+                        screen = screen,
+                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                        onClick = { bottomNavBarNavigateTo(navController, screen.route) }
+                    )
+                }
+            }
+        }
+    ) { innerPadding ->
+        MainNavigation(
+            navController = navController,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            graph = {
+                addMainGraph(navController)
+            })
+    }
+}
+
+@Composable
+fun RowScope.BottomNavBarItem(screen: MainScreen, selected: Boolean, onClick: () -> Unit) {
+    val textColor = if (selected) White else Teal2
+
+    BottomNavigationItem(
+        icon = {
+            Icon(
+                painterResource(id = screen.iconDrawableId),
+                contentDescription = null,
+                modifier = Modifier.size(24.dp)
+            )
+        },
+        label = {
+            Text(
+                text = stringResource(screen.labelStringId),
+                style = MaterialTheme.typography.body2.copy(textColor)
+            )
+        },
+        selected = selected,
+        onClick = onClick,
+        selectedContentColor = White,
+        unselectedContentColor = Teal2,
+        modifier = Modifier.then(
+            Modifier.weight(if (selected) 1.8f else 1f)
+        )
+    )
+}
+
+fun bottomNavBarNavigateTo(navController: NavController, route: String) {
+    navController.navigate(route) {
+        // Pop up to the start destination of the graph to
+        // avoid building up a large stack of destinations
+        // on the back stack as users select items
+        popUpTo(navController.graph.findStartDestination().id) {
+            saveState = true
+        }
+
+        // Avoid multiple copies of the same destination when
+        // reselecting the same item
+        launchSingleTop = true
+
+        // Restore state when reselecting a previously selected item
+        restoreState = true
+    }
+}
