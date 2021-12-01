@@ -1,9 +1,9 @@
-package by.happygnom.plato.ui.screens.profile
+package by.happygnom.plato.ui.screens.routes.filter
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor() : ViewModel() {
+class RoutesFilterViewModel @Inject constructor() : ViewModel() {
 }

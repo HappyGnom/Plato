@@ -29,9 +29,9 @@ fun MainScreen(viewModel: MainViewModel) {
 
     val bottomNavigationItems = listOf(
         MainScreen.Routes,
-        MainScreen.Projects,
-        MainScreen.Profile,
-        MainScreen.Settings
+        MainScreen.Stats,
+        MainScreen.News,
+        MainScreen.User
     )
 
     Scaffold(

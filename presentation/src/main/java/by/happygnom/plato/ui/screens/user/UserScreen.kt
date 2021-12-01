@@ -1,4 +1,4 @@
-package by.happygnom.plato.ui.screens.profile
+package by.happygnom.plato.ui.screens.user
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
@@ -10,12 +10,12 @@ import androidx.navigation.NavController
 import by.happygnom.plato.ui.theme.Teal1
 
 @Composable
-fun ProfileScreen(
-    viewModel: ProfileViewModel,
+fun UserScreen(
+    viewModel: UserViewModel,
     navController: NavController
 ) {
     Text(
-        text = "Profile",
+        text = "User",
         style = MaterialTheme.typography.h1.copy(Teal1),
         modifier = Modifier.padding(16.dp)
     )

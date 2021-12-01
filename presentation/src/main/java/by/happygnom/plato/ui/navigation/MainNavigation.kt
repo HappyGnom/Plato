@@ -10,15 +10,19 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import androidx.navigation.navigation
 import by.happygnom.plato.R
-import by.happygnom.plato.ui.screens.profile.ProfileScreen
-import by.happygnom.plato.ui.screens.projects.ProjectsScreen
-import by.happygnom.plato.ui.screens.routes.RoutesScreen
-import by.happygnom.plato.ui.screens.settings.SettingsScreen
+import by.happygnom.plato.ui.screens.news.NewsScreen
+import by.happygnom.plato.ui.screens.routes.details.RouteDetailsScreen
+import by.happygnom.plato.ui.screens.routes.filter.RoutesFilterScreen
+import by.happygnom.plato.ui.screens.routes.list.RoutesListScreen
+import by.happygnom.plato.ui.screens.stats.StatsScreen
+import by.happygnom.plato.ui.screens.user.UserScreen
 
 
 sealed class Screen(val route: String) {
+    object Authorization : Screen("authorization")
     object Main : Screen("main")
 }
 
@@ -28,9 +32,19 @@ sealed class MainScreen(
     @DrawableRes val iconDrawableId: Int
 ) {
     object Routes : MainScreen("main/routes", R.string.routes, R.drawable.ic_routes)
-    object Projects : MainScreen("main/projects", R.string.projects, R.drawable.ic_project)
-    object Profile : MainScreen("main/profile", R.string.profile, R.drawable.ic_user)
-    object Settings : MainScreen("main/settings", R.string.settings, R.drawable.ic_settings)
+    object Stats : MainScreen("main/stats", R.string.stats, R.drawable.ic_stats)
+    object News : MainScreen("main/news", R.string.news, R.drawable.ic_news)
+    object User : MainScreen("main/user", R.string.user, R.drawable.ic_user)
+}
+
+sealed class RoutesScreen(
+    val route: String
+) {
+    object List : RoutesScreen("main/routes/list")
+    object Filter : RoutesScreen("main/routes/list/filters")
+    object RouteDetails : RoutesScreen("main/routes/list/{route_id}") {
+        fun createRoute(routeId: String) = "main/routes/$routeId"
+    }
 }
 
 @Composable
@@ -51,20 +65,42 @@ fun NavGraphBuilder.addMainGraph(
     navController: NavController,
 ) {
     navigation(route = Screen.Main.route, startDestination = MainScreen.Routes.route) {
-        composable(MainScreen.Routes.route) {
-            RoutesScreen(viewModel = hiltViewModel(), navController = navController)
+        addRoutesGraph(navController)
+
+        composable(MainScreen.Stats.route) {
+            StatsScreen(viewModel = hiltViewModel(), navController = navController)
         }
 
-        composable(MainScreen.Projects.route) {
-            ProjectsScreen(viewModel = hiltViewModel(), navController = navController)
+        composable(MainScreen.News.route) {
+            NewsScreen(viewModel = hiltViewModel(), navController = navController)
         }
 
-        composable(MainScreen.Profile.route) {
-            ProfileScreen(viewModel = hiltViewModel(), navController = navController)
+        composable(MainScreen.User.route) {
+            UserScreen(viewModel = hiltViewModel(), navController = navController)
+        }
+    }
+}
+
+fun NavGraphBuilder.addRoutesGraph(
+    navController: NavController,
+) {
+    navigation(route = MainScreen.Routes.route, startDestination = RoutesScreen.List.route) {
+        composable(RoutesScreen.List.route) {
+            RoutesListScreen(listViewModel = hiltViewModel(), navController = navController)
         }
 
-        composable(MainScreen.Settings.route) {
-            SettingsScreen(viewModel = hiltViewModel(), navController = navController)
+        composable(RoutesScreen.Filter.route) {
+            RoutesFilterScreen(listViewModel = hiltViewModel(), navController = navController)
+        }
+
+        composable(RoutesScreen.RouteDetails.route) {
+            val routeId = it.arguments?.getString("routeId") ?: return@composable
+
+            RouteDetailsScreen(
+                listViewModel = hiltViewModel(),
+                navController = navController,
+                routeId = routeId
+            )
         }
     }
 }

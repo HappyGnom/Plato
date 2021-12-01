@@ -32,3 +32,11 @@ val LightPlatoColorScheme = lightColors(
     error = Pink1,
     onError = White,
 )
+
+val GradeWhite = Color(0xFFFFFFFF)
+val GradeYellow = Color(0xFFFFD65F)
+val GradeOrange = Color(0xFFF77600)
+val GradeGreen = Color(0xFF11DD88)
+val GradeBlue = Color(0xFF1E51C8)
+val GradeRed = Color(0xFFE43D3D)
+val GradePurple = Color(0xFF8D33FF)
