@@ -33,6 +33,13 @@ val PlatoTypography = Typography(
         color = BlackNero,
         fontFeatureSettings = "c2sc, smcp"
     ),
+    h3 = TextStyle(
+        fontFamily = FinlandicaFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 24.sp,
+        color = BlackNero,
+        fontFeatureSettings = "c2sc, smcp"
+    ),
     body1 = TextStyle(
         fontFamily = FinlandicaFontFamily,
         fontWeight = FontWeight.Normal,

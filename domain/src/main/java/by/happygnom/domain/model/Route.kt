@@ -1,5 +1,6 @@
 package by.happygnom.domain.model
 
+import java.text.SimpleDateFormat
 import java.util.*
 
 data class Route(
@@ -24,6 +25,12 @@ data class Route(
             comparisonDate.add(Calendar.DATE, -7)
 
             return setDate.after(comparisonDate.time)
+        }
+
+    val setDateString: String
+        get() {
+            val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+            return dateFormat.format(this.setDate)
         }
 }
 
@@ -80,7 +87,7 @@ val mockRoutes = listOf(
         0,
         "Igor Morozov",
         Calendar.getInstance().apply { set(2021, 4, 12) }.time,
-        listOf("Dyno", "Volumes"),
+        listOf("Dyno", "Volumes", "Overhang"),
         Route.Status.TAKEN_DOWN,
         "23426"
     ),
@@ -108,7 +115,7 @@ val mockRoutes = listOf(
         10,
         "Nikita Logunov",
         Calendar.getInstance().apply { set(2021, 12, 1) }.time,
-        listOf("Stretch", "Grip"),
+        listOf("Stretch", "Grip", "Overhang", "Long moves"),
         Route.Status.SET,
         "654326"
     ),

@@ -1,4 +1,4 @@
-package by.happygnom.plato.ui.screens.routes.filter
+package by.happygnom.plato.ui.screens.routes.comments
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
@@ -10,12 +10,13 @@ import androidx.navigation.NavController
 import by.happygnom.plato.ui.theme.Teal1
 
 @Composable
-fun RoutesFilterScreen(
-    viewModel: RoutesFilterViewModel,
-    navController: NavController
+fun CommentsScreen(
+    viewModel: CommentsViewModel,
+    navController: NavController,
+    routeId: String
 ) {
     Text(
-        text = "Routes filter",
+        text = "Route comments",
         style = MaterialTheme.typography.h1.copy(Teal1),
         modifier = Modifier.padding(16.dp)
     )

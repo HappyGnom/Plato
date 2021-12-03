@@ -1,12 +1,11 @@
 package by.happygnom.plato.ui.screens.main
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -19,6 +18,7 @@ import by.happygnom.plato.ui.navigation.MainNavigation
 import by.happygnom.plato.ui.navigation.MainScreen
 import by.happygnom.plato.ui.navigation.addMainGraph
 import by.happygnom.plato.ui.theme.*
+import by.happygnom.plato.ui.theme.Grey1
 
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
@@ -37,10 +37,11 @@ fun MainScreen(viewModel: MainViewModel) {
     Scaffold(
         bottomBar = {
             BottomNavigation(
-                backgroundColor = Teal1,
+                backgroundColor = White,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(BottomNavBarShape)
+                    .border(0.5.dp, Grey3)
+//                    .clip(BottomNavBarShape)
             ) {
                 bottomNavigationItems.forEach { screen ->
                     BottomNavBarItem(
@@ -65,7 +66,7 @@ fun MainScreen(viewModel: MainViewModel) {
 
 @Composable
 fun RowScope.BottomNavBarItem(screen: MainScreen, selected: Boolean, onClick: () -> Unit) {
-    val textColor = if (selected) White else Teal2
+    val textColor = if (selected) Teal1 else Grey2
 
     BottomNavigationItem(
         icon = {
@@ -83,10 +84,10 @@ fun RowScope.BottomNavBarItem(screen: MainScreen, selected: Boolean, onClick: ()
         },
         selected = selected,
         onClick = onClick,
-        selectedContentColor = White,
-        unselectedContentColor = Teal2,
+        selectedContentColor = Teal1,
+        unselectedContentColor = Grey2,
         modifier = Modifier.then(
-            Modifier.weight(if (selected) 1.8f else 1f)
+            Modifier.weight(if (selected) 1.5f else 1f)
         )
     )
 }

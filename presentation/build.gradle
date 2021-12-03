@@ -3,6 +3,9 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+    id 'com.google.firebase.firebase-perf'
     id 'kotlin-parcelize'
 }
 
@@ -82,6 +85,13 @@ dependencies {
     implementation project(path: ':domain')
     implementation project(path: ':data')
 
+    // Firebase
+    implementation platform('com.google.firebase:firebase-bom:29.0.1')
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-perf'
+
     // Jetpack Compose
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
@@ -106,4 +116,7 @@ dependencies {
 
     // Coil Image Loading
     implementation "io.coil-kt:coil-compose:1.4.0"
+
+    // Collapsing toolbar
+    implementation "me.onebone:toolbar-compose:2.3.0"
 }

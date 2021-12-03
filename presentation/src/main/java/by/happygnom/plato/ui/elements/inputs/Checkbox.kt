@@ -5,6 +5,7 @@ import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import by.happygnom.plato.ui.theme.Grey3
 import by.happygnom.plato.ui.theme.Pink1
@@ -18,6 +19,7 @@ fun TealCheckbox(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
+    val focusManager = LocalFocusManager.current
     val colors = CheckboxDefaults.colors(
         checkedColor = Teal1,
         uncheckedColor = Grey3,
@@ -26,8 +28,10 @@ fun TealCheckbox(
 
     Checkbox(
         checked = checked,
-        onCheckedChange = onCheckedChange,
-        modifier = modifier.size(20.dp),
+        onCheckedChange = {
+            focusManager.clearFocus()
+            onCheckedChange?.invoke(it)
+        },        modifier = modifier.size(20.dp),
         enabled = enabled,
         colors = colors
     )
@@ -40,6 +44,7 @@ fun PinkCheckbox(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
+    val focusManager = LocalFocusManager.current
     val colors = CheckboxDefaults.colors(
         checkedColor = Pink1,
         uncheckedColor = Grey3,
@@ -48,7 +53,10 @@ fun PinkCheckbox(
 
     Checkbox(
         checked = checked,
-        onCheckedChange = onCheckedChange,
+        onCheckedChange = {
+            focusManager.clearFocus()
+            onCheckedChange?.invoke(it)
+        },
         modifier = modifier.size(20.dp),
         enabled = enabled,
         colors = colors

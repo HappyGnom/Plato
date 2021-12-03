@@ -4,12 +4,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -20,7 +17,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import by.happygnom.domain.model.Route
@@ -28,19 +24,16 @@ import by.happygnom.domain.model.mockRoutes
 import by.happygnom.plato.R
 import by.happygnom.plato.model.GradeLevels
 import by.happygnom.plato.ui.elements.Card
+import by.happygnom.plato.ui.elements.TagsList
 import by.happygnom.plato.ui.elements.button.LabeledIconButton
 import by.happygnom.plato.ui.navigation.RoutesScreen
 import by.happygnom.plato.ui.theme.*
-import java.text.SimpleDateFormat
-import java.util.*
 
 @Composable
 fun RoutesListScreen(
-    listViewModel: RoutesListViewModel,
+    viewModel: RoutesListViewModel,
     navController: NavController,
 ) {
-    val selectedIndex = rememberSaveable { mutableStateOf(0) }
-
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -49,11 +42,12 @@ fun RoutesListScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .background(Teal1)
+                .padding(16.dp)
         ) {
             Text(
                 text = stringResource(id = R.string.all_routes),
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.h3.copy(White)
             )
 
             IconButton(
@@ -63,7 +57,7 @@ fun RoutesListScreen(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_filter),
                     contentDescription = "Filter",
-                    tint = Grey1
+                    tint = White
                 )
             }
         }
@@ -72,16 +66,14 @@ fun RoutesListScreen(
 
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(8.dp)
+            modifier = Modifier.fillMaxHeight()
         ) {
             item {
                 Row(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 16.dp)
+                        .padding(horizontal = 8.dp, vertical = 16.dp)
                 ) {
                     LabeledIconButton(
                         text = stringResource(id = R.string.set),
@@ -91,13 +83,13 @@ fun RoutesListScreen(
 
                     LabeledIconButton(
                         text = stringResource(id = R.string.projects),
-                        iconPainter = painterResource(id = R.drawable.ic_arm),
+                        iconPainter = painterResource(id = R.drawable.ic_bookmark),
                         onClick = { /*TODO*/ }
                     )
 
                     LabeledIconButton(
                         text = stringResource(id = R.string.sent),
-                        iconPainter = painterResource(id = R.drawable.ic_tick),
+                        iconPainter = painterResource(id = R.drawable.ic_arm),
                         onClick = { /*TODO*/ }
                     )
 
@@ -110,11 +102,19 @@ fun RoutesListScreen(
             }
 
             items(mockRoutes) { route ->
-                RouteCard(
-                    route = route,
-                    onClick = {},
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Box(modifier = Modifier.padding(horizontal = 8.dp)) {
+                    RouteCard(
+                        route = route,
+                        onClick = {
+                            navController.navigate(RoutesScreen.RouteDetails.createRoute(route.id))
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
@@ -126,7 +126,6 @@ fun RouteCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val dateFormat = rememberSaveable { SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()) }
     val blackAndWhiteMatrix = ColorMatrix().apply { setToSaturation(0f) }
 
     val cardColor = if (route.status == Route.Status.SET) White else Grey5
@@ -148,7 +147,7 @@ fun RouteCard(
     ) {
         Row {
             Image(
-                painter = BitmapPainter(ImageBitmap.imageResource(id = R.drawable.route_photo)),
+                bitmap = ImageBitmap.imageResource(id = R.drawable.route_photo),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 alignment = Alignment.Center,
@@ -195,14 +194,10 @@ fun RouteCard(
 
                     Spacer(modifier = Modifier.width(8.dp))
 
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    TagsList(
+                        tags = route.tags,
                         modifier = Modifier.weight(1f)
-                    ) {
-                        items(route.tags) { tag ->
-                            PinkTag(text = tag)
-                        }
-                    }
+                    )
 
                     Spacer(modifier = Modifier.width(8.dp))
 
@@ -236,7 +231,7 @@ fun RouteCard(
                 ) {
                     Text(
                         text = route.likesCount.toString(),
-                        style = MaterialTheme.typography.caption
+                        style = MaterialTheme.typography.caption.copy(Grey1)
                     )
 
                     Icon(
@@ -246,10 +241,38 @@ fun RouteCard(
                         modifier = Modifier.size(12.dp)
                     )
 
+                    Spacer(modifier = Modifier.width(4.dp))
+
+                    Text(
+                        text = route.sendsCount.toString(),
+                        style = MaterialTheme.typography.caption.copy(Grey1)
+                    )
+
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_arm),
+                        contentDescription = "Send",
+                        tint = Grey1,
+                        modifier = Modifier.size(12.dp)
+                    )
+
+                    Spacer(modifier = Modifier.width(4.dp))
+
+                    Text(
+                        text = route.commentsCount.toString(),
+                        style = MaterialTheme.typography.caption.copy(Grey1)
+                    )
+
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_message),
+                        contentDescription = "Comments",
+                        tint = Grey1,
+                        modifier = Modifier.size(12.dp)
+                    )
+
                     Spacer(modifier = Modifier.weight(1f))
 
                     Text(
-                        text = dateFormat.format(route.setDate),
+                        text = route.setDateString,
                         style = MaterialTheme.typography.caption
                     )
                 }
@@ -258,23 +281,3 @@ fun RouteCard(
     }
 }
 
-@Composable
-fun PinkTag(
-    text: String,
-    modifier: Modifier = Modifier,
-    style: TextStyle = MaterialTheme.typography.caption,
-    enabled: Boolean = false,
-) {
-    val tagColor = if (enabled) Pink1 else Pink2
-
-    Box(
-        modifier = modifier
-            .background(tagColor, CardShape)
-            .padding(horizontal = 4.dp, vertical = 2.dp)
-    ) {
-        Text(
-            text = text,
-            style = style.copy(White)
-        )
-    }
-}

@@ -10,16 +10,15 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.dialog
 import androidx.navigation.navigation
 import by.happygnom.plato.R
 import by.happygnom.plato.ui.screens.news.NewsScreen
+import by.happygnom.plato.ui.screens.routes.comments.CommentsScreen
 import by.happygnom.plato.ui.screens.routes.details.RouteDetailsScreen
 import by.happygnom.plato.ui.screens.routes.filter.RoutesFilterScreen
 import by.happygnom.plato.ui.screens.routes.list.RoutesListScreen
 import by.happygnom.plato.ui.screens.stats.StatsScreen
 import by.happygnom.plato.ui.screens.user.UserScreen
-
 
 sealed class Screen(val route: String) {
     object Authorization : Screen("authorization")
@@ -29,7 +28,7 @@ sealed class Screen(val route: String) {
 sealed class MainScreen(
     val route: String,
     @StringRes val labelStringId: Int,
-    @DrawableRes val iconDrawableId: Int
+    @DrawableRes val iconDrawableId: Int,
 ) {
     object Routes : MainScreen("main/routes", R.string.routes, R.drawable.ic_routes)
     object Stats : MainScreen("main/stats", R.string.stats, R.drawable.ic_stats)
@@ -38,19 +37,23 @@ sealed class MainScreen(
 }
 
 sealed class RoutesScreen(
-    val route: String
+    val route: String,
 ) {
     object List : RoutesScreen("main/routes/list")
     object Filter : RoutesScreen("main/routes/list/filters")
     object RouteDetails : RoutesScreen("main/routes/list/{route_id}") {
-        fun createRoute(routeId: String) = "main/routes/$routeId"
+        fun createRoute(routeId: String) = "main/routes/list/$routeId"
+    }
+
+    object Comments : RoutesScreen("main/routes/list/{route_id}/comments") {
+        fun createRoute(routeId: String) = "main/routes/list/$routeId/comments"
     }
 }
 
 @Composable
 fun MainNavigation(
     navController: NavHostController, graph: NavGraphBuilder.() -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     NavHost(
         navController = navController,
@@ -86,18 +89,28 @@ fun NavGraphBuilder.addRoutesGraph(
 ) {
     navigation(route = MainScreen.Routes.route, startDestination = RoutesScreen.List.route) {
         composable(RoutesScreen.List.route) {
-            RoutesListScreen(listViewModel = hiltViewModel(), navController = navController)
+            RoutesListScreen(viewModel = hiltViewModel(), navController = navController)
         }
 
         composable(RoutesScreen.Filter.route) {
-            RoutesFilterScreen(listViewModel = hiltViewModel(), navController = navController)
+            RoutesFilterScreen(viewModel = hiltViewModel(), navController = navController)
         }
 
         composable(RoutesScreen.RouteDetails.route) {
-            val routeId = it.arguments?.getString("routeId") ?: return@composable
+            val routeId = it.arguments?.getString("route_id") ?: return@composable
 
             RouteDetailsScreen(
-                listViewModel = hiltViewModel(),
+                viewModel = hiltViewModel(),
+                navController = navController,
+                routeId = routeId
+            )
+        }
+
+        composable(RoutesScreen.Comments.route) {
+            val routeId = it.arguments?.getString("route_id") ?: return@composable
+
+            CommentsScreen(
+                viewModel = hiltViewModel(),
                 navController = navController,
                 routeId = routeId
             )

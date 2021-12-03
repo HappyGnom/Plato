@@ -17,4 +17,30 @@
     <string name="projects">Projects</string>
     <string name="sent">Sent</string>
     <string name="liked">Liked</string>
+
+    <string name="route_info">Route info</string>
+    <string name="grade">Grade</string>
+    <string name="holds_color">Holds color</string>
+    <string name="set_by">Set by</string>
+    <string name="set_date">Set date</string>
+    <string name="status">Status</string>
+    <string name="tags">Tags</string>
+
+    <string name="mark_sent">Sent it!</string>
+
+    <plurals name="likes">
+        <item quantity="zero">No likes</item>
+        <item quantity="one">1 like</item>
+        <item quantity="other">%d likes</item>
+    </plurals>
+
+    <plurals name="sends">
+        <item quantity="zero">No sends</item>
+        <item quantity="one">1 send</item>
+        <item quantity="other">%d sends</item>
+    </plurals>
+
+    <string name="comments">Comments</string>
+    <string name="add_comment">Add a public comment…</string>
+    <string name="see_all_comments_template">See all %d comments</string>
 </resources>
