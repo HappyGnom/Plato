@@ -12,6 +12,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import by.happygnom.plato.R
+import by.happygnom.plato.ui.screens.auth.getStarted.GetStartedScreen
+import by.happygnom.plato.ui.screens.auth.login.LoginScreen
+import by.happygnom.plato.ui.screens.auth.main.AuthScreen
+import by.happygnom.plato.ui.screens.auth.signup.SignUpScreen
 import by.happygnom.plato.ui.screens.news.NewsScreen
 import by.happygnom.plato.ui.screens.routes.comments.CommentsScreen
 import by.happygnom.plato.ui.screens.routes.details.RouteDetailsScreen
@@ -21,7 +25,6 @@ import by.happygnom.plato.ui.screens.stats.StatsScreen
 import by.happygnom.plato.ui.screens.user.UserScreen
 
 sealed class Screen(val route: String) {
-    object Authorization : Screen("authorization")
     object Main : Screen("main")
 }
 
@@ -52,7 +55,8 @@ sealed class RoutesScreen(
 
 @Composable
 fun MainNavigation(
-    navController: NavHostController, graph: NavGraphBuilder.() -> Unit,
+    navController: NavHostController,
+    graph: NavGraphBuilder.() -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
@@ -66,6 +70,7 @@ fun MainNavigation(
 
 fun NavGraphBuilder.addMainGraph(
     navController: NavController,
+    onSignOut: () -> Unit
 ) {
     navigation(route = Screen.Main.route, startDestination = MainScreen.Routes.route) {
         addRoutesGraph(navController)
@@ -79,7 +84,7 @@ fun NavGraphBuilder.addMainGraph(
         }
 
         composable(MainScreen.User.route) {
-            UserScreen(viewModel = hiltViewModel(), navController = navController)
+            UserScreen(viewModel = hiltViewModel(), navController = navController, onSignOut = onSignOut)
         }
     }
 }

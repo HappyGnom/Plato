@@ -8,6 +8,10 @@ plugins {
     id 'com.google.firebase.firebase-perf'
     id 'kotlin-parcelize'
 }
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
     compileSdk 31
@@ -25,6 +29,27 @@ android {
         }
     }
 
+    signingConfigs {
+        build {
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+        }
+        debug {
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
+        release {
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+        }
+    }
+
     buildTypes {
         debug {
             manifestPlaceholders.crashlyticsCollectionEnabled = false
@@ -34,12 +59,14 @@ android {
         }
 
         release {
+            manifestPlaceholders
             manifestPlaceholders.crashlyticsCollectionEnabled = true
             manifestPlaceholders.analyticsCollectionEnabled = true
 
             versionNameSuffix "-R"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
         }
     }
 
@@ -119,4 +146,29 @@ dependencies {
 
     // Collapsing toolbar
     implementation "me.onebone:toolbar-compose:2.3.0"
+
+    // Google accompanist
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.21.4-beta")
+    implementation "com.google.accompanist:accompanist-insets:0.21.4-beta"
+    implementation "com.google.accompanist:accompanist-insets-ui:0.21.4-beta"
+
+    // View Pager
+    implementation "com.google.accompanist:accompanist-pager:0.21.4-beta"
+    implementation "com.google.accompanist:accompanist-pager-indicators:0.21.4-beta"
+
+
+    // Import the BoM for the Firebase platform
+    implementation platform('com.google.firebase:firebase-bom:29.0.1')
+    implementation 'com.google.firebase:firebase-analytics'
+
+    // Declare the dependency for the Firebase Authentication library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-auth-ktx'
+
+    // Also declare the dependency for the Google Play services library and specify its version
+    implementation 'com.google.android.gms:play-services-auth:19.2.0'
+    implementation 'com.firebaseui:firebase-ui-auth:4.3.2'
+
+
+
 }

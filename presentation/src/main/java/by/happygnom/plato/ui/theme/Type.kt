@@ -1,10 +1,12 @@
 package by.happygnom.plato.ui.theme
 
 import androidx.compose.material.Typography
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import by.happygnom.plato.R
 
@@ -36,7 +38,7 @@ val PlatoTypography = Typography(
     h3 = TextStyle(
         fontFamily = FinlandicaFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 24.sp,
+        fontSize = 16.sp,
         color = BlackNero,
         fontFeatureSettings = "c2sc, smcp"
     ),

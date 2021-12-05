@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "234486982554",
+    "project_id": "plato-d6f43",
+    "storage_bucket": "plato-d6f43.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:234486982554:android:77668dcae184c3fcecbc23",
+        "android_client_info": {
+          "package_name": "by.happygnom.plato"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "234486982554-jln61fhsjcp6496m922mhu955pip0d4c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCj6uGgKmCUVj2PnDBv4v-pnLSj_WxRLFk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "234486982554-jln61fhsjcp6496m922mhu955pip0d4c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
