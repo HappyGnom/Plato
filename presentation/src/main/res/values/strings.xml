@@ -84,4 +84,8 @@
     <string name="apply">Apply</string>
     <string name="unspecified">Unspecified</string>
     <string name="clear_all">Clear all</string>
+
+    <string name="plato_wide_text">P L A T O</string>
+    <!--    <string name="default_web_client_id">234486982554-jln61fhsjcp6496m922mhu955pip0d4c.apps.googleusercontent.com</string>-->
+
 </resources>

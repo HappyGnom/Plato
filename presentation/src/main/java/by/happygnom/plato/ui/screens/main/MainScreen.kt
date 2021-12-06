@@ -17,17 +17,12 @@ import androidx.navigation.compose.rememberNavController
 import by.happygnom.plato.ui.navigation.MainNavigation
 import by.happygnom.plato.ui.navigation.MainScreen
 import by.happygnom.plato.ui.navigation.addMainGraph
-import by.happygnom.plato.ui.theme.Grey2
-import by.happygnom.plato.ui.theme.Grey3
-import by.happygnom.plato.ui.theme.Teal1
-import by.happygnom.plato.ui.theme.White
-import java.util.*
-import kotlin.reflect.KFunction2
+import by.happygnom.plato.ui.theme.*
+import by.happygnom.plato.ui.theme.Grey1
 
 @Composable
-fun MainScreen(
-    viewModel: MainViewModel
-) {
+fun MainScreen(viewModel: MainViewModel, onSignOut: () -> Unit) {
+
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -64,7 +59,7 @@ fun MainScreen(
                 .fillMaxSize()
                 .padding(innerPadding),
             graph = {
-                addMainGraph(navController = navController)
+                addMainGraph(navController, onSignOut)
             })
     }
 }
