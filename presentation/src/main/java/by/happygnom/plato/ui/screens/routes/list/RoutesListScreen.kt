@@ -5,8 +5,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,7 +23,6 @@ import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import by.happygnom.domain.model.Route
-import by.happygnom.domain.model.mockRoutes
 import by.happygnom.plato.R
 import by.happygnom.plato.model.GradeLevels
 import by.happygnom.plato.ui.elements.Card
@@ -32,6 +34,9 @@ import by.happygnom.plato.ui.navigation.RoutesScreen
 import by.happygnom.plato.ui.theme.*
 import by.happygnom.plato.util.toFormattedString
 import coil.compose.rememberImagePainter
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun RoutesListScreen(
@@ -53,7 +58,7 @@ fun RoutesListScreen(
         floatingActionButton = {
             AddFloatingActionButton(
                 onClick = {
-                    navController.navigate(RoutesScreen.Editor.route)
+                    navController.navigate(RoutesScreen.Editor.createRoute(null))
                 }
             )
         }) {
@@ -73,13 +78,27 @@ fun RoutesListScreenContent(
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
+    val routes by viewModel.routes.observeAsState(listOf())
+    val isLoading by viewModel.isLoading.observeAsState(false)
+
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isLoading),
+        onRefresh = { viewModel.loadRoutes() },
+        indicator = { state, trigger ->
+            SwipeRefreshIndicator(
+                state = state,
+                refreshTriggerDistance = trigger,
+                scale = true,
+                backgroundColor = White,
+                contentColor = Teal1,
+                shape = CircleShape,
+            )
+        }
     ) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(8.dp, 12.dp, 8.dp, 88.dp),
-            modifier = Modifier.fillMaxHeight()
+            modifier = modifier
         ) {
             item {
                 Row(
@@ -114,19 +133,26 @@ fun RoutesListScreenContent(
                 }
             }
 
-            items(mockRoutes) { route ->
-                RouteCard(
-                    route = route,
-                    onClick = {
-                        navController.navigate(
-                            RoutesScreen.RouteDetails.createRoute(
-                                route.id
+            if (routes.isNullOrEmpty())
+                item {
+                    Text(
+                        text = stringResource(id = R.string.no_routes),
+                        style = MaterialTheme.typography.body1,
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
+                }
+            else
+                items(routes) { route ->
+                    RouteCard(
+                        route = route,
+                        onClick = {
+                            navController.navigate(
+                                RoutesScreen.RouteDetails.createRoute(route.id)
                             )
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
         }
     }
 }

@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'kotlinx-serialization'
     id 'kotlin-kapt'
 }
 
@@ -13,6 +14,8 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        buildConfigField "String", "API_ADRESS", '"https://plato.azurewebsites.net/api"'
     }
 
     buildTypes {
@@ -36,4 +39,13 @@ android {
 
 dependencies {
     implementation project(path: ':domain')
+
+    // Ktor
+    api "io.ktor:ktor-client-android:$ktor_version"
+    api "io.ktor:ktor-client-serialization:$ktor_version"
+    api "io.ktor:ktor-client-logging-jvm:$ktor_version"
+    api 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1'
+
+    // Room
+    api "androidx.room:room-runtime:$room_version"
 }

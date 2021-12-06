@@ -3,8 +3,10 @@ package by.happygnom.plato.ui.screens.routes.route_editor
 import android.graphics.drawable.BitmapDrawable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import by.happygnom.domain.model.mockRoutes
+import by.happygnom.domain.data_interface.repository.RoutesRepository
+import by.happygnom.domain.usecase.GetRouteByIdUseCase
 import by.happygnom.plato.model.GradeLevels
 import by.happygnom.plato.model.InputValidator
 import by.happygnom.plato.util.toBase64
@@ -16,9 +18,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RouteEditorViewModel @Inject constructor(
+    private val routesRepository: RoutesRepository,
     private val imageLoader: ImageLoader,
-    private val imageRequestBuilder: ImageRequest.Builder
+    private val imageRequestBuilder: ImageRequest.Builder,
+    savedState: SavedStateHandle
 ) : ViewModel() {
+
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> = _isLoading
+
+    private val _existingRouteId = MutableLiveData<Long?>(null)
+    val existingRouteId: LiveData<Long?> = _existingRouteId
 
     private val _pictureBase64 = MutableLiveData<String?>(null)
     val pictureBase64: LiveData<String?> = _pictureBase64
@@ -41,15 +51,34 @@ class RouteEditorViewModel @Inject constructor(
     private val _errors = MutableLiveData<RouteEditorErrors?>(null)
     val errors: LiveData<RouteEditorErrors?> = _errors
 
-    fun loadRouteData(routeId: String) {
-        val route = mockRoutes.find { it.id == routeId }!!
+    init {
+        val routeId = savedState.get<Long>("existing_route_id")
+        if (routeId != null && routeId >= 0)
+            loadRoute(routeId)
+    }
 
-        setPicture(route.pictureUrl)
-        _gradeLevel.value = route.gradeLevel
-        _holdsColor.value = route.holdsColor
-        _setterName.value = route.setterName
-        _setDate.value = route.setDate
-        _tags.value = route.tags.joinToString()
+    private fun loadRoute(routeId: Long) {
+        val getRouteByIdUseCase = GetRouteByIdUseCase(routesRepository)
+        getRouteByIdUseCase.inputRouteId = routeId
+        _isLoading.value = true
+
+        getRouteByIdUseCase.executeAsync {
+            onSuccess { route ->
+                _existingRouteId.value = route.id
+                route.pictureUrl?.let { setPicture(it) }
+                _gradeLevel.value = route.gradeLevel
+                _holdsColor.value = route.holdsColor
+                _setterName.value = route.setterName
+                _setDate.value = route.setDate
+                _tags.value = route.tags.joinToString()
+            }
+            onFailure {
+                it
+            }
+            onComplete {
+                _isLoading.value = false
+            }
+        }
     }
 
     fun setPicture(pictureUri: String) {
@@ -58,7 +87,7 @@ class RouteEditorViewModel @Inject constructor(
 //            .placeholder(R.drawable.placeholder_route)
 //            .error(R.drawable.placeholder_route)
             .target { result ->
-                val base64 = (result as BitmapDrawable).bitmap.toBase64()
+                val base64 = (result as BitmapDrawable?)?.bitmap?.toBase64()
                 _pictureBase64.value = base64
             }
             .build()
@@ -89,7 +118,7 @@ class RouteEditorViewModel @Inject constructor(
         _tags.value = tags
     }
 
-    fun validateInput(){
+    fun validateInput() {
         _errors.value = getInputErrorsOrNull()
     }
 

@@ -31,10 +31,10 @@ android {
 
     signingConfigs {
         release {
+            storeFile file(keystoreProperties['storeFile'])
             storePassword keystoreProperties['storePassword']
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
         }
     }
 
@@ -42,8 +42,8 @@ android {
         debug {
             manifestPlaceholders.crashlyticsCollectionEnabled = false
             manifestPlaceholders.analyticsCollectionEnabled = false
+
             versionNameSuffix "-D"
-            signingConfig signingConfigs.release
         }
 
         release {
@@ -102,9 +102,13 @@ dependencies {
 
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:29.0.1')
+    implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-perf'
+
+    implementation 'com.firebaseui:firebase-ui-auth:4.3.2'
+    implementation 'com.google.android.gms:play-services-auth:19.2.0'
 
     // Jetpack Compose
     implementation "androidx.compose.ui:ui:$compose_version"
@@ -137,31 +141,21 @@ dependencies {
     // Collapsing toolbar
     implementation "me.onebone:toolbar-compose:2.3.0"
 
-    // Google accompanist
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.21.4-beta")
-    implementation "com.google.accompanist:accompanist-insets:0.21.4-beta"
-    implementation "com.google.accompanist:accompanist-insets-ui:0.21.4-beta"
+    // Insets
+    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-insets:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-insets-ui:$accompanist_version"
 
-    // View Pager
-    implementation "com.google.accompanist:accompanist-pager:0.21.4-beta"
-    implementation "com.google.accompanist:accompanist-pager-indicators:0.21.4-beta"
+    // Permissions
+    implementation "com.google.accompanist:accompanist-permissions:$accompanist_version"
 
+    // SwipeRefresh
+    implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist_version"
 
-    // Import the BoM for the Firebase platform
-    implementation platform('com.google.firebase:firebase-bom:29.0.1')
-    implementation 'com.google.firebase:firebase-analytics'
+    // Pager
+    implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist_version"
 
-    // Declare the dependency for the Firebase Authentication library
-    // When using the BoM, you don't specify versions in Firebase library dependencies
-    implementation 'com.google.firebase:firebase-auth-ktx'
-
-    // Also declare the dependency for the Google Play services library and specify its version
-    implementation 'com.google.android.gms:play-services-auth:19.2.0'
-    implementation 'com.firebaseui:firebase-ui-auth:4.3.2'
-
-
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.5.0")
-
+    // Coroutines play-services adapter
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.5.0"
 }

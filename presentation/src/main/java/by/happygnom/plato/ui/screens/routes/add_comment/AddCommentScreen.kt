@@ -21,7 +21,7 @@ import by.happygnom.plato.ui.theme.Teal1
 fun AddCommentScreen(
     viewModel: AddCommentViewModel,
     navController: NavController,
-    routeId: String
+    routeId: Long
 ) {
 //        viewModel.loadRouteData(routeId)
     Scaffold(

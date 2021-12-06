@@ -42,10 +42,9 @@ import java.util.*
 fun RouteEditorScreen(
     viewModel: RouteEditorViewModel,
     navController: NavController,
-    existingRouteId: String?,
 ) {
-    if (existingRouteId != null)
-        viewModel.loadRouteData(existingRouteId)
+    val existingRouteId by viewModel.existingRouteId.observeAsState(null)
+    val isLoading by viewModel.isLoading.observeAsState(false)
 
     Scaffold(
         topBar = {
@@ -69,6 +68,17 @@ fun RouteEditorScreen(
                 .fillMaxSize()
                 .padding(it)
         )
+
+        if (isLoading)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
     }
 }
 
@@ -77,7 +87,7 @@ fun RouteEditorScreen(
 fun RouteEditorScreenContent(
     viewModel: RouteEditorViewModel,
     navController: NavController,
-    existingRouteId: String?,
+    existingRouteId: Long?,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current

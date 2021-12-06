@@ -3,10 +3,10 @@ package by.happygnom.domain.model
 import java.util.*
 
 data class Route(
-    val id: String,
+    val id: Long,
     val gradeLevel: Int,
     val holdsColor: String,
-    val pictureUrl: String,
+    val pictureUrl: String?,
     val likesCount: Int,
     val sendsCount: Int,
     val commentsCount: Int,
@@ -31,7 +31,7 @@ const val mockRoutePhoto = "https://i.imgur.com/7Yr1NLM.jpeg"
 
 val mockRoutes = listOf(
     Route(
-        "1",
+        1,
         0,
         "Blue",
         mockRoutePhoto,
@@ -45,7 +45,7 @@ val mockRoutes = listOf(
         "https://raw.githubusercontent.com/intade/plato_gltf/master/test%20wall/WallGLTF-05-38-2021-19-38-16.gltf"
     ),
     Route(
-        "2",
+        2,
         5,
         "Green",
         mockRoutePhoto,
@@ -59,7 +59,7 @@ val mockRoutes = listOf(
         "https://raw.githubusercontent.com/intade/plato_gltf/master/test%20wall/WallGLTF-05-38-2021-19-38-16.gltf"
     ),
     Route(
-        "3",
+        3,
         8,
         "Yellow",
         mockRoutePhoto,
@@ -73,7 +73,7 @@ val mockRoutes = listOf(
         null
     ),
     Route(
-        "4",
+        4,
         15,
         "Black",
         mockRoutePhoto,
@@ -87,7 +87,7 @@ val mockRoutes = listOf(
         null
     ),
     Route(
-        "5",
+        5,
         9,
         "Red",
         mockRoutePhoto,
@@ -101,7 +101,7 @@ val mockRoutes = listOf(
         null
     ),
     Route(
-        "6",
+        6,
         4,
         "Green",
         mockRoutePhoto,
@@ -115,7 +115,7 @@ val mockRoutes = listOf(
         null
     ),
     Route(
-        "7",
+        7,
         6,
         "Blue",
         mockRoutePhoto,

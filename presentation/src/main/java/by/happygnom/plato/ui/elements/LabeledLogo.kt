@@ -28,7 +28,6 @@ fun LabeledLogo(
     size: Int = 40,
     spaceBetween: Dp = 8.dp
 ) {
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp),

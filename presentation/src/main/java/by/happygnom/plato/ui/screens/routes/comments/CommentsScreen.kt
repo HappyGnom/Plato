@@ -16,7 +16,7 @@ import by.happygnom.plato.ui.elements.DefaultToolbar
 fun CommentsScreen(
     viewModel: CommentsViewModel,
     navController: NavController,
-    routeId: String
+    routeId: Long
 ) {
 //        viewModel.loadRouteData(routeId)
     Scaffold(

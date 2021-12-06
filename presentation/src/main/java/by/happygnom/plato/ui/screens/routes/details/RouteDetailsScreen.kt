@@ -4,13 +4,16 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -21,6 +24,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import by.happygnom.domain.model.Route
 import by.happygnom.plato.R
+import by.happygnom.plato.model.GradeLevels
 import by.happygnom.plato.ui.elements.AddCommentButton
 import by.happygnom.plato.ui.elements.Comment
 import by.happygnom.plato.ui.elements.TagsList
@@ -37,63 +41,97 @@ import by.happygnom.plato.util.toFormattedString
 import coil.compose.rememberImagePainter
 import me.onebone.toolbar.*
 
+@OptIn(ExperimentalToolbarApi::class)
 @Composable
 fun RouteDetailsScreen(
     viewModel: RouteDetailsViewModel,
     navController: NavController,
-    routeId: String,
 ) {
-    viewModel.loadRoute(routeId)
+    val route by viewModel.route.observeAsState(null)
+    val gradeName = route?.let {
+        GradeLevels.gradeLevelToScaleString(
+            it.gradeLevel, GradeLevels.GradeScale.FONT_SCALE
+        )
+    }
 
+    val isLoading by viewModel.isLoading.observeAsState(false)
     val toolbarState = rememberCollapsingToolbarScaffoldState()
 
     CollapsingToolbarScaffold(
         state = toolbarState,
         scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
         modifier = Modifier.fillMaxSize(),
-        toolbarModifier = Modifier.background(Teal1),
+        toolbarModifier = Modifier
+            .background(Teal1)
+            .fillMaxWidth(),
         toolbar = {
-            Toolbar(viewModel, navController, toolbarState)
+            Toolbar(navController, toolbarState, route, gradeName)
         },
         body = {
-            RouteDetails(viewModel, navController)
+            when {
+                isLoading ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                route == null || gradeName == null ->
+                    Text(
+                        text = stringResource(id = R.string.failed_to_load_route),
+                        style = MaterialTheme.typography.body1,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                else -> {
+                    LaunchedEffect(key1 = "Open image", block = {
+                        toolbarState.toolbarState.expand(200)
+                    })
+
+                    RouteDetails(viewModel, navController, route!!, gradeName)
+                }
+            }
         }
     )
 }
 
 @Composable
 fun CollapsingToolbarScope.Toolbar(
-    viewModel: RouteDetailsViewModel,
     navController: NavController,
     toolbarState: CollapsingToolbarScaffoldState,
+    route: Route?,
+    gradeName: String?
 ) {
-    val route by viewModel.route.observeAsState()
-    val gradeName by viewModel.gradeName.observeAsState("")
-
-    Image(
-        painter = rememberImagePainter(
-            data = route!!.pictureUrl,
-            builder = {
-                placeholder(R.drawable.placeholder_route)
-                error(R.drawable.placeholder_route)
-            }
-        ),
-        contentDescription = null,
-        contentScale = ContentScale.Crop,
-        alignment = Alignment.Center,
-        modifier = Modifier
-            .aspectRatio(1f)
-            .parallax(0.2f)
-            .graphicsLayer {
-                // change alpha of Image as the toolbar expands
-                alpha = toolbarState.toolbarState.progress
-            }
-    )
+    if (route != null)
+        Image(
+            painter = rememberImagePainter(
+                data = route.pictureUrl,
+                builder = {
+                    placeholder(R.drawable.placeholder_route)
+                    error(R.drawable.placeholder_route)
+                }
+            ),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            alignment = Alignment.Center,
+            modifier = Modifier
+                .aspectRatio(1f)
+                .parallax(0.2f)
+                .graphicsLayer {
+                    // change alpha of Image as the toolbar expands
+                    alpha = toolbarState.toolbarState.progress
+                }
+        )
 
     IconButton(
         onClick = { navController.popBackStack() },
         modifier = Modifier
-            .padding(16.dp)
+            .padding(10.dp)
+            .clip(CircleShape)
+            .background(Teal1)
+            .padding(6.dp)
             .size(24.dp)
             .road(
                 whenCollapsed = Alignment.TopStart,
@@ -107,31 +145,38 @@ fun CollapsingToolbarScope.Toolbar(
         )
     }
 
-    IconButton(
-        onClick = { navController.navigate(RoutesScreen.Editor.createRoute(route!!.id)) },
-        modifier = Modifier
-            .padding(16.dp)
-            .size(24.dp)
-            .road(
-                whenCollapsed = Alignment.TopEnd,
-                whenExpanded = Alignment.TopEnd
+    if (route != null)
+        IconButton(
+            onClick = { navController.navigate(RoutesScreen.Editor.createRoute(route.id)) },
+            modifier = Modifier
+                .padding(10.dp)
+                .clip(CircleShape)
+                .background(Teal1)
+                .padding(6.dp)
+                .size(24.dp)
+                .road(
+                    whenCollapsed = Alignment.TopEnd,
+                    whenExpanded = Alignment.TopEnd
+                )
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_edit),
+                contentDescription = "Edit",
+                tint = White
             )
-    ) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_edit),
-            contentDescription = "Edit",
-            tint = White
-        )
-    }
+        }
 
     Text(
-        text = gradeName,
+        text = gradeName ?: stringResource(id = R.string.route_info),
         style = MaterialTheme.typography.h3.copy(White),
         modifier = Modifier
             .padding(56.dp, 16.dp, 16.dp, 16.dp)
+            .clip(CircleShape)
+            .background(Teal1)
+            .padding(4.dp)
             .road(
                 whenCollapsed = Alignment.CenterStart,
-                whenExpanded = Alignment.BottomEnd
+                whenExpanded = if (route != null) Alignment.BottomEnd else Alignment.CenterStart
             )
     )
 }
@@ -140,10 +185,10 @@ fun CollapsingToolbarScope.Toolbar(
 fun RouteDetails(
     viewModel: RouteDetailsViewModel,
     navController: NavController,
+    route: Route,
+    gradeName: String
 ) {
     val resources = LocalContext.current.resources
-
-    val route by viewModel.route.observeAsState()
 
     val isLiked by viewModel.isLiked.observeAsState(false)
     val isProjected by viewModel.isProjected.observeAsState(false)
@@ -158,7 +203,7 @@ fun RouteDetails(
                 .padding(16.dp)
         ) {
             TagsList(
-                tags = route!!.tags,
+                tags = route.tags,
                 textStyle = MaterialTheme.typography.body1,
                 modifier = Modifier.weight(1f)
             )
@@ -192,14 +237,14 @@ fun RouteDetails(
             ) {
                 Text(
                     text = resources.getQuantityString(
-                        R.plurals.likes, route!!.likesCount, route!!.likesCount
+                        R.plurals.likes, route.likesCount, route.likesCount
                     ),
                     style = MaterialTheme.typography.caption.copy(Grey1)
                 )
 
                 Text(
                     text = resources.getQuantityString(
-                        R.plurals.sends, route!!.sendsCount, route!!.sendsCount
+                        R.plurals.sends, route.sendsCount, route.sendsCount
                     ),
                     style = MaterialTheme.typography.caption.copy(Grey1)
                 )
@@ -208,10 +253,9 @@ fun RouteDetails(
 
         Divider(color = Grey3)
 
-        if (route!!.visualisationUrl != null) {
+        if (route.visualisationUrl != null) {
             Route3dVisualisation(
-                viewModel = viewModel,
-                navController = navController,
+                routeVisualisationUrl = route.visualisationUrl!!,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
@@ -221,8 +265,8 @@ fun RouteDetails(
         }
 
         RouteInfo(
-            viewModel = viewModel,
-            navController = navController,
+            route = route,
+            gradeName = gradeName,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
@@ -242,13 +286,10 @@ fun RouteDetails(
 
 @Composable
 fun Route3dVisualisation(
-    viewModel: RouteDetailsViewModel,
-    navController: NavController,
+    routeVisualisationUrl: String,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val route by viewModel.route.observeAsState()
-    if (route!!.visualisationUrl == null) return
 
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -264,7 +305,7 @@ fun Route3dVisualisation(
             text = stringResource(id = R.string.view_3d),
             imageId = R.drawable.ic_view_in_ar,
             onClick = {
-                val sceneViewerIntent = build3dModelIntent(route!!.visualisationUrl!!)
+                val sceneViewerIntent = build3dModelIntent(routeVisualisationUrl)
                 ContextCompat.startActivity(context, sceneViewerIntent, null)
             },
             modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -274,25 +315,22 @@ fun Route3dVisualisation(
 
 @Composable
 fun RouteInfo(
-    viewModel: RouteDetailsViewModel,
-    navController: NavController,
-    modifier: Modifier = Modifier,
+    route: Route,
+    gradeName: String,
+    modifier: Modifier = Modifier
 ) {
-    val route by viewModel.route.observeAsState()
-    val gradeName by viewModel.gradeName.observeAsState("")
-
-    val statusString = when (route!!.status) {
+    val statusString = when (route.status) {
         Route.Status.SET -> stringResource(id = R.string.set)
         Route.Status.TAKEN_DOWN -> stringResource(id = R.string.taken_down)
     }
 
     val routeDetailsData = mapOf(
         stringResource(id = R.string.grade) to gradeName,
-        stringResource(id = R.string.holds_color) to route!!.holdsColor,
-        stringResource(id = R.string.set_by) to route!!.setterName,
-        stringResource(id = R.string.set_date) to route!!.setDate.toFormattedString(),
+        stringResource(id = R.string.holds_color) to route.holdsColor,
+        stringResource(id = R.string.set_by) to route.setterName,
+        stringResource(id = R.string.set_date) to route.setDate.toFormattedString(),
         stringResource(id = R.string.status) to statusString,
-        stringResource(id = R.string.tags) to route!!.tags.joinToString()
+        stringResource(id = R.string.tags) to route.tags.joinToString()
     )
 
     Column(

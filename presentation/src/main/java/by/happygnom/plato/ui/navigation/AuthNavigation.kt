@@ -1,7 +1,5 @@
 package by.happygnom.plato.ui.navigation
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -11,18 +9,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import by.happygnom.plato.R
 import by.happygnom.plato.ui.screens.auth.getStarted.GetStartedScreen
 import by.happygnom.plato.ui.screens.auth.login.LoginScreen
 import by.happygnom.plato.ui.screens.auth.main.AuthScreen
 import by.happygnom.plato.ui.screens.auth.signup.SignUpScreen
-import by.happygnom.plato.ui.screens.news.NewsScreen
-import by.happygnom.plato.ui.screens.routes.comments.CommentsScreen
-import by.happygnom.plato.ui.screens.routes.details.RouteDetailsScreen
-import by.happygnom.plato.ui.screens.routes.filter.RoutesFilterScreen
-import by.happygnom.plato.ui.screens.routes.list.RoutesListScreen
-import by.happygnom.plato.ui.screens.stats.StatsScreen
-import by.happygnom.plato.ui.screens.user.UserScreen
 
 sealed class AuthScreen(val route: String) {
     object Auth : Screen("auth")

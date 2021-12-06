@@ -17,7 +17,9 @@
     <string name="projected">Projected</string>
     <string name="sent">Sent</string>
     <string name="liked">Liked</string>
+    <string name="no_routes">No routes found. Change your filter settings</string>
 
+    <string name="failed_to_load_route">Failed to load route data</string>
     <string name="route_info">Route info</string>
     <string name="visualisation">Visualisation</string>
     <string name="id">Id</string>
