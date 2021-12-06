@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import by.happygnom.plato.R
 import by.happygnom.plato.ui.theme.Grey1
 import by.happygnom.plato.ui.theme.Grey2
+import coil.compose.rememberImagePainter
 
 @Composable
 fun Comment(
@@ -34,7 +35,7 @@ fun Comment(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Image(
-                bitmap = ImageBitmap.imageResource(id = R.drawable.user_photo),
+                bitmap = ImageBitmap.imageResource(id = R.drawable.placeholder_avatar),
                 contentDescription = null,
                 modifier = Modifier
                     .size(34.dp)
@@ -64,6 +65,7 @@ fun Comment(
 @Composable
 fun AddCommentButton(
     onClick: () -> Unit,
+    userImageUrl: String,
     modifier: Modifier = Modifier,
 ) {
     val focusManager = LocalFocusManager.current
@@ -77,7 +79,13 @@ fun AddCommentButton(
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Image(
-            bitmap = ImageBitmap.imageResource(id = R.drawable.user_photo),
+            painter = rememberImagePainter(
+                data = userImageUrl,
+                builder = {
+                    placeholder(R.drawable.placeholder_avatar)
+                    error(R.drawable.placeholder_avatar)
+                }
+            ),
             contentDescription = null,
             modifier = Modifier
                 .size(40.dp)
@@ -85,7 +93,7 @@ fun AddCommentButton(
         )
 
         Text(
-            text = stringResource(id = R.string.add_comment),
+            text = stringResource(id = R.string.add_public_comment),
             style = MaterialTheme.typography.body1.copy(Grey2)
         )
     }

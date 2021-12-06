@@ -6,7 +6,7 @@ buildscript {
         lifecycle_version = '2.3.1'
         coroutines_version = '1.5.2-native-mt'
         nav_version = '2.3.5'
-        hilt_version = '2.40.1'
+        hilt_version = '2.40.4'
     }
 
     repositories {

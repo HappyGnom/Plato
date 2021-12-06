@@ -8,17 +8,19 @@
     <string name="news">News</string>
     <string name="user">User</string>
 
+    <string name="set">Set</string>
     <string name="taken_down">Taken down</string>
     <string name="new_exclamation">NEW!</string>
     <string name="set_by_template">By %s</string>
 
-    <string name="all_routes">All routes</string>
-    <string name="set">Set</string>
-    <string name="projects">Projects</string>
+    <string name="all_set">All set</string>
+    <string name="projected">Projected</string>
     <string name="sent">Sent</string>
     <string name="liked">Liked</string>
 
     <string name="route_info">Route info</string>
+    <string name="visualisation">Visualisation</string>
+    <string name="id">Id</string>
     <string name="grade">Grade</string>
     <string name="holds_color">Holds color</string>
     <string name="set_by">Set by</string>
@@ -27,6 +29,7 @@
     <string name="tags">Tags</string>
 
     <string name="mark_sent">Sent it!</string>
+    <string name="view_3d">View in 3D</string>
 
     <plurals name="likes">
         <item quantity="zero">No likes</item>
@@ -41,6 +44,44 @@
     </plurals>
 
     <string name="comments">Comments</string>
-    <string name="add_comment">Add a public comment…</string>
+    <string name="add_comment">Add comment</string>
+    <string name="add_public_comment">Add a public comment…</string>
+    <string name="add_comment_info">Your comment and profile avatar will be visible to all other users. Please, keep your comments respectful and polite.</string>
     <string name="see_all_comments_template">See all %d comments</string>
+
+    <string name="route_creation">Route creation</string>
+    <string name="route_editing">Route editing</string>
+    <string name="color">Color</string>
+    <string name="name">Name</string>
+    <string name="tags_list">Tags list</string>
+    <string name="select_date">Select date</string>
+    <string name="take_down">Take down</string>
+    <string name="cancelation">Cancel</string>
+    <string name="confirm">Confirm</string>
+
+    <string name="permission_request">Permission request</string>
+    <string name="permission_required_info">A permission is required for the application. Please, grant it to continue</string>
+    <string name="permission_not_available">It looks like you have denied this permission last time. Please, grant it from device settings to continue</string>
+    <string name="ok">OK</string>
+    <string name="open_settings">Open settings</string>
+    <string name="permission_media_access_info">You want to upload a photo from the gallery. Please, provide a permission to access it</string>
+    <string name="permission_camera_info">You want to take a photo with a camera. Please, provide a permission to access it</string>
+
+    <string name="error_image_not_set">Image is not set</string>
+    <string name="error_field_blank">Field is blank</string>
+    <string name="error_name_too_short">Name is too short</string>
+    <string name="error_date_not_set">Date is not set</string>
+    <string name="error_blank_tags">One or more tags are blank</string>
+
+    <string name="filters">Filters</string>
+    <string name="category">Category</string>
+    <string name="grade_from">Grade from</string>
+    <string name="grade_to">Grade to</string>
+    <string name="set_date_from">Set date from</string>
+    <string name="set_date_to">Set date to</string>
+    <string name="setter_name">Setter name</string>
+    <string name="include_taken_down">Include taken down routes</string>
+    <string name="apply">Apply</string>
+    <string name="unspecified">Unspecified</string>
+    <string name="clear_all">Clear all</string>
 </resources>

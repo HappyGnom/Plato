@@ -5,6 +5,9 @@ import by.happygnom.plato.ui.theme.*
 
 object GradeLevels {
 
+    const val LOWEST_GRADE = 0
+    const val HIGHEST_GRADE = 21
+
     enum class GradeScale { V_SCALE, FONT_SCALE }
 
     fun gradeLevelToScaleString(level: Int, scale: GradeScale) = when (scale) {
@@ -14,7 +17,7 @@ object GradeLevels {
 
     private fun gradeLevelToVScale(level: Int): String {
         return when {
-            level <= 0 -> "V0"
+            level <= LOWEST_GRADE -> "V0"
             level == 1 -> "V1"
             level == 2 -> "V2"
             level in 3..4 -> "V3"
@@ -31,14 +34,14 @@ object GradeLevels {
             level == 18 -> "V14"
             level == 19 -> "V15"
             level == 20 -> "V16"
-            level >= 21 -> "V17"
+            level >= HIGHEST_GRADE -> "V17"
             else -> "NaN"
         }
     }
 
     private fun gradeLevelToFontScale(level: Int): String {
         return when {
-            level <= 0 -> "4"
+            level <= LOWEST_GRADE -> "4"
             level == 1 -> "5"
             level == 2 -> "5+"
             level == 3 -> "6a"
@@ -59,14 +62,14 @@ object GradeLevels {
             level == 18 -> "8b+"
             level == 19 -> "8c"
             level == 20 -> "8c+"
-            level >= 21 -> "9a"
+            level >= HIGHEST_GRADE -> "9a"
             else -> "NaN"
         }
     }
 
     fun gradeLevelToColor(level: Int): Color {
         return when {
-            level <= 0 -> GradeWhite
+            level <= LOWEST_GRADE -> GradeWhite
             level in 1..2 -> GradeYellow
             level in 3..4 -> GradeOrange
             level in 5..6 -> GradeGreen

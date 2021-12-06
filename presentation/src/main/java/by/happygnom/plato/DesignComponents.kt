@@ -8,7 +8,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -117,11 +116,11 @@ fun DesignComponents() {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 StrokeImageButton(
-                    text = "Google", drawableId = R.drawable.ic_google,
+                    text = "Google", imageId = R.drawable.ic_google,
                     onClick = {}, modifier = Modifier.weight(1f)
                 )
                 StrokeImageButton(
-                    text = "Google", drawableId = R.drawable.ic_google,
+                    text = "Google", imageId = R.drawable.ic_google,
                     onClick = {}, enabled = false, modifier = Modifier.weight(1f)
                 )
             }

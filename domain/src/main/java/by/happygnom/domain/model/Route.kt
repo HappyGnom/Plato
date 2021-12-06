@@ -1,13 +1,12 @@
 package by.happygnom.domain.model
 
-import java.text.SimpleDateFormat
 import java.util.*
 
 data class Route(
     val id: String,
     val gradeLevel: Int,
     val holdsColor: String,
-    val pictureBase64: String,
+    val pictureUrl: String,
     val likesCount: Int,
     val sendsCount: Int,
     val commentsCount: Int,
@@ -15,7 +14,7 @@ data class Route(
     val setDate: Date,
     val tags: List<String>,
     val status: Status,
-    val visualisationId: String,
+    val visualisationUrl: String?,
 ) {
     enum class Status { SET, TAKEN_DOWN }
 
@@ -26,20 +25,16 @@ data class Route(
 
             return setDate.after(comparisonDate.time)
         }
-
-    val setDateString: String
-        get() {
-            val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-            return dateFormat.format(this.setDate)
-        }
 }
+
+const val mockRoutePhoto = "https://i.imgur.com/7Yr1NLM.jpeg"
 
 val mockRoutes = listOf(
     Route(
         "1",
         0,
         "Blue",
-        "",
+        mockRoutePhoto,
         10,
         50,
         3,
@@ -47,13 +42,13 @@ val mockRoutes = listOf(
         Calendar.getInstance().apply { set(2021, 8, 4) }.time,
         listOf("Big holds", "Slab"),
         Route.Status.SET,
-        "51351"
+        "https://raw.githubusercontent.com/intade/plato_gltf/master/test%20wall/WallGLTF-05-38-2021-19-38-16.gltf"
     ),
     Route(
         "2",
         5,
         "Green",
-        "",
+        mockRoutePhoto,
         15,
         20,
         12,
@@ -61,13 +56,13 @@ val mockRoutes = listOf(
         Calendar.getInstance().apply { set(2021, 11, 15) }.time,
         listOf("Dyno", "Sloper"),
         Route.Status.SET,
-        "54543"
+        "https://raw.githubusercontent.com/intade/plato_gltf/master/test%20wall/WallGLTF-05-38-2021-19-38-16.gltf"
     ),
     Route(
         "3",
         8,
         "Yellow",
-        "",
+        mockRoutePhoto,
         12,
         5,
         0,
@@ -75,13 +70,13 @@ val mockRoutes = listOf(
         Calendar.getInstance().apply { set(2021, 11, 25) }.time,
         listOf("Strength"),
         Route.Status.SET,
-        "11632"
+        null
     ),
     Route(
         "4",
         15,
         "Black",
-        "",
+        mockRoutePhoto,
         3,
         1,
         0,
@@ -89,13 +84,13 @@ val mockRoutes = listOf(
         Calendar.getInstance().apply { set(2021, 4, 12) }.time,
         listOf("Dyno", "Volumes", "Overhang"),
         Route.Status.TAKEN_DOWN,
-        "23426"
+        null
     ),
     Route(
         "5",
         9,
         "Red",
-        "",
+        mockRoutePhoto,
         6,
         4,
         3,
@@ -103,13 +98,13 @@ val mockRoutes = listOf(
         Calendar.getInstance().apply { set(2021, 7, 4) }.time,
         listOf("Overhang"),
         Route.Status.SET,
-        "21426"
+        null
     ),
     Route(
         "6",
         4,
         "Green",
-        "",
+        mockRoutePhoto,
         13,
         25,
         10,
@@ -117,13 +112,13 @@ val mockRoutes = listOf(
         Calendar.getInstance().apply { set(2021, 12, 1) }.time,
         listOf("Stretch", "Grip", "Overhang", "Long moves"),
         Route.Status.SET,
-        "654326"
+        null
     ),
     Route(
         "7",
         6,
         "Blue",
-        "",
+        mockRoutePhoto,
         12,
         15,
         5,
@@ -131,6 +126,7 @@ val mockRoutes = listOf(
         Calendar.getInstance().apply { set(2021, 12, 1) }.time,
         listOf("Comp", "Crimps"),
         Route.Status.SET,
-        "324545"
+        null
     )
 )
+

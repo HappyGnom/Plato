@@ -17,11 +17,17 @@ import androidx.navigation.compose.rememberNavController
 import by.happygnom.plato.ui.navigation.MainNavigation
 import by.happygnom.plato.ui.navigation.MainScreen
 import by.happygnom.plato.ui.navigation.addMainGraph
-import by.happygnom.plato.ui.theme.*
-import by.happygnom.plato.ui.theme.Grey1
+import by.happygnom.plato.ui.theme.Grey2
+import by.happygnom.plato.ui.theme.Grey3
+import by.happygnom.plato.ui.theme.Teal1
+import by.happygnom.plato.ui.theme.White
+import java.util.*
+import kotlin.reflect.KFunction2
 
 @Composable
-fun MainScreen(viewModel: MainViewModel) {
+fun MainScreen(
+    viewModel: MainViewModel
+) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -41,7 +47,6 @@ fun MainScreen(viewModel: MainViewModel) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .border(0.5.dp, Grey3)
-//                    .clip(BottomNavBarShape)
             ) {
                 bottomNavigationItems.forEach { screen ->
                     BottomNavBarItem(
@@ -59,7 +64,7 @@ fun MainScreen(viewModel: MainViewModel) {
                 .fillMaxSize()
                 .padding(innerPadding),
             graph = {
-                addMainGraph(navController)
+                addMainGraph(navController = navController)
             })
     }
 }

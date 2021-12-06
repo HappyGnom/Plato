@@ -1,5 +1,8 @@
 package by.happygnom.plato
 
+import android.app.DatePickerDialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,9 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import by.happygnom.plato.ui.screens.main.MainScreen
-import by.happygnom.plato.ui.theme.Grey5
 import by.happygnom.plato.ui.theme.PlatoTheme
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -27,8 +31,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    MainScreen(viewModel = hiltViewModel())
-//                    DesignComponents()
+                    MainScreen(
+                        viewModel = hiltViewModel()
+                    )
                 }
             }
         }
@@ -39,7 +44,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     PlatoTheme {
-        MainScreen(viewModel = hiltViewModel())
+//        MainScreen(viewModel = hiltViewModel())
     }
 }
 

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="PlatoDatePickerStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/brand</item>
+        <!--selected Item color-->
+        <item name="colorControlActivated">#EE2951</item>
+<!--        &lt;!&ndash; arrow bordercolor(<>)&ndash;&gt;-->
+<!--        <item name="android:selectableItemBackgroundBorderless">@color/border</item>-->
+        <!-- Highlight item color-->
+        <item name="colorControlHighlight">#F4708B</item>
+        <!--Calender Background color -->
+        <item name="android:windowBackground">#FFFFFF</item>
+        <!-- Ok Cancel Color-->
+        <item name="android:textColor">@color/brand</item>
+        <!-- Calender Number color arrow color (< >) -->
+        <item name="android:textColorPrimary">#5B5E67</item>
+        <!-- Week TextColor-->
+        <item name="android:textColorSecondary">#1D1D1D</item>
+        <!--day , month-->
+        <item name="android:textColorPrimaryInverse">#FFFFFF</item>
+        <!-- year-->
+        <item name="android:textColorSecondaryInverse">#A3DCD6</item>
+
+    </style>
+
+</resources>
