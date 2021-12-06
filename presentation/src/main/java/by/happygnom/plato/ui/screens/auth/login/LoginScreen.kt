@@ -1,16 +1,16 @@
 package by.happygnom.plato.ui.screens.auth.login
 
+import android.content.ContentValues.TAG
 import android.content.Intent
+import android.content.Intent.getIntent
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -43,6 +43,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -57,9 +58,11 @@ fun LoginScreen(
 ) {
     var userEmail by remember { mutableStateOf("") }
     var userPassword by remember { mutableStateOf("") }
+    var resetEmail by remember { mutableStateOf("") }
     val isSignedIn by viewModel.signedIn.observeAsState(false)
     val error by viewModel.error.observeAsState("")
     val loading by viewModel.loading.observeAsState(false)
+    val (showDialog, setShowDialog) =  remember { mutableStateOf(false) }
 
     val auth: FirebaseAuth = Firebase.auth
     lateinit var mGoogleSignInClient: GoogleSignInClient
@@ -256,7 +259,7 @@ fun LoginScreen(
                             start = offset,
                             end = offset
                         ).firstOrNull()?.let { annotation ->
-                            navController.navigate(AuthenticationScreen.SignUp.route)
+                            setShowDialog(true)
                         }
                     },
                     modifier = Modifier.padding(top = 8.dp)
@@ -390,6 +393,46 @@ fun LoginScreen(
                     .size(150.dp)
             )
         }
+    }
+
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = {
+            },
+            title = {
+                Text("Enter your email")
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        // Change the state to close the dialog
+                        Firebase.auth.sendPasswordResetEmail(resetEmail)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    Log.d(TAG, "Email sent.")
+                                }
+                            }
+                        setShowDialog(false)
+                    },
+                ) {
+                    Text("OK")
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = {
+                        // Change the state to close the dialog
+                        setShowDialog(false)
+                    },
+                ) {
+                    Text("Cancel")
+                }
+            },
+            text = {
+                InputTextField(text = resetEmail, onValueChange = { resetEmail = it })
+            },
+        )
     }
 }
 
