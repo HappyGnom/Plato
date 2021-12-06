@@ -9,14 +9,14 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import by.happygnom.domain.model.Route
@@ -24,48 +24,61 @@ import by.happygnom.domain.model.mockRoutes
 import by.happygnom.plato.R
 import by.happygnom.plato.model.GradeLevels
 import by.happygnom.plato.ui.elements.Card
+import by.happygnom.plato.ui.elements.DefaultToolbar
 import by.happygnom.plato.ui.elements.TagsList
+import by.happygnom.plato.ui.elements.button.AddFloatingActionButton
 import by.happygnom.plato.ui.elements.button.LabeledIconButton
 import by.happygnom.plato.ui.navigation.RoutesScreen
 import by.happygnom.plato.ui.theme.*
+import by.happygnom.plato.util.toFormattedString
+import coil.compose.rememberImagePainter
 
 @Composable
 fun RoutesListScreen(
     viewModel: RoutesListViewModel,
     navController: NavController,
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Teal1)
-                .padding(16.dp)
-        ) {
-            Text(
-                text = stringResource(id = R.string.all_routes),
-                style = MaterialTheme.typography.h3.copy(White)
+    Scaffold(
+        topBar = {
+            val routesText = stringResource(id = R.string.all_set) +
+                    " " +
+                    stringResource(id = R.string.routes).toLowerCase(Locale.current)
+
+            DefaultToolbar(
+                text = routesText,
+                endIconId = R.drawable.ic_filter,
+                onEndIconClick = { navController.navigate(RoutesScreen.Filter.route) }
             )
+        },
+        floatingActionButton = {
+            AddFloatingActionButton(
+                onClick = {
+                    navController.navigate(RoutesScreen.Editor.route)
+                }
+            )
+        }) {
+        RoutesListScreenContent(
+            viewModel = viewModel,
+            navController = navController,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
+        )
+    }
+}
 
-            IconButton(
-                onClick = { navController.navigate(RoutesScreen.Filter.route) },
-                modifier = Modifier.size(24.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_filter),
-                    contentDescription = "Filter",
-                    tint = White
-                )
-            }
-        }
-
-        Divider(color = Grey3)
-
+@Composable
+fun RoutesListScreenContent(
+    viewModel: RoutesListViewModel,
+    navController: NavController,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+    ) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(8.dp, 12.dp, 8.dp, 88.dp),
             modifier = Modifier.fillMaxHeight()
         ) {
             item {
@@ -73,16 +86,16 @@ fun RoutesListScreen(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 16.dp)
+                        .padding(vertical = 12.dp)
                 ) {
                     LabeledIconButton(
-                        text = stringResource(id = R.string.set),
+                        text = stringResource(id = R.string.all_set),
                         iconPainter = painterResource(id = R.drawable.ic_path),
                         onClick = { /*TODO*/ }
                     )
 
                     LabeledIconButton(
-                        text = stringResource(id = R.string.projects),
+                        text = stringResource(id = R.string.projected),
                         iconPainter = painterResource(id = R.drawable.ic_bookmark),
                         onClick = { /*TODO*/ }
                     )
@@ -102,19 +115,17 @@ fun RoutesListScreen(
             }
 
             items(mockRoutes) { route ->
-                Box(modifier = Modifier.padding(horizontal = 8.dp)) {
-                    RouteCard(
-                        route = route,
-                        onClick = {
-                            navController.navigate(RoutesScreen.RouteDetails.createRoute(route.id))
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
+                RouteCard(
+                    route = route,
+                    onClick = {
+                        navController.navigate(
+                            RoutesScreen.RouteDetails.createRoute(
+                                route.id
+                            )
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
     }
@@ -147,7 +158,13 @@ fun RouteCard(
     ) {
         Row {
             Image(
-                bitmap = ImageBitmap.imageResource(id = R.drawable.route_photo),
+                painter = rememberImagePainter(
+                    data = route.pictureUrl,
+                    builder = {
+                        placeholder(R.drawable.placeholder_route)
+                        error(R.drawable.placeholder_route)
+                    }
+                ),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 alignment = Alignment.Center,
@@ -269,10 +286,21 @@ fun RouteCard(
                         modifier = Modifier.size(12.dp)
                     )
 
+                    if (route.visualisationUrl != null) {
+                        Spacer(modifier = Modifier.width(4.dp))
+
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_view_in_ar),
+                            contentDescription = "Has 3D scene",
+                            modifier = Modifier.size(12.dp),
+                            tint = Color.Unspecified
+                        )
+                    }
+
                     Spacer(modifier = Modifier.weight(1f))
 
                     Text(
-                        text = route.setDateString,
+                        text = route.setDate.toFormattedString(),
                         style = MaterialTheme.typography.caption
                     )
                 }

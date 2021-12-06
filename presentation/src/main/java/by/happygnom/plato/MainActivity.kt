@@ -2,7 +2,6 @@ package by.happygnom.plato
 
 import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,12 +15,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private lateinit var mGoogleSignInClient: GoogleSignInClient
 
@@ -57,5 +57,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-

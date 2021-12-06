@@ -10,10 +10,8 @@ val Shapes = Shapes(
     large = RoundedCornerShape(4.dp)
 )
 
-val ButtonShape = RoundedCornerShape(percent = 100)
+val ButtonShape = RoundedCornerShape(4.dp)
 
 val InputFieldShape = RoundedCornerShape(4.dp)
 
 val CardShape = RoundedCornerShape(4.dp)
-
-val BottomNavBarShape = RoundedCornerShape(8.dp, 8.dp, 0.dp, 0.dp)

@@ -11,20 +11,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import by.happygnom.domain.model.Route
 import by.happygnom.plato.R
 import by.happygnom.plato.ui.elements.AddCommentButton
 import by.happygnom.plato.ui.elements.Comment
 import by.happygnom.plato.ui.elements.TagsList
+import by.happygnom.plato.ui.elements.button.StrokeImageButton
 import by.happygnom.plato.ui.elements.button.SwitchableIconButton
 import by.happygnom.plato.ui.elements.button.TealTextButton
 import by.happygnom.plato.ui.navigation.RoutesScreen
@@ -32,6 +32,9 @@ import by.happygnom.plato.ui.theme.Grey1
 import by.happygnom.plato.ui.theme.Grey3
 import by.happygnom.plato.ui.theme.Teal1
 import by.happygnom.plato.ui.theme.White
+import by.happygnom.plato.util.build3dModelIntent
+import by.happygnom.plato.util.toFormattedString
+import coil.compose.rememberImagePainter
 import me.onebone.toolbar.*
 
 @Composable
@@ -64,10 +67,17 @@ fun CollapsingToolbarScope.Toolbar(
     navController: NavController,
     toolbarState: CollapsingToolbarScaffoldState,
 ) {
+    val route by viewModel.route.observeAsState()
     val gradeName by viewModel.gradeName.observeAsState("")
 
     Image(
-        bitmap = ImageBitmap.imageResource(id = R.drawable.route_photo),
+        painter = rememberImagePainter(
+            data = route!!.pictureUrl,
+            builder = {
+                placeholder(R.drawable.placeholder_route)
+                error(R.drawable.placeholder_route)
+            }
+        ),
         contentDescription = null,
         contentScale = ContentScale.Crop,
         alignment = Alignment.Center,
@@ -85,11 +95,31 @@ fun CollapsingToolbarScope.Toolbar(
         modifier = Modifier
             .padding(16.dp)
             .size(24.dp)
-            .pin()
+            .road(
+                whenCollapsed = Alignment.TopStart,
+                whenExpanded = Alignment.TopStart
+            )
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_back),
             contentDescription = "Back",
+            tint = White
+        )
+    }
+
+    IconButton(
+        onClick = { navController.navigate(RoutesScreen.Editor.createRoute(route!!.id)) },
+        modifier = Modifier
+            .padding(16.dp)
+            .size(24.dp)
+            .road(
+                whenCollapsed = Alignment.TopEnd,
+                whenExpanded = Alignment.TopEnd
+            )
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_edit),
+            contentDescription = "Edit",
             tint = White
         )
     }
@@ -113,11 +143,11 @@ fun RouteDetails(
 ) {
     val resources = LocalContext.current.resources
 
+    val route by viewModel.route.observeAsState()
+
     val isLiked by viewModel.isLiked.observeAsState(false)
     val isProjected by viewModel.isProjected.observeAsState(false)
     val isSent by viewModel.isSent.observeAsState(false)
-
-    val route by viewModel.route.observeAsState()
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         Row(
@@ -178,6 +208,18 @@ fun RouteDetails(
 
         Divider(color = Grey3)
 
+        if (route!!.visualisationUrl != null) {
+            Route3dVisualisation(
+                viewModel = viewModel,
+                navController = navController,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            )
+
+            Divider(color = Grey3)
+        }
+
         RouteInfo(
             viewModel = viewModel,
             navController = navController,
@@ -194,6 +236,38 @@ fun RouteDetails(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
+        )
+    }
+}
+
+@Composable
+fun Route3dVisualisation(
+    viewModel: RouteDetailsViewModel,
+    navController: NavController,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+    val route by viewModel.route.observeAsState()
+    if (route!!.visualisationUrl == null) return
+
+    Column(
+        verticalArrangement = Arrangement.SpaceBetween,
+        modifier = modifier
+    ) {
+        Text(
+            text = stringResource(id = R.string.visualisation),
+            style = MaterialTheme.typography.body1,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        StrokeImageButton(
+            text = stringResource(id = R.string.view_3d),
+            imageId = R.drawable.ic_view_in_ar,
+            onClick = {
+                val sceneViewerIntent = build3dModelIntent(route!!.visualisationUrl!!)
+                ContextCompat.startActivity(context, sceneViewerIntent, null)
+            },
+            modifier = Modifier.align(Alignment.CenterHorizontally)
         )
     }
 }
@@ -216,7 +290,7 @@ fun RouteInfo(
         stringResource(id = R.string.grade) to gradeName,
         stringResource(id = R.string.holds_color) to route!!.holdsColor,
         stringResource(id = R.string.set_by) to route!!.setterName,
-        stringResource(id = R.string.set_date) to route!!.setDateString,
+        stringResource(id = R.string.set_date) to route!!.setDate.toFormattedString(),
         stringResource(id = R.string.status) to statusString,
         stringResource(id = R.string.tags) to route!!.tags.joinToString()
     )
@@ -286,7 +360,8 @@ fun LatestComments(
             modifier = Modifier.fillMaxWidth()
         ) {
             AddCommentButton(
-                onClick = {},
+                onClick = { navController.navigate(RoutesScreen.AddComment.createRoute(route!!.id)) },
+                userImageUrl = "https://i.imgur.com/SWyt4bv.jpeg",
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -302,5 +377,3 @@ fun LatestComments(
         )
     }
 }
-
-

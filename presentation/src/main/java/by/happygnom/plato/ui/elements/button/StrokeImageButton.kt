@@ -17,20 +17,20 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import by.happygnom.plato.ui.elements.ColoredRippleTheme
-import by.happygnom.plato.ui.theme.BlackNero
 import by.happygnom.plato.ui.theme.ButtonShape
+import by.happygnom.plato.ui.theme.Grey1
 import by.happygnom.plato.ui.theme.Grey2
 
 @Composable
 fun StrokeImageButton(
     text: String,
-    @DrawableRes drawableId: Int,
+    @DrawableRes imageId: Int,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     enabled: Boolean = true
 ) {
     val colors = ButtonDefaults.buttonColors(
-        backgroundColor = Grey2, contentColor = BlackNero,
+        backgroundColor = Grey2, contentColor = Grey1,
         disabledBackgroundColor = Grey2, disabledContentColor = Grey2
     )
     val rippleColor = colors.backgroundColor(enabled = true).value
@@ -58,7 +58,7 @@ fun StrokeImageButton(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Image(
-                    painter = painterResource(id = drawableId),
+                    painter = painterResource(id = imageId),
                     contentDescription = null,
                     modifier = Modifier.fillMaxHeight(),
                     colorFilter = imageColorFilter

@@ -21,7 +21,8 @@ import by.happygnom.plato.ui.theme.Grey3
 fun QuantitySelector(
     currentQuantity: Int,
     onQuantityChange: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    quantityDisplayTransformation: (Int) -> String = { it.toString() }
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -59,7 +60,7 @@ fun QuantitySelector(
         }
 
         Text(
-            text = currentQuantity.toString(),
+            text = quantityDisplayTransformation(currentQuantity),
             modifier = Modifier.constrainAs(label) {
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)

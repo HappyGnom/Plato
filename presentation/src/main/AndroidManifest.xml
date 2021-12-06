@@ -3,6 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="by.happygnom.plato">
 
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <application
         android:name=".PlatoApp"
         android:allowBackup="true"
@@ -12,24 +19,36 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Plato">
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <activity
-            android:name=".AuthActivity"
+            android:name=".MainActivity"
             android:exported="true"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Plato.NoActionBar"
+            android:windowSoftInputMode="adjustPan"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".MainActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Plato.NoActionBar" >
-        </activity>
+            android:name=".AuthActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Plato.NoActionBar"
+            tools:ignore="LockedOrientationActivity" />
 
     </application>
 

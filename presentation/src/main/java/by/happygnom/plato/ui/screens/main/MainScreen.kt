@@ -22,6 +22,7 @@ import by.happygnom.plato.ui.theme.Grey1
 
 @Composable
 fun MainScreen(viewModel: MainViewModel, onSignOut: () -> Unit) {
+
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -41,7 +42,6 @@ fun MainScreen(viewModel: MainViewModel, onSignOut: () -> Unit) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .border(0.5.dp, Grey3)
-//                    .clip(BottomNavBarShape)
             ) {
                 bottomNavigationItems.forEach { screen ->
                     BottomNavBarItem(

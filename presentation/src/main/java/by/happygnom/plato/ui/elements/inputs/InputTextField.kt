@@ -3,7 +3,6 @@ package by.happygnom.plato.ui.elements.inputs
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -22,11 +21,9 @@ fun InputTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     hint: String = "",
-    isError: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    keyboardActions: KeyboardActions = KeyboardActions.Default,
     enableVisibilityToggle: Boolean = false,
-    singleLine: Boolean = true
+    singleLine: Boolean = false
 ) {
     var passwordIsShown by remember { mutableStateOf(false) }
 
@@ -56,10 +53,8 @@ fun InputTextField(
         textStyle = MaterialTheme.typography.body1,
         shape = InputFieldShape,
         colors = colors,
-        isError = isError,
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
-        keyboardActions = keyboardActions,
         singleLine = singleLine,
         modifier = modifier
             .focusable(true)
