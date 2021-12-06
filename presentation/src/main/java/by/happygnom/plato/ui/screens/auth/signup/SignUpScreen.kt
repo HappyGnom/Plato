@@ -259,7 +259,7 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
 
                 StrokeImageButton(
                     text = "Sign up with Google",
-                    drawableId = R.drawable.ic_google,
+                    imageId = R.drawable.ic_google,
                     onClick = {
                         if (auth.currentUser == null) {
                             signInWithGoogle()

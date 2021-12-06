@@ -278,7 +278,7 @@ fun LoginScreen(
 
                 StrokeImageButton(
                     text = "Sign in with Google",
-                    drawableId = R.drawable.ic_google,
+                    imageId = R.drawable.ic_google,
                     onClick = {
                         if (auth.currentUser == null) {
                             signInWithGoogle()
