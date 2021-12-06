@@ -38,7 +38,14 @@ val PlatoTypography = Typography(
     h3 = TextStyle(
         fontFamily = FinlandicaFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
+        fontSize = 24.sp,
+        color = BlackNero,
+        fontFeatureSettings = "c2sc, smcp"
+    ),
+    h6 = TextStyle(
+        fontFamily = FinlandicaFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 8.sp,
         color = BlackNero,
         fontFeatureSettings = "c2sc, smcp"
     ),

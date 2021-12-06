@@ -53,8 +53,7 @@ fun AuthNavigation(
 }
 
 fun NavGraphBuilder.addAuthGraph(
-    navController: NavController,
-    onSignIn: () -> Unit
+    navController: NavController
 ) {
     navigation(route = AuthScreen.Auth.route, startDestination = AuthenticationScreen.Main.route) {
         composable(AuthenticationScreen.Main.route) {
@@ -68,8 +67,7 @@ fun NavGraphBuilder.addAuthGraph(
         composable(AuthenticationScreen.Login.route) {
             LoginScreen(
                 viewModel = hiltViewModel(),
-                navController = navController,
-                onSignIn = onSignIn
+                navController = navController
             )
         }
 
