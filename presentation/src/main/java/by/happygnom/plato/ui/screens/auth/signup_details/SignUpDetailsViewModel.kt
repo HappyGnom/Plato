@@ -107,13 +107,14 @@ class SignUpDetailsViewModel @Inject constructor(
 
     fun registerUser() {
         val registerUseCase = RegisterUseCase(userRepository)
+        val sex = calculateSex()
         setUserIdToken()
         val user = User(
             idToken!!,
             name.value!!,
             surname.value!!,
             nickname.value,
-            sex.value!!,
+            sex,
             (startDate.value!!.time / DateUtils.SECOND_IN_MILLIS),
             null
         )
@@ -131,6 +132,14 @@ class SignUpDetailsViewModel @Inject constructor(
             onComplete {
 //                _isLoading.value = false
             }
+        }
+    }
+
+    private fun calculateSex(): Int {
+        return when (sex.value) {
+            "Male" -> Sex.MALE.number
+            "Female" -> Sex.FEMALE.number
+            else -> Sex.OTHER.number
         }
     }
 }

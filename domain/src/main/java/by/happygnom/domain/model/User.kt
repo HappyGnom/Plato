@@ -7,7 +7,7 @@ data class User(
     val name: String,
     val surname: String,
     val nickname: String?,
-    val sex: String,
+    val sex: Int,
     val startDate: Long,
     val pictureUrl: String?
 )

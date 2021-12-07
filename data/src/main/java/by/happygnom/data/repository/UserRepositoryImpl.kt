@@ -1,6 +1,5 @@
 package by.happygnom.data.repository
 
-import by.happygnom.data.dao.UserDao
 import by.happygnom.data.model.UserEntity
 import by.happygnom.data.network.UserGateway
 import by.happygnom.domain.data_interface.repository.UserRepository

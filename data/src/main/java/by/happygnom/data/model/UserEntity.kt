@@ -20,7 +20,7 @@ data class UserEntity(
     @SerialName("photoUrl")
     val pictureUrl: String?,
     @SerialName("sex")
-    val sex: String,
+    val sex: Int,
     @SerialName("startDate")
     val startDate: Long,
 ) {
