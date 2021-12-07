@@ -23,7 +23,7 @@ import by.happygnom.plato.ui.elements.button.TealFilledButton
 import by.happygnom.plato.ui.elements.button.TealStrokeButton
 import by.happygnom.plato.ui.elements.inputs.InputTextFieldBox
 import by.happygnom.plato.ui.elements.inputs.QuantitySelector
-import by.happygnom.plato.ui.elements.inputs.SimpleTextDropdown
+import by.happygnom.plato.ui.elements.inputs.SimpleTextDrop
 import by.happygnom.plato.ui.elements.inputs.TealCheckbox
 import by.happygnom.plato.ui.theme.Grey1
 import by.happygnom.plato.util.showDatePickerDialog
@@ -77,18 +77,7 @@ fun RoutesFilterScreenContent(
     ) {
         Spacer(modifier = Modifier.height(0.dp))
 
-        Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        ) {
-            Text(
-                text = stringResource(id = R.string.category),
-                style = MaterialTheme.typography.body2
-            )
-
-            SimpleTextDropdown(
+            SimpleTextDrop(
                 options = listOf(
                     stringResource(id = R.string.projected),
                     stringResource(id = R.string.sent),
@@ -96,10 +85,10 @@ fun RoutesFilterScreenContent(
                 ),
                 selectedOption = category,
                 onOptionChanged = viewModel::setCategory,
-                modifier = Modifier.fillMaxWidth(0.8f),
-                addUnspecifiedOption = true
+                modifier = Modifier.fillMaxWidth(0.8f).padding(16.dp),
+                addUnspecifiedOption = true,
+                label = stringResource(id = R.string.category)
             )
-        }
 
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -145,18 +134,7 @@ fun RoutesFilterScreenContent(
             )
         }
 
-        Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        ) {
-            Text(
-                text = stringResource(id = R.string.setter_name),
-                style = MaterialTheme.typography.body2
-            )
-
-            SimpleTextDropdown(
+            SimpleTextDrop(
                 options = listOf(
                     "Yura Morozov",
                     "Ilya Khomyakov",
@@ -166,10 +144,10 @@ fun RoutesFilterScreenContent(
                 ),
                 selectedOption = setterName,
                 onOptionChanged = viewModel::setSetterName,
-                modifier = Modifier.fillMaxWidth(0.8f),
-                addUnspecifiedOption = true
+                modifier = Modifier.fillMaxWidth(0.8f).padding(horizontal = 16.dp),
+                addUnspecifiedOption = true,
+                label = stringResource(id = R.string.setter_name)
             )
-        }
 
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp),
