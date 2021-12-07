@@ -1,9 +1,14 @@
 package by.happygnom.plato.di
 
 import android.content.Context
+import androidx.room.Room
+import by.happygnom.data.database.RoutesDatabase
+import by.happygnom.data.network.CommentsGateway
 import by.happygnom.data.network.RoutesGateway
 import by.happygnom.data.network.ktorHttpClient
+import by.happygnom.data.repository.CommentsRepositoryImpl
 import by.happygnom.data.repository.RoutesRepositoryImpl
+import by.happygnom.domain.data_interface.repository.CommentsRepository
 import by.happygnom.domain.data_interface.repository.RoutesRepository
 import coil.ImageLoader
 import coil.request.ImageRequest
@@ -29,6 +34,21 @@ class SingletonModule {
 
     @Provides
     fun provideRoutesRepository(@ApplicationContext context: Context): RoutesRepository {
-        return RoutesRepositoryImpl(RoutesGateway(ktorHttpClient))
+        val routesGateway = RoutesGateway(ktorHttpClient)
+
+        val routesDatabase = Room.databaseBuilder(
+            context,
+            RoutesDatabase::class.java,
+            "RoutesDb"
+        ).build()
+
+        return RoutesRepositoryImpl(routesGateway, routesDatabase.routesDao)
+    }
+
+    @Provides
+    fun provideCommentsRepository(@ApplicationContext context: Context): CommentsRepository {
+        val commentsGateway = CommentsGateway(ktorHttpClient)
+
+        return CommentsRepositoryImpl(commentsGateway)
     }
 }

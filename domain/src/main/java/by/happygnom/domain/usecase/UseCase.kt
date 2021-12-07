@@ -104,6 +104,7 @@ abstract class UseCase<T> constructor(
 
         operator fun invoke(error: CancellationException) {
             onCancel?.invoke(error)
+            onComplete?.invoke()
         }
     }
 }

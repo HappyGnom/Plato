@@ -27,7 +27,7 @@ import by.happygnom.plato.ui.elements.inputs.SimpleTextDropdown
 import by.happygnom.plato.ui.elements.inputs.TealCheckbox
 import by.happygnom.plato.ui.theme.Grey1
 import by.happygnom.plato.util.showDatePickerDialog
-import by.happygnom.plato.util.toFormattedString
+import by.happygnom.plato.util.toFormattedDateString
 import java.util.*
 
 @Composable
@@ -185,7 +185,7 @@ fun RoutesFilterScreenContent(
             val setDateText = if (setDateFrom == null)
                 stringResource(id = R.string.unspecified)
             else
-                setDateFrom!!.toFormattedString()
+                setDateFrom!!.toFormattedDateString()
 
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -231,7 +231,7 @@ fun RoutesFilterScreenContent(
             val setDateText = if (setDateTo == null)
                 stringResource(id = R.string.unspecified)
             else
-                setDateTo!!.toFormattedString()
+                setDateTo!!.toFormattedDateString()
 
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),

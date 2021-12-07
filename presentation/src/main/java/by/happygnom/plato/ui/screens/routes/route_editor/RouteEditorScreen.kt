@@ -277,7 +277,7 @@ fun RouteEditorScreenContent(
             val setDateText = if (setDate == null)
                 stringResource(id = R.string.select_date)
             else
-                setDate!!.toFormattedString()
+                setDate!!.toFormattedDateString()
 
             TealStrokeButton(
                 text = setDateText,

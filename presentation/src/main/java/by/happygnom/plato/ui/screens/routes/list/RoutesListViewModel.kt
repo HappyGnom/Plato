@@ -2,7 +2,6 @@ package by.happygnom.plato.ui.screens.routes.list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import by.happygnom.domain.data_interface.repository.RoutesRepository
 import by.happygnom.domain.model.Route
@@ -25,8 +24,9 @@ class RoutesListViewModel @Inject constructor(
         loadRoutes()
     }
 
-    fun loadRoutes() {
+    fun loadRoutes(forceUpdate: Boolean = false) {
         val getRoutesUseCase = GetRoutesUseCase(routesRepository)
+        getRoutesUseCase.inputForceUpdate = forceUpdate
         _isLoading.value = true
 
         getRoutesUseCase.executeAsync {

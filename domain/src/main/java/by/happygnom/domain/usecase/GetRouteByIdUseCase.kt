@@ -7,9 +7,10 @@ class GetRouteByIdUseCase(private val routesRepository: RoutesRepository) :
     UseCase<Route>("GetRouteByIdUseCase") {
 
     var inputRouteId: Long = 0
+    var inputForceUpdate: Boolean = false
 
     override suspend fun performTask(): Route {
-        return routesRepository.getRouteById(inputRouteId)
+        return routesRepository.getRouteById(inputRouteId, inputForceUpdate)
             ?: throw NullPointerException("Route with id $inputRouteId not found")
     }
 }

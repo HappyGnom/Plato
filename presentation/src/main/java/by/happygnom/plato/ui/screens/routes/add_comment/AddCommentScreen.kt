@@ -12,18 +12,19 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import by.happygnom.plato.R
 import by.happygnom.plato.ui.elements.DefaultToolbar
+import by.happygnom.plato.ui.elements.LoadingIndicator
 import by.happygnom.plato.ui.elements.inputs.InputTextField
 import by.happygnom.plato.ui.theme.Grey1
 import by.happygnom.plato.ui.theme.Grey2
 import by.happygnom.plato.ui.theme.Teal1
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun AddCommentScreen(
     viewModel: AddCommentViewModel,
     navController: NavController,
-    routeId: Long
 ) {
-//        viewModel.loadRouteData(routeId)
     Scaffold(
         topBar = {
             DefaultToolbar(
@@ -50,36 +51,52 @@ fun AddCommentScreenContent(
     modifier: Modifier = Modifier,
 ) {
     val commentContent by viewModel.commentContent.observeAsState("")
+    val isLoading by viewModel.isLoading.observeAsState(false)
+    val commentPublished by viewModel.commentPublished.observeAsState()
+
     val sendButtonEnabled = commentContent.isNotBlank()
 
-    Column(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = modifier.padding(16.dp),
-    ) {
-        Text(
-            text = stringResource(id = R.string.add_comment_info),
-            style = MaterialTheme.typography.body1.copy(Grey1)
-        )
+    commentPublished?.getContentIfNotHandled()?.let {
+        navController.popBackStack()
+    }
 
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            InputTextField(
-                text = commentContent,
-                onValueChange = viewModel::setCommentContent,
-                modifier = Modifier.weight(1f),
-                hint = stringResource(id = R.string.add_public_comment),
-                singleLine = false
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isLoading),
+        onRefresh = {},
+        indicator = { state, refreshTrigger -> LoadingIndicator(state, refreshTrigger) }
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = modifier.padding(16.dp),
+        ) {
+            Text(
+                text = stringResource(id = R.string.add_comment_info),
+                style = MaterialTheme.typography.body1.copy(Grey1)
             )
 
-            IconButton(
-                onClick = viewModel::send,
-                enabled = sendButtonEnabled,
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_send),
-                    contentDescription = null,
-                    tint = if (sendButtonEnabled) Teal1 else Grey2,
-                    modifier = Modifier.size(24.dp)
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                InputTextField(
+                    text = commentContent,
+                    onValueChange = {
+                        if (!isLoading)
+                            viewModel.setCommentContent(it)
+                    },
+                    modifier = Modifier.weight(1f),
+                    hint = stringResource(id = R.string.add_public_comment),
+                    singleLine = false
                 )
+
+                IconButton(
+                    onClick = viewModel::publishComment,
+                    enabled = sendButtonEnabled,
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_send),
+                        contentDescription = null,
+                        tint = if (sendButtonEnabled) Teal1 else Grey2,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
             }
         }
     }

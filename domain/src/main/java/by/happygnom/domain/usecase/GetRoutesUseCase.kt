@@ -6,7 +6,9 @@ import by.happygnom.domain.model.Route
 class GetRoutesUseCase(private val routesRepository: RoutesRepository) :
     UseCase<List<Route>>("GetRoutesUseCase") {
 
+    var inputForceUpdate: Boolean = false
+
     override suspend fun performTask(): List<Route> {
-        return routesRepository.getAllSetRoutes()
+        return routesRepository.getAllRoutes(inputForceUpdate)
     }
 }

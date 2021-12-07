@@ -128,12 +128,9 @@ fun NavGraphBuilder.addRoutesGraph(
             RoutesScreen.Comments.route,
             arguments = listOf(navArgument("route_id") { type = NavType.LongType })
         ) {
-            val routeId = it.arguments?.getLong("route_id") ?: return@composable
-
             CommentsScreen(
                 viewModel = hiltViewModel(),
                 navController = navController,
-                routeId = routeId
             )
         }
 
@@ -141,12 +138,9 @@ fun NavGraphBuilder.addRoutesGraph(
             RoutesScreen.AddComment.route,
             arguments = listOf(navArgument("route_id") { type = NavType.LongType })
         ) {
-            val routeId = it.arguments?.getLong("route_id") ?: return@composable
-
             AddCommentScreen(
                 viewModel = hiltViewModel(),
-                navController = navController,
-                routeId = routeId
+                navController = navController
             )
         }
 

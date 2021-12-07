@@ -1,14 +1,18 @@
 package by.happygnom.data.model
 
 import android.text.format.DateUtils
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import by.happygnom.domain.model.Route
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.util.*
 
 @Serializable
+@Entity(tableName = "route")
 data class RouteEntity(
     @SerialName("id")
+    @PrimaryKey
     val id: Long,
     @SerialName("grade")
     val gradeLevel: Int,
@@ -25,7 +29,7 @@ data class RouteEntity(
     @SerialName("status")
     val status: Int,
 //    @SerialName("tags")
-//    val tags: List<Tag>?,
+//    val tags: List<TagEntity>?,
     @SerialName("likesCount")
     val likesCount: Int,
     @SerialName("sendsCount")
@@ -33,53 +37,18 @@ data class RouteEntity(
     @SerialName("commentsCount")
     val commentsCount: Int,
 ) {
-    @Serializable
-    data class Tag(
-        @SerialName("id")
-        val id: Long,
-        @SerialName("value")
-        val value: String
+    fun toDomain() = Route(
+        id,
+        gradeLevel,
+        holdsColor,
+        pictureUrl,
+        likesCount,
+        sendsCount,
+        commentsCount,
+        setterName ?: "",
+        Date(setDateTimestamp * DateUtils.SECOND_IN_MILLIS),
+        /*tags?.map { it.value } ?:*/ emptyList(),
+        if (status == 0) Route.Status.SET else Route.Status.TAKEN_DOWN,
+        visualisationUrl
     )
-
-    fun toDomain(): Route {
-        return Route(
-            id,
-            gradeLevel,
-            holdsColor,
-            pictureUrl,
-            likesCount,
-            sendsCount,
-            commentsCount,
-            setterName ?: "",
-            Date(setDateTimestamp * DateUtils.SECOND_IN_MILLIS),
-            /*tags?.map { it.value } ?:*/ emptyList(),
-            if (status == 0) Route.Status.SET else Route.Status.TAKEN_DOWN,
-            visualisationUrl
-        )
-    }
 }
-
-//    val likes: List<UserRouteConnection>?,
-//    @SerialName("likesCount")
-//@Serializable
-//data class Comment(
-//    @SerialName("id")
-//    val id: Long,
-//    @SerialName("userId")
-//    val userId: String,
-//    @SerialName("message")
-//    val message: String,
-////        @SerialName("dateTime")
-////        val dateTimeTimestamp: Long
-//)
-//    @SerialName("comments")
-//    val comments: List<Comment>?,
-//    @SerialName("sends")
-//    val sends: List<UserRouteConnection>?,
-//@Serializable
-//    data class UserRouteConnection(
-//        @SerialName("id")
-//        val id: Long,
-//        @SerialName("userId")
-//        val userId: String
-//    )

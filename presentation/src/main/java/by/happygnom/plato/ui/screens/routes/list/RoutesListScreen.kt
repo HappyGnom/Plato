@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,15 +26,15 @@ import by.happygnom.plato.R
 import by.happygnom.plato.model.GradeLevels
 import by.happygnom.plato.ui.elements.Card
 import by.happygnom.plato.ui.elements.DefaultToolbar
+import by.happygnom.plato.ui.elements.LoadingIndicator
 import by.happygnom.plato.ui.elements.TagsList
 import by.happygnom.plato.ui.elements.button.AddFloatingActionButton
 import by.happygnom.plato.ui.elements.button.LabeledIconButton
 import by.happygnom.plato.ui.navigation.RoutesScreen
 import by.happygnom.plato.ui.theme.*
-import by.happygnom.plato.util.toFormattedString
+import by.happygnom.plato.util.toFormattedDateString
 import coil.compose.rememberImagePainter
 import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
@@ -83,17 +82,8 @@ fun RoutesListScreenContent(
 
     SwipeRefresh(
         state = rememberSwipeRefreshState(isLoading),
-        onRefresh = { viewModel.loadRoutes() },
-        indicator = { state, trigger ->
-            SwipeRefreshIndicator(
-                state = state,
-                refreshTriggerDistance = trigger,
-                scale = true,
-                backgroundColor = White,
-                contentColor = Teal1,
-                shape = CircleShape,
-            )
-        }
+        onRefresh = { viewModel.loadRoutes(forceUpdate = true) },
+        indicator = { state, refreshTrigger -> LoadingIndicator(state, refreshTrigger) }
     ) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -189,6 +179,7 @@ fun RouteCard(
                     builder = {
                         placeholder(R.drawable.placeholder_route)
                         error(R.drawable.placeholder_route)
+                        fallback(R.drawable.placeholder_route)
                     }
                 ),
                 contentDescription = null,
@@ -326,7 +317,7 @@ fun RouteCard(
                     Spacer(modifier = Modifier.weight(1f))
 
                     Text(
-                        text = route.setDate.toFormattedString(),
+                        text = route.setDate.toFormattedDateString(),
                         style = MaterialTheme.typography.caption
                     )
                 }

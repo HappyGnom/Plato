@@ -4,8 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import by.happygnom.domain.data_interface.repository.CommentsRepository
 import by.happygnom.domain.data_interface.repository.RoutesRepository
+import by.happygnom.domain.model.Comment
 import by.happygnom.domain.model.Route
+import by.happygnom.domain.usecase.GetCommentsUseCase
 import by.happygnom.domain.usecase.GetRouteByIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -13,11 +16,17 @@ import javax.inject.Inject
 @HiltViewModel
 class RouteDetailsViewModel @Inject constructor(
     private val routesRepository: RoutesRepository,
+    private val commentsRepository: CommentsRepository,
     savedState: SavedStateHandle
 ) : ViewModel() {
 
+    private val routeId = savedState.get<Long>("route_id") ?: -1
+
     private val _route = MutableLiveData<Route>()
     val route: LiveData<Route> = _route
+
+    private val _latestComments = MutableLiveData<List<Comment>>()
+    val latestComments: LiveData<List<Comment>> = _latestComments
 
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> = _isLoading
@@ -32,18 +41,42 @@ class RouteDetailsViewModel @Inject constructor(
     val isSent: LiveData<Boolean> = _isSent
 
     init {
-        val routeId = savedState.get<Long>("route_id") ?: -1
-        loadRoute(routeId)
+        loadRouteDetails()
     }
 
-    private fun loadRoute(routeId: Long) {
+    fun loadRouteDetails(forceUpdate: Boolean = false){
+        loadRoute(forceUpdate)
+        loadLatestComments()
+    }
+
+    private fun loadRoute(forceUpdate: Boolean = false) {
         val getRouteByIdUseCase = GetRouteByIdUseCase(routesRepository)
         getRouteByIdUseCase.inputRouteId = routeId
+        getRouteByIdUseCase.inputForceUpdate = forceUpdate
         _isLoading.value = true
 
         getRouteByIdUseCase.executeAsync {
             onSuccess {
                 _route.postValue(it)
+            }
+            onFailure {
+                it
+            }
+            onComplete {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    private fun loadLatestComments() {
+        val getCommentsUseCase = GetCommentsUseCase(commentsRepository)
+        getCommentsUseCase.inputRouteId = routeId
+        getCommentsUseCase.inputCount = 3
+        _isLoading.value = true
+
+        getCommentsUseCase.executeAsync {
+            onSuccess {
+                _latestComments.postValue(it)
             }
             onFailure {
                 it

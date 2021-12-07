@@ -22,11 +22,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
+import by.happygnom.domain.model.Comment
 import by.happygnom.domain.model.Route
 import by.happygnom.plato.R
 import by.happygnom.plato.model.GradeLevels
 import by.happygnom.plato.ui.elements.AddCommentButton
 import by.happygnom.plato.ui.elements.Comment
+import by.happygnom.plato.ui.elements.LoadingIndicator
 import by.happygnom.plato.ui.elements.TagsList
 import by.happygnom.plato.ui.elements.button.StrokeImageButton
 import by.happygnom.plato.ui.elements.button.SwitchableIconButton
@@ -37,64 +39,54 @@ import by.happygnom.plato.ui.theme.Grey3
 import by.happygnom.plato.ui.theme.Teal1
 import by.happygnom.plato.ui.theme.White
 import by.happygnom.plato.util.build3dModelIntent
-import by.happygnom.plato.util.toFormattedString
+import by.happygnom.plato.util.toFormattedDateString
 import coil.compose.rememberImagePainter
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import me.onebone.toolbar.*
 
-@OptIn(ExperimentalToolbarApi::class)
 @Composable
 fun RouteDetailsScreen(
     viewModel: RouteDetailsViewModel,
     navController: NavController,
 ) {
     val route by viewModel.route.observeAsState(null)
+    val isLoading by viewModel.isLoading.observeAsState(false)
+
     val gradeName = route?.let {
         GradeLevels.gradeLevelToScaleString(
             it.gradeLevel, GradeLevels.GradeScale.FONT_SCALE
         )
     }
 
-    val isLoading by viewModel.isLoading.observeAsState(false)
     val toolbarState = rememberCollapsingToolbarScaffoldState()
 
-    CollapsingToolbarScaffold(
-        state = toolbarState,
-        scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
-        modifier = Modifier.fillMaxSize(),
-        toolbarModifier = Modifier
-            .background(Teal1)
-            .fillMaxWidth(),
-        toolbar = {
-            Toolbar(navController, toolbarState, route, gradeName)
-        },
-        body = {
-            when {
-                isLoading ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
-                route == null || gradeName == null ->
-                    Text(
-                        text = stringResource(id = R.string.failed_to_load_route),
-                        style = MaterialTheme.typography.body1,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                else -> {
-                    LaunchedEffect(key1 = "Open image", block = {
-                        toolbarState.toolbarState.expand(200)
-                    })
-
-                    RouteDetails(viewModel, navController, route!!, gradeName)
-                }
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isLoading),
+        onRefresh = { viewModel.loadRouteDetails(true) },
+        indicator = { state, refreshTrigger -> LoadingIndicator(state, refreshTrigger) }
+    ) {
+        CollapsingToolbarScaffold(
+            state = toolbarState,
+            scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
+            modifier = Modifier.fillMaxSize(),
+            toolbarModifier = Modifier
+                .background(Teal1)
+                .fillMaxWidth(),
+            toolbar = {
+                Toolbar(navController, toolbarState, route, gradeName)
+            },
+            body = {
+                RouteDetailsScreenContent(
+                    viewModel = viewModel,
+                    navController = navController,
+                    toolbarState = toolbarState,
+                    route = route,
+                    gradeName = gradeName
+                )
             }
-        }
-    )
+        )
+    }
 }
 
 @Composable
@@ -104,13 +96,14 @@ fun CollapsingToolbarScope.Toolbar(
     route: Route?,
     gradeName: String?
 ) {
-    if (route != null)
+//    if (route != null)
         Image(
             painter = rememberImagePainter(
-                data = route.pictureUrl,
+                data = route?.pictureUrl,
                 builder = {
                     placeholder(R.drawable.placeholder_route)
                     error(R.drawable.placeholder_route)
+                    fallback(R.drawable.placeholder_route)
                 }
             ),
             contentDescription = null,
@@ -181,12 +174,47 @@ fun CollapsingToolbarScope.Toolbar(
     )
 }
 
+@OptIn(ExperimentalToolbarApi::class)
+@Composable
+fun RouteDetailsScreenContent(
+    viewModel: RouteDetailsViewModel,
+    navController: NavController,
+    toolbarState: CollapsingToolbarScaffoldState,
+    route: Route?,
+    gradeName: String?,
+) {
+    val latestComments by viewModel.latestComments.observeAsState(emptyList())
+
+    when {
+        route == null || gradeName == null ->
+            Text(
+                text = stringResource(id = R.string.failed_to_load_route),
+                style = MaterialTheme.typography.body1,
+                modifier = Modifier.padding(16.dp)
+            )
+        else -> {
+//            LaunchedEffect(key1 = "Open image", block = {
+//                toolbarState.toolbarState.expand(100)
+//            })
+
+            RouteDetails(
+                viewModel = viewModel,
+                navController = navController,
+                route = route,
+                gradeName = gradeName,
+                latestComments = latestComments
+            )
+        }
+    }
+}
+
 @Composable
 fun RouteDetails(
     viewModel: RouteDetailsViewModel,
     navController: NavController,
     route: Route,
-    gradeName: String
+    gradeName: String,
+    latestComments: List<Comment>
 ) {
     val resources = LocalContext.current.resources
 
@@ -275,8 +303,9 @@ fun RouteDetails(
         Divider(color = Grey3)
 
         LatestComments(
-            viewModel = viewModel,
             navController = navController,
+            route = route,
+            latestComments = latestComments,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
@@ -328,7 +357,7 @@ fun RouteInfo(
         stringResource(id = R.string.grade) to gradeName,
         stringResource(id = R.string.holds_color) to route.holdsColor,
         stringResource(id = R.string.set_by) to route.setterName,
-        stringResource(id = R.string.set_date) to route.setDate.toFormattedString(),
+        stringResource(id = R.string.set_date) to route.setDate.toFormattedDateString(),
         stringResource(id = R.string.status) to statusString,
         stringResource(id = R.string.tags) to route.tags.joinToString()
     )
@@ -377,12 +406,11 @@ fun RouteInfoRow(
 
 @Composable
 fun LatestComments(
-    viewModel: RouteDetailsViewModel,
     navController: NavController,
+    route: Route,
+    latestComments: List<Comment>,
     modifier: Modifier = Modifier,
 ) {
-    val route by viewModel.route.observeAsState()
-
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = modifier
@@ -398,19 +426,25 @@ fun LatestComments(
             modifier = Modifier.fillMaxWidth()
         ) {
             AddCommentButton(
-                onClick = { navController.navigate(RoutesScreen.AddComment.createRoute(route!!.id)) },
+                onClick = { navController.navigate(RoutesScreen.AddComment.createRoute(route.id)) },
                 userImageUrl = "https://i.imgur.com/SWyt4bv.jpeg",
                 modifier = Modifier.fillMaxWidth()
             )
 
-            repeat(3) {
-                Comment(modifier = Modifier.fillMaxWidth())
-            }
+            if (latestComments.isNullOrEmpty())
+                Text(
+                    text = stringResource(id = R.string.no_comments),
+                    style = MaterialTheme.typography.body1
+                )
+            else
+                latestComments.forEach {
+                    Comment(it, modifier = Modifier.fillMaxWidth())
+                }
         }
 
         TealTextButton(
-            text = stringResource(id = R.string.see_all_comments_template, 5),
-            onClick = { navController.navigate(RoutesScreen.Comments.createRoute(route!!.id)) },
+            text = stringResource(id = R.string.see_all_comments_template, route.commentsCount),
+            onClick = { navController.navigate(RoutesScreen.Comments.createRoute(route.id)) },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
     }

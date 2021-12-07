@@ -50,6 +50,7 @@
     <string name="add_public_comment">Add a public comment…</string>
     <string name="add_comment_info">Your comment and profile avatar will be visible to all other users. Please, keep your comments respectful and polite.</string>
     <string name="see_all_comments_template">See all %d comments</string>
+    <string name="no_comments">No comments here yet. Be the first one to share your thoughts!</string>
 
     <string name="route_creation">Route creation</string>
     <string name="route_editing">Route editing</string>

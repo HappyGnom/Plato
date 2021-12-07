@@ -13,19 +13,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
+import by.happygnom.domain.model.Comment
 import by.happygnom.plato.R
 import by.happygnom.plato.ui.theme.Grey1
 import by.happygnom.plato.ui.theme.Grey2
+import by.happygnom.plato.util.toFormattedDateTimeString
 import coil.compose.rememberImagePainter
 
 @Composable
 fun Comment(
+    comment: Comment,
     modifier: Modifier = Modifier,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -35,7 +35,14 @@ fun Comment(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Image(
-                bitmap = ImageBitmap.imageResource(id = R.drawable.placeholder_avatar),
+                painter = rememberImagePainter(
+                    data = comment.userPictureUrl,
+                    builder = {
+                        placeholder(R.drawable.placeholder_avatar)
+                        error(R.drawable.placeholder_avatar)
+                        fallback(R.drawable.placeholder_avatar)
+                    }
+                ),
                 contentDescription = null,
                 modifier = Modifier
                     .size(34.dp)
@@ -44,19 +51,19 @@ fun Comment(
 
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(
-                    text = "Anthoine Znak",
+                    text = comment.userName,
                     style = MaterialTheme.typography.body2
                 )
 
                 Text(
-                    text = "13.12.2021",
+                    text = comment.dateTime.toFormattedDateTimeString(),
                     style = MaterialTheme.typography.caption.copy(Grey2)
                 )
             }
         }
 
         Text(
-            text = LoremIpsum(25).values.joinToString(" "),
+            text = comment.message,
             style = MaterialTheme.typography.body2.copy(Grey1)
         )
     }
@@ -84,6 +91,7 @@ fun AddCommentButton(
                 builder = {
                     placeholder(R.drawable.placeholder_avatar)
                     error(R.drawable.placeholder_avatar)
+                    fallback(R.drawable.placeholder_avatar)
                 }
             ),
             contentDescription = null,
