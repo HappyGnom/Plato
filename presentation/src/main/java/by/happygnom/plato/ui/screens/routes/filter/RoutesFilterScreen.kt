@@ -23,7 +23,7 @@ import by.happygnom.plato.ui.elements.button.TealFilledButton
 import by.happygnom.plato.ui.elements.button.TealStrokeButton
 import by.happygnom.plato.ui.elements.inputs.InputTextFieldBox
 import by.happygnom.plato.ui.elements.inputs.QuantitySelector
-import by.happygnom.plato.ui.elements.inputs.SimpleTextDrop
+import by.happygnom.plato.ui.elements.inputs.SimpleTextDropDown
 import by.happygnom.plato.ui.elements.inputs.TealCheckbox
 import by.happygnom.plato.ui.theme.Grey1
 import by.happygnom.plato.util.showDatePickerDialog
@@ -77,7 +77,7 @@ fun RoutesFilterScreenContent(
     ) {
         Spacer(modifier = Modifier.height(0.dp))
 
-            SimpleTextDrop(
+            SimpleTextDropDown(
                 options = listOf(
                     stringResource(id = R.string.projected),
                     stringResource(id = R.string.sent),
@@ -134,7 +134,7 @@ fun RoutesFilterScreenContent(
             )
         }
 
-            SimpleTextDrop(
+            SimpleTextDropDown(
                 options = listOf(
                     "Yura Morozov",
                     "Ilya Khomyakov",

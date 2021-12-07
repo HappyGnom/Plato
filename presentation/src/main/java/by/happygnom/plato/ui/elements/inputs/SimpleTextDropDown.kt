@@ -17,7 +17,7 @@ import by.happygnom.plato.ui.theme.*
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SimpleTextDrop(
+fun SimpleTextDropDown(
     options: List<String>,
     selectedOption: String?,
     onOptionChanged: (String) -> Unit,
