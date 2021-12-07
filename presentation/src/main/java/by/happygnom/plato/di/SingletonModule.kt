@@ -5,11 +5,14 @@ import androidx.room.Room
 import by.happygnom.data.database.RoutesDatabase
 import by.happygnom.data.network.CommentsGateway
 import by.happygnom.data.network.RoutesGateway
+import by.happygnom.data.network.UserGateway
 import by.happygnom.data.network.ktorHttpClient
 import by.happygnom.data.repository.CommentsRepositoryImpl
 import by.happygnom.data.repository.RoutesRepositoryImpl
+import by.happygnom.data.repository.UserRepositoryImpl
 import by.happygnom.domain.data_interface.repository.CommentsRepository
 import by.happygnom.domain.data_interface.repository.RoutesRepository
+import by.happygnom.domain.data_interface.repository.UserRepository
 import coil.ImageLoader
 import coil.request.ImageRequest
 import dagger.Module
@@ -50,5 +53,12 @@ class SingletonModule {
         val commentsGateway = CommentsGateway(ktorHttpClient)
 
         return CommentsRepositoryImpl(commentsGateway)
+    }
+
+    @Provides
+    fun provideUserRepository(@ApplicationContext context: Context): UserRepository {
+        val userGateway = UserGateway(ktorHttpClient)
+
+        return UserRepositoryImpl(userGateway)
     }
 }

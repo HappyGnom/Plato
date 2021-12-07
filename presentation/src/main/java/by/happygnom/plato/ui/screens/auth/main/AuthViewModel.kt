@@ -5,7 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import by.happygnom.domain.data_interface.repository.UserRepository
 import by.happygnom.domain.model.User
+import by.happygnom.domain.usecase.PublishCommentUseCase
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -41,35 +43,34 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         } catch (e: Exception) {
             Log.e("email sign in error", e.toString())
             _error.value = e.message
-        }
-        finally {
+        } finally {
             _loading.value = false
         }
     }
 
-    fun signUpWithEmailAndPassword(email: String, password: String, passwordConfirm: String) = viewModelScope.launch {
-        _loading.value = true
-        if (password != passwordConfirm) {
-            _error.value = "Passwords doesn't match"
-        }
-        else {
-            try {
-                Firebase.auth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            val curUser = Firebase.auth.currentUser
-                            curUser?.let { _isSignedIn.value = Event(true) }
-                        } else if (it.isCanceled) {
+    fun signUpWithEmailAndPassword(email: String, password: String, passwordConfirm: String) =
+        viewModelScope.launch {
+            _loading.value = true
+            if (password != passwordConfirm) {
+                _error.value = "Passwords doesn't match"
+            } else {
+                try {
+                    Firebase.auth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                val curUser = Firebase.auth.currentUser
+                                curUser?.let { _isSignedIn.value = Event(true) }
+                            } else if (it.isCanceled) {
 //                    _error.value = "Passwords doesn't match"
-                        }
-                    }.await()
-            } catch (e: Exception) {
-                Log.e("email sign up error", e.toString())
-                _error.value = e.message
+                            }
+                        }.await()
+                } catch (e: Exception) {
+                    Log.e("email sign up error", e.toString())
+                    _error.value = e.message
+                }
             }
+            _loading.value = false
         }
-        _loading.value = false
-    }
 
     fun signIn(email: String, displayName: String) {
         _isSignedIn.value = Event(true)

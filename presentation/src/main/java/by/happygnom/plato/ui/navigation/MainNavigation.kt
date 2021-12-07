@@ -66,12 +66,8 @@ sealed class RoutesScreen(
 sealed class UserScreen(
     val route: String,
 ) {
-    object Profile : UserScreen("main/user/{id_token}") {
-        fun createRoute(idToken: Long) = "main/user/$idToken"
-    }
-    object Settings : UserScreen("main/user/{id_token}/settings") {
-        fun createRoute(idToken: Long) = "main/user/$idToken/settings"
-    }
+    object Profile : UserScreen("main/user/")
+    object Settings : UserScreen("main/user/settings")
 }
 
 @Composable
@@ -111,17 +107,12 @@ fun NavGraphBuilder.addUserGraph(
     navController: NavController
 ) {
     navigation(route = MainScreen.User.route, startDestination = UserScreen.Profile.route) {
-        composable(
-            UserScreen.Profile.route,
-            arguments = listOf(navArgument("id_token") { type = NavType.StringType })
-        ) {
+        composable(UserScreen.Profile.route,) {
             UserScreen(viewModel = hiltViewModel(), navController = navController)
         }
 
-        composable(
-            UserScreen.Settings.route,
-            arguments = listOf(navArgument("id_token") { type = NavType.StringType })
-        )  {
+        composable(UserScreen.Settings.route
+        ) {
             SettingsScreen(viewModel = hiltViewModel(), navController = navController)
         }
     }

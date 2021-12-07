@@ -21,6 +21,7 @@ import by.happygnom.plato.ui.elements.RadioButtonHorizontal
 import by.happygnom.plato.ui.elements.button.DatePickerButton
 import by.happygnom.plato.ui.elements.button.TealFilledButton
 import by.happygnom.plato.ui.elements.inputs.InputTextFieldBox
+import by.happygnom.plato.ui.navigation.AuthenticationScreen
 import by.happygnom.plato.util.showDatePickerDialog
 import by.happygnom.plato.util.toFormattedDateString
 import com.google.accompanist.insets.statusBarsPadding
@@ -39,6 +40,17 @@ fun SignUpDetailsScreen(viewModel: SignUpDetailsViewModel, navController: NavCon
     val nickname by viewModel.nickname.observeAsState("")
     val startDate by viewModel.startDate.observeAsState(null)
     val sex by viewModel.sex.observeAsState("Male")
+
+    val signedUp by viewModel.signedUp.observeAsState()
+
+    fun updateUi() {
+        val intent = Intent(context, MainActivity::class.java)
+        context.startActivity(intent)
+    }
+
+    signedUp?.getContentIfNotHandled()?.let {
+        updateUi()
+    }
 
     Box(modifier = Modifier.fillMaxSize(1f)) {
         Column(
@@ -136,9 +148,7 @@ fun SignUpDetailsScreen(viewModel: SignUpDetailsViewModel, navController: NavCon
                     onClick = {
                         viewModel.validateInput()
                         if (errors == null) {
-                            val intent = Intent(context, MainActivity::class.java)
-                            context.startActivity(intent)
-
+                            viewModel.registerUser()
                         }
                     },
                     modifier = Modifier

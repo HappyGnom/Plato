@@ -8,21 +8,21 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Entity(tableName = "user")
 data class UserEntity(
-    @SerialName("idToken")
+    @SerialName("firebaseId")
     @PrimaryKey
-    val idToken: Long,
-    @SerialName("name")
+    val id: String,
+    @SerialName("firstName")
     val name: String,
-    @SerialName("surname")
+    @SerialName("lastName")
     val surname: String,
     @SerialName("nickname")
     val nickname: String?,
-    @SerialName("pictureUrl")
+    @SerialName("photoUrl")
     val pictureUrl: String?,
     @SerialName("sex")
     val sex: String,
-    @SerialName("email")
-    val email: String,
+    @SerialName("startDate")
+    val startDate: Long,
 ) {
 
 }

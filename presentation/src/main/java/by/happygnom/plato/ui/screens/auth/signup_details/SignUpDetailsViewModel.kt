@@ -1,15 +1,30 @@
 package by.happygnom.plato.ui.screens.auth.signup_details
 
+import android.text.format.DateUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import by.happygnom.domain.data_interface.repository.UserRepository
+import by.happygnom.domain.model.User
+import by.happygnom.domain.usecase.RegisterUseCase
 import by.happygnom.plato.model.InputValidator
+import by.happygnom.plato.util.Event
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class SignUpDetailsViewModel @Inject constructor() : ViewModel() {
+class SignUpDetailsViewModel @Inject constructor(
+    private val userRepository: UserRepository
+) : ViewModel() {
+
+    var idToken: String? = null
+
+    private val _signedUp = MutableLiveData<Event<Boolean>>()
+    val signedUp: LiveData<Event<Boolean>> = _signedUp
+
     private val _name = MutableLiveData("")
     val name: LiveData<String> = _name
 
@@ -75,5 +90,47 @@ class SignUpDetailsViewModel @Inject constructor() : ViewModel() {
             null
         else
             errors
+    }
+
+    private fun setUserIdToken() {
+        val mUser = Firebase.auth.currentUser
+        mUser!!.getIdToken(true)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    idToken = task.result.token
+                } else {
+                    // Handle error -> task.getException();
+                }
+            }
+    }
+
+
+    fun registerUser() {
+        val registerUseCase = RegisterUseCase(userRepository)
+        setUserIdToken()
+        val user = User(
+            idToken!!,
+            name.value!!,
+            surname.value!!,
+            nickname.value,
+            sex.value!!,
+            (startDate.value!!.time / DateUtils.SECOND_IN_MILLIS),
+            null
+        )
+        registerUseCase.user = user
+
+//        _isLoading.value = true
+
+        registerUseCase.executeAsync {
+            onSuccess {
+                _signedUp.value = Event(true)
+            }
+            onFailure {
+//                it
+            }
+            onComplete {
+//                _isLoading.value = false
+            }
+        }
     }
 }

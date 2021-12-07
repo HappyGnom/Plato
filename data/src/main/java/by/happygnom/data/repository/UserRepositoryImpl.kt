@@ -1,17 +1,13 @@
 package by.happygnom.data.repository
 
-import by.happygnom.data.dao.RoutesDao
 import by.happygnom.data.dao.UserDao
-import by.happygnom.data.network.RoutesGateway
+import by.happygnom.data.model.UserEntity
 import by.happygnom.data.network.UserGateway
-import by.happygnom.domain.data_interface.repository.RoutesRepository
 import by.happygnom.domain.data_interface.repository.UserRepository
-import by.happygnom.domain.model.Route
 import by.happygnom.domain.model.User
 
 class UserRepositoryImpl(
-    private val userGateway: UserGateway,
-    private val userDao: UserDao
+    private val userGateway: UserGateway
 ) : UserRepository {
 
     //    override suspend fun getAllUsers(forceUpdate: Boolean): List<User> {
@@ -27,11 +23,25 @@ class UserRepositoryImpl(
 //            updateAllUsers()
 //        }
 //    }
-    override suspend fun getAllUsers(forceUpdate: Boolean): List<User> {
-        TODO("Not yet implemented")
-    }
+//    override suspend fun getAllUsers(forceUpdate: Boolean): List<User> {
+//        TODO("Not yet implemented")
+//    }
+//
+//    override suspend fun getUserByIdToken(idToken: String, forceUpdate: Boolean): User? {
+//        TODO("Not yet implemented")
+//    }
 
-    override suspend fun getUserByIdToken(idToken: String, forceUpdate: Boolean): User? {
-        TODO("Not yet implemented")
+    override suspend fun registerUser(user: User) {
+        return userGateway.registerUser(
+            UserEntity(
+                user.idToken,
+                user.name,
+                user.surname,
+                user.nickname,
+                user.pictureUrl,
+                user.sex,
+                user.startDate
+            )
+        )
     }
 }
