@@ -13,6 +13,7 @@ import by.happygnom.plato.ui.screens.auth.getStarted.GetStartedScreen
 import by.happygnom.plato.ui.screens.auth.login.LoginScreen
 import by.happygnom.plato.ui.screens.auth.main.AuthScreen
 import by.happygnom.plato.ui.screens.auth.signup.SignUpScreen
+import by.happygnom.plato.ui.screens.auth.signup_details.SignUpDetailsScreen
 
 sealed class AuthScreen(val route: String) {
     object Auth : Screen("auth")
@@ -23,6 +24,7 @@ sealed class AuthenticationScreen(
 ) {
     object Main : AuthenticationScreen("auth/main")
     object SignUp : AuthenticationScreen("auth/signup")
+    object SignUpDetails : AuthenticationScreen("auth/signupDetails")
     object Login : AuthenticationScreen("auth/login")
     object GetStarted : AuthenticationScreen("auth/getStarted")
 }
@@ -55,14 +57,15 @@ fun NavGraphBuilder.addAuthGraph(
         }
 
         composable(AuthenticationScreen.Login.route) {
-            LoginScreen(
-                viewModel = hiltViewModel(),
-                navController = navController
-            )
+            LoginScreen(viewModel = hiltViewModel(), navController = navController)
         }
 
         composable(AuthenticationScreen.GetStarted.route) {
             GetStartedScreen(viewModel = hiltViewModel(), navController = navController)
+        }
+
+        composable(AuthenticationScreen.SignUpDetails.route) {
+            SignUpDetailsScreen(viewModel = hiltViewModel(), navController = navController)
         }
     }
 }

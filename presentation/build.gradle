@@ -44,6 +44,7 @@ android {
             manifestPlaceholders.analyticsCollectionEnabled = false
 
             versionNameSuffix "-D"
+            signingConfig signingConfigs.release
         }
 
         release {
@@ -157,5 +158,8 @@ dependencies {
     implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist_version"
 
     // Coroutines play-services adapter
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.5.0"
+
 }

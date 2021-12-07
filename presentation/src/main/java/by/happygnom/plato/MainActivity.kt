@@ -42,18 +42,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    MainScreen(viewModel = hiltViewModel(), onSignOut = { onSignOut() })
+                    MainScreen(viewModel = hiltViewModel())
                 }
             }
-        }
-    }
-
-    private fun onSignOut() {
-        auth.signOut()
-        mGoogleSignInClient.signOut().addOnCompleteListener {
-            val intent = Intent(this, AuthActivity::class.java)
-            this.startActivity(intent)
-            finish()
         }
     }
 }

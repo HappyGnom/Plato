@@ -89,6 +89,28 @@
     <string name="clear_all">Clear all</string>
 
     <string name="plato_wide_text">P L A T O</string>
-    <!--    <string name="default_web_client_id">234486982554-jln61fhsjcp6496m922mhu955pip0d4c.apps.googleusercontent.com</string>-->
+
+    <string name="nickname">Nickname</string>
+    <string name="user_name">Name</string>
+    <string name="user_surname">Surname</string>
+    <string name="profile_info_label">Profile info</string>
+    <string name="create_account">Create an account</string>
+    <string name="enter_your_email">Enter your email</string>
+    <string name="enter_your_password">Enter your password</string>
+    <string name="confirm_password">Confirm your password</string>
+    <string name="signup">SignUp</string>
+    <string name="already_have_acc">Already have a PLATO account? </string>
+    <string name="signin">SignIn</string>
+    <string name="signUp_with_google">Sign up with Google</string>
+    <string name="by_using_plato_you_agree">By using PLATO you agree to our </string>
+    <string name="terms_of_use">Terms Of Use</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="start_date">Start date</string>
+    <string name="continueText">Continue</string>
+    <string name="error_numbers_are_not_allowed">Numbers aren\'t allowed in a name</string>
+    <string name="error_must_contain_letter">Nickname must contain a letter</string>
+    <string name="error_after_current_date">Date must be less than current date</string>
+    
+    <string name="web_client_id">234486982554-jln61fhsjcp6496m922mhu955pip0d4c.apps.googleusercontent.com</string>
 
 </resources>

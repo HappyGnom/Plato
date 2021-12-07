@@ -21,7 +21,7 @@ import by.happygnom.plato.ui.theme.*
 import by.happygnom.plato.ui.theme.Grey1
 
 @Composable
-fun MainScreen(viewModel: MainViewModel, onSignOut: () -> Unit) {
+fun MainScreen(viewModel: MainViewModel) {
 
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -59,7 +59,7 @@ fun MainScreen(viewModel: MainViewModel, onSignOut: () -> Unit) {
                 .fillMaxSize()
                 .padding(innerPadding),
             graph = {
-                addMainGraph(navController, onSignOut)
+                addMainGraph(navController)
             })
     }
 }

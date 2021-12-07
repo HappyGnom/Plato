@@ -81,7 +81,7 @@ fun LoginScreen(
     }
 
     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestIdToken(stringResource(R.string.default_web_client_id))
+        .requestIdToken(stringResource(R.string.web_client_id))
         .requestEmail()
         .build()
     mGoogleSignInClient = GoogleSignIn.getClient(context, gso)
@@ -168,7 +168,7 @@ fun LoginScreen(
 
                 if (error != "") {
                     Text(
-                        text = error, style = MaterialTheme.typography.h6.copy(GradeRed),
+                        text = error, style = MaterialTheme.typography.caption.copy(GradeRed),
                         modifier = Modifier.align(Alignment.Start)
                     )
                 }
@@ -272,7 +272,7 @@ fun LoginScreen(
                     Divider(modifier = Modifier.weight(2f))
                     Text(
                         text = "OR",
-                        style = MaterialTheme.typography.h3.copy(Grey1),
+                        style = MaterialTheme.typography.body1.copy(Grey1),
                         modifier = Modifier.weight(1f),
                         textAlign = TextAlign.Center
                     )

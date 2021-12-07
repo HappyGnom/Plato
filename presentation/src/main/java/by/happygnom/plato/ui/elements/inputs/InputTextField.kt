@@ -42,7 +42,7 @@ fun InputTextField(
 
     val colors = TextFieldDefaults.outlinedTextFieldColors(
         textColor = BlackNero,
-        backgroundColor = Grey5,
+        backgroundColor = White,
         cursorColor = Teal1,
         unfocusedBorderColor = Grey3,
         focusedBorderColor = BlackNero,

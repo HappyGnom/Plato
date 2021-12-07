@@ -72,7 +72,7 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
     }
 
     if (isSignedIn) {
-        updateUI()
+        navController.navigate(AuthenticationScreen.SignUpDetails.route)
     }
 
     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -131,14 +131,14 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
                 LabeledLogo()
 
                 Text(
-                    text = "Create an account",
+                    text = stringResource(R.string.create_account),
                     modifier = Modifier.padding(top = 16.dp),
                     style = MaterialTheme.typography.h2
                 )
 
                 InputTextField(
                     text = userEmail,
-                    hint = "Enter your email",
+                    hint = stringResource(R.string.enter_your_email),
                     modifier = Modifier
                         .padding(top = 32.dp)
                         .fillMaxWidth(1f),
@@ -150,7 +150,7 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
 
                 InputTextField(
                     text = userPassword,
-                    hint = "Enter your password",
+                    hint = stringResource(R.string.enter_your_password),
                     modifier = Modifier
                         .padding(top = 16.dp)
                         .fillMaxWidth(1f),
@@ -163,7 +163,7 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
 
                 InputTextField(
                     text = userPasswordConfirm,
-                    hint = "Confirm your password",
+                    hint = stringResource(R.string.confirm_password),
                     modifier = Modifier
                         .padding(top = 16.dp)
                         .fillMaxWidth(1f),
@@ -176,17 +176,18 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
 
                 if (error != "") {
                     Text(
-                        text = error, style = MaterialTheme.typography.h6.copy(GradeRed),
+                        text = error, style = MaterialTheme.typography.caption.copy(GradeRed),
                         modifier = Modifier.align(Alignment.Start)
                     )
                 }
 
                 TealFilledButton(
-                    text = "SignUp",
+                    text = stringResource(R.string.signup),
                     enabled = userEmail.isNotEmpty() &&
                             userPassword.isNotEmpty() &&
                             userPasswordConfirm.isNotEmpty(),
                     onClick = {
+//                        navController.navigate(AuthenticationScreen.SignUpDetails.route)
                         viewModel.signUpWithEmailAndPassword(
                             userEmail.trim(),
                             userPassword.trim(),
@@ -197,6 +198,8 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
                         .fillMaxWidth(1f)
                         .padding(top = 32.dp)
                 )
+
+                val signIn = stringResource(R.string.signin)
 
                 val signUpAnnotatedText = buildAnnotatedString {
                     withStyle(
@@ -210,11 +213,12 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
                             )
                         )
                     ) {
-                        append("Already have a PLATO account?   ")
+                        append(stringResource(R.string.already_have_acc))
+                        append("\t")
                     }
                     pushStringAnnotation(
-                        tag = "SignIn",
-                        annotation = "SignIn"
+                        tag = signIn,
+                        annotation = signIn
                     )
                     withStyle(
                         style = SpanStyle(
@@ -224,7 +228,7 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
                             fontFamily = FontFamily(Font(R.font.finlandica_regular))
                         )
                     ) {
-                        append("SignIn")
+                        append(signIn)
                     }
                     pop()
                 }
@@ -233,7 +237,7 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
                     text = signUpAnnotatedText,
                     onClick = { offset ->
                         signUpAnnotatedText.getStringAnnotations(
-                            tag = "SignIn",
+                            tag = signIn,
                             start = offset,
                             end = offset
                         ).firstOrNull()?.let { annotation ->
@@ -250,7 +254,7 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
                     Divider(modifier = Modifier.weight(2f))
                     Text(
                         text = "OR",
-                        style = MaterialTheme.typography.h3.copy(Grey1),
+                        style = MaterialTheme.typography.body1.copy(Grey1),
                         modifier = Modifier.weight(1f),
                         textAlign = TextAlign.Center
                     )
@@ -258,7 +262,7 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
                 }
 
                 StrokeImageButton(
-                    text = "Sign up with Google",
+                    text = stringResource(R.string.signUp_with_google),
                     imageId = R.drawable.ic_google,
                     onClick = {
                         if (auth.currentUser == null) {
@@ -270,6 +274,9 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
                         .fillMaxWidth(1f)
                 )
 
+                val termsOfUse = stringResource(id = R.string.terms_of_use)
+                val privacyPolicy = stringResource(R.string.privacy_policy)
+
                 val termsOfUseAnnotatedText = buildAnnotatedString {
                     withStyle(
                         style = SpanStyle(
@@ -278,11 +285,11 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
                             fontFamily = FontFamily(Font(R.font.finlandica_regular))
                         )
                     ) {
-                        append("By using PLATO you agree to our ")
+                        append(stringResource(R.string.by_using_plato_you_agree))
                     }
                     pushStringAnnotation(
-                        tag = "TermsOfUse",
-                        annotation = "TermsOfUse"
+                        tag = termsOfUse,
+                        annotation = termsOfUse
                     )
                     withStyle(
                         style = SpanStyle(
@@ -298,7 +305,7 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
                             )
                         )
                     ) {
-                        append("Terms of Use")
+                        append(termsOfUse)
                     }
                     pop()
 
@@ -313,8 +320,8 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
                     }
 
                     pushStringAnnotation(
-                        tag = "PrivacyPolicy",
-                        annotation = "PrivacyPolicy"
+                        tag = privacyPolicy,
+                        annotation = privacyPolicy
                     )
                     withStyle(
                         style = SpanStyle(
@@ -330,7 +337,7 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
                             ),
                         )
                     ) {
-                        append("Privacy Policy")
+                        append(privacyPolicy)
                     }
                     pop()
                 }
@@ -339,14 +346,14 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
                     text = termsOfUseAnnotatedText,
                     onClick = { offset ->
                         termsOfUseAnnotatedText.getStringAnnotations(
-                            tag = "TermsOfUse",
+                            tag = termsOfUse,
                             start = offset,
                             end = offset
                         ).firstOrNull()?.let { annotation ->
                             navController.navigate(AuthenticationScreen.SignUp.route)
                         }
                         termsOfUseAnnotatedText.getStringAnnotations(
-                            tag = "PrivacyPolicy",
+                            tag = privacyPolicy,
                             start = offset,
                             end = offset
                         ).firstOrNull()?.let { annotation ->

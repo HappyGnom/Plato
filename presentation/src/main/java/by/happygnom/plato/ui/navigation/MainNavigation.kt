@@ -17,7 +17,8 @@ import by.happygnom.plato.ui.screens.routes.filter.RoutesFilterScreen
 import by.happygnom.plato.ui.screens.routes.list.RoutesListScreen
 import by.happygnom.plato.ui.screens.routes.route_editor.RouteEditorScreen
 import by.happygnom.plato.ui.screens.stats.StatsScreen
-import by.happygnom.plato.ui.screens.user.UserScreen
+import by.happygnom.plato.ui.screens.user.profile.UserScreen
+import by.happygnom.plato.ui.screens.user.settings.SettingsScreen
 import java.util.*
 
 sealed class Screen(val route: String) {
@@ -62,6 +63,17 @@ sealed class RoutesScreen(
     }
 }
 
+sealed class UserScreen(
+    val route: String,
+) {
+    object Profile : UserScreen("main/user/{id_token}") {
+        fun createRoute(idToken: Long) = "main/user/$idToken"
+    }
+    object Settings : UserScreen("main/user/{id_token}/settings") {
+        fun createRoute(idToken: Long) = "main/user/$idToken/settings"
+    }
+}
+
 @Composable
 fun MainNavigation(
     navController: NavHostController,
@@ -78,8 +90,7 @@ fun MainNavigation(
 }
 
 fun NavGraphBuilder.addMainGraph(
-    navController: NavController,
-    onSignOut: () -> Unit
+    navController: NavController
 ) {
     navigation(route = Screen.Main.route, startDestination = MainScreen.Routes.route) {
         addRoutesGraph(navController)
@@ -92,12 +103,26 @@ fun NavGraphBuilder.addMainGraph(
             NewsScreen(viewModel = hiltViewModel(), navController = navController)
         }
 
-        composable(MainScreen.User.route) {
-            UserScreen(
-                viewModel = hiltViewModel(),
-                navController = navController,
-                onSignOut = onSignOut
-            )
+        addUserGraph(navController)
+    }
+}
+
+fun NavGraphBuilder.addUserGraph(
+    navController: NavController
+) {
+    navigation(route = MainScreen.User.route, startDestination = UserScreen.Profile.route) {
+        composable(
+            UserScreen.Profile.route,
+            arguments = listOf(navArgument("id_token") { type = NavType.StringType })
+        ) {
+            UserScreen(viewModel = hiltViewModel(), navController = navController)
+        }
+
+        composable(
+            UserScreen.Settings.route,
+            arguments = listOf(navArgument("id_token") { type = NavType.StringType })
+        )  {
+            SettingsScreen(viewModel = hiltViewModel(), navController = navController)
         }
     }
 }
