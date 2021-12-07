@@ -47,6 +47,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
+import by.happygnom.plato.util.*
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 @Composable
@@ -56,7 +57,7 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
     var userPassword by remember { mutableStateOf("") }
     var userPasswordConfirm by remember { mutableStateOf("") }
     val error by viewModel.error.observeAsState("")
-    val isSignedIn by viewModel.signedIn.observeAsState(false)
+    val isSignedIn by viewModel.signedIn.observeAsState()
     val loading by viewModel.loading.observeAsState(false)
 
     val auth: FirebaseAuth = Firebase.auth
@@ -71,7 +72,7 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
         context.startActivity(intent)
     }
 
-    if (isSignedIn) {
+    isSignedIn?.getContentIfNotHandled()?.let {
         navController.navigate(AuthenticationScreen.SignUpDetails.route)
     }
 

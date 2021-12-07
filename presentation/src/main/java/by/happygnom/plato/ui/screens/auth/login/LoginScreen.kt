@@ -59,7 +59,7 @@ fun LoginScreen(
     var userEmail by remember { mutableStateOf("") }
     var userPassword by remember { mutableStateOf("") }
     var resetEmail by remember { mutableStateOf("") }
-    val isSignedIn by viewModel.signedIn.observeAsState(false)
+    val isSignedIn by viewModel.signedIn.observeAsState()
     val error by viewModel.error.observeAsState("")
     val loading by viewModel.loading.observeAsState(false)
     val (showDialog, setShowDialog) =  remember { mutableStateOf(false) }
@@ -76,7 +76,7 @@ fun LoginScreen(
         context.startActivity(intent)
     }
 
-    if (isSignedIn) {
+    isSignedIn?.getContentIfNotHandled()?.let {
         updateUI()
     }
 

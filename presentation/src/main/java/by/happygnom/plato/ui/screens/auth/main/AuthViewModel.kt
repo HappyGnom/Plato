@@ -13,12 +13,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
+import by.happygnom.plato.util.Event
 
 @HiltViewModel
 class AuthViewModel @Inject constructor() : ViewModel() {
 
-    private val _isSignedIn: MutableLiveData<Boolean> = MutableLiveData(false)
-    val signedIn: LiveData<Boolean> = _isSignedIn
+    private val _isSignedIn: MutableLiveData<Event<Boolean>> = MutableLiveData<Event<Boolean>>()
+    val signedIn: LiveData<Event<Boolean>> = _isSignedIn
 
     private val _loading: MutableLiveData<Boolean> = MutableLiveData(false)
     val loading: LiveData<Boolean> = _loading
@@ -33,10 +34,8 @@ class AuthViewModel @Inject constructor() : ViewModel() {
                 if (it.isSuccessful) {
                     val curUser = Firebase.auth.currentUser
                     curUser?.let {
-                        _isSignedIn.value = true
+                        _isSignedIn.value = Event(true)
                     }
-                } else if (it.isCanceled) {
-//                    _error.value = "Invalid emails or password"
                 }
             }.await()
         } catch (e: Exception) {
@@ -59,7 +58,7 @@ class AuthViewModel @Inject constructor() : ViewModel() {
                     .addOnCompleteListener {
                         if (it.isSuccessful) {
                             val curUser = Firebase.auth.currentUser
-                            curUser?.let { _isSignedIn.value = true }
+                            curUser?.let { _isSignedIn.value = Event(true) }
                         } else if (it.isCanceled) {
 //                    _error.value = "Passwords doesn't match"
                         }
@@ -73,7 +72,7 @@ class AuthViewModel @Inject constructor() : ViewModel() {
     }
 
     fun signIn(email: String, displayName: String) {
-        _isSignedIn.value = true
+        _isSignedIn.value = Event(true)
         _loading.value = false
     }
 
