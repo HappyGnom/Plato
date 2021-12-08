@@ -17,12 +17,12 @@ class UserRepositoryImpl(
     private val userGateway: UserGateway
 ) : UserRepository {
 
-    override suspend fun getUser(firebaseUid: String): User? {
+    override suspend fun getUser(firebaseUid: String, forceUpdate: Boolean): User? {
         return userDao.ensureIsNotEmpty(firebaseUid).getUserById(firebaseUid)?.toDomain()
     }
 
-    private suspend fun UserDao.ensureIsNotEmpty(id: String) = apply {
-        if (this.count() == 0L) {
+    private suspend fun UserDao.ensureIsNotEmpty(id: String, forceUpdate: Boolean = false) = apply {
+        if (this.count() == 0L || forceUpdate) {
             setCurrentUser(id)
         }
     }
@@ -48,6 +48,20 @@ class UserRepositoryImpl(
 
     override suspend fun registerUser(user: User) {
         return userGateway.registerUser(
+            ApiUser(
+                user.id,
+                user.name,
+                user.surname,
+                user.nickname,
+                user.pictureUrl,
+                user.sex,
+                user.startDate.time / DateUtils.SECOND_IN_MILLIS,
+            )
+        )
+    }
+
+    override suspend fun updateUser(user: User) {
+        return userGateway.updateUser(
             ApiUser(
                 user.id,
                 user.name,

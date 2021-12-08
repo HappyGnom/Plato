@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import by.happygnom.domain.data_interface.repository.UserRepository
 import by.happygnom.domain.model.User
 import by.happygnom.domain.usecase.RegisterUseCase
+import by.happygnom.plato.model.AuthenticatedUser
 import by.happygnom.plato.model.InputValidator
 import by.happygnom.plato.util.Event
 import com.google.firebase.auth.ktx.auth
@@ -19,8 +20,6 @@ import javax.inject.Inject
 class SignUpDetailsViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
-
-    var idToken: String? = null
 
     private val _signedUp = MutableLiveData<Event<Boolean>>()
     val signedUp: LiveData<Event<Boolean>> = _signedUp
@@ -110,6 +109,7 @@ class SignUpDetailsViewModel @Inject constructor(
 
         registerUseCase.executeAsync {
             onSuccess {
+                AuthenticatedUser.defineUser(userRepository = userRepository)
                 _signedUp.value = Event(true)
             }
             onFailure {

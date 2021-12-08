@@ -9,7 +9,6 @@ import java.time.LocalDate
 import java.util.*
 
 object InputValidator {
-
     @StringRes
     fun getPictureBase64ErrorIdOrNull(input: String?): Int? {
         return when {

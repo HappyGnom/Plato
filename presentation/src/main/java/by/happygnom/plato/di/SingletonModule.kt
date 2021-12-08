@@ -13,6 +13,8 @@ import by.happygnom.domain.data_interface.repository.CommentsRepository
 import by.happygnom.domain.data_interface.repository.RoutesRepository
 import by.happygnom.domain.data_interface.repository.TagsRepository
 import by.happygnom.domain.data_interface.repository.UserRepository
+import by.happygnom.domain.model.User
+import by.happygnom.domain.usecase.GetUserUseCase
 import coil.ImageLoader
 import coil.request.ImageRequest
 import com.google.firebase.auth.ktx.auth

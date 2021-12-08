@@ -14,7 +14,14 @@ class UserGateway(private val client: HttpClient) {
         }
     }
 
+    suspend fun updateUser(user: ApiUser) {
+        return client.put("${BuildConfig.API_ADRESS}/User") {
+            body = user
+        }
+    }
+
     suspend fun getUserById(id: String): ApiUser {
         return client.get("${BuildConfig.API_ADRESS}/User/$id?fetchRoutes=true")
     }
+
 }

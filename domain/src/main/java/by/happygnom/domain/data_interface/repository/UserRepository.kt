@@ -6,5 +6,7 @@ interface UserRepository {
 
     suspend fun registerUser(user: User)
 
-    suspend fun getUser(firebaseUid: String): User?
+    suspend fun updateUser(user: User)
+
+    suspend fun getUser(firebaseUid: String, forceUpdate: Boolean = false): User?
 }

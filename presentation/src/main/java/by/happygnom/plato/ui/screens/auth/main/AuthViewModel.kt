@@ -5,9 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import by.happygnom.domain.data_interface.repository.UserRepository
+import by.happygnom.plato.model.AuthenticatedUser
 import by.happygnom.plato.util.Event
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -15,7 +18,9 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor() : ViewModel() {
+class AuthViewModel @Inject constructor(
+    private val userRepository: UserRepository
+) : ViewModel() {
 
     private val _isSignedIn: MutableLiveData<Event<Boolean>> = MutableLiveData<Event<Boolean>>()
     val signedIn: LiveData<Event<Boolean>> = _isSignedIn
@@ -31,6 +36,7 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         try {
             Firebase.auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
                 if (it.isSuccessful) {
+                    AuthenticatedUser.defineUser(userRepository = userRepository)
                     val curUser = Firebase.auth.currentUser
                     curUser?.let {
                         _isSignedIn.value = Event(true)
@@ -55,6 +61,7 @@ class AuthViewModel @Inject constructor() : ViewModel() {
                     Firebase.auth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener {
                             if (it.isSuccessful) {
+//                                AuthenticatedUser.defineUser(userRepository = userRepository)
                                 val curUser = Firebase.auth.currentUser
                                 curUser?.let { _isSignedIn.value = Event(true) }
                             } else if (it.isCanceled) {
@@ -70,6 +77,7 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         }
 
     fun signIn() {
+        AuthenticatedUser.defineUser(userRepository = userRepository)
         _isSignedIn.value = Event(true)
         _loading.value = false
     }

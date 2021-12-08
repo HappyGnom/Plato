@@ -66,7 +66,7 @@ sealed class RoutesScreen(
 sealed class UserScreen(
     val route: String,
 ) {
-    object Profile : UserScreen("main/user/")
+    object Profile : UserScreen("main/user/profile")
     object Settings : UserScreen("main/user/settings")
 }
 
@@ -107,12 +107,11 @@ fun NavGraphBuilder.addUserGraph(
     navController: NavController
 ) {
     navigation(route = MainScreen.User.route, startDestination = UserScreen.Profile.route) {
-        composable(UserScreen.Profile.route,) {
+        composable(UserScreen.Profile.route) {
             UserScreen(viewModel = hiltViewModel(), navController = navController)
         }
 
-        composable(UserScreen.Settings.route
-        ) {
+        composable(UserScreen.Settings.route) {
             SettingsScreen(viewModel = hiltViewModel(), navController = navController)
         }
     }
