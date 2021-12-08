@@ -14,7 +14,9 @@ import io.ktor.http.*
 
 private const val TIME_OUT_SECONDS = 60
 
-val ktorHttpClient = HttpClient(Android) {
+fun getKtorHttpClient(
+    authTokenProvider: () -> String?
+) = HttpClient(Android) {
     install(JsonFeature) {
         serializer = KotlinxSerializer(kotlinx.serialization.json.Json {
             prettyPrint = true
@@ -46,5 +48,9 @@ val ktorHttpClient = HttpClient(Android) {
 
     install(DefaultRequest) {
         header(HttpHeaders.ContentType, ContentType.Application.Json)
+
+        val authToken = authTokenProvider()
+        if (authToken != null)
+            header(HttpHeaders.Authorization, "Bearer $authToken")
     }
 }

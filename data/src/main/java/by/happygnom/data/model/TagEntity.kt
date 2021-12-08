@@ -11,11 +11,11 @@ import kotlinx.serialization.Serializable
 data class TagEntity(
     @PrimaryKey
     @SerialName("id")
-    val id: Long,
+    val tagId: Long,
     @SerialName("value")
     val value: String
 ) {
     fun toDomain() = Tag(
-        id, value
+        tagId, value
     )
 }

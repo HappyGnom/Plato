@@ -7,6 +7,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
@@ -23,6 +24,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
@@ -146,7 +148,8 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
                     singleLine = true,
                     onValueChange = {
                         userEmail = it
-                    }
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                 )
 
                 InputTextField(
@@ -160,6 +163,7 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
                     onValueChange = {
                         userPassword = it
                     },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                 )
 
                 InputTextField(
@@ -173,6 +177,7 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
                     onValueChange = {
                         userPasswordConfirm = it
                     },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                 )
 
                 if (error != "") {

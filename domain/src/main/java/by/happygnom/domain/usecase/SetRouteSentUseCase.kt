@@ -6,10 +6,9 @@ class SetRouteSentUseCase(private val routesRepository: RoutesRepository) :
     UseCase<Unit>("SetRouteSentUseCase") {
 
     var inputRouteId: Long = 0
-    var inputUserId: Long = 0
     var isSent: Boolean = false
 
     override suspend fun performTask() {
-        routesRepository.setRouteSent(inputRouteId, inputUserId, isSent)
+        routesRepository.setRouteSent(inputRouteId, isSent)
     }
 }

@@ -128,7 +128,7 @@ fun SignUpDetailsScreen(viewModel: SignUpDetailsViewModel, navController: NavCon
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp),
-                    onEmpty = { viewModel.setStartDate(null) }
+                    onClear = { viewModel.setStartDate(null) }
                 )
 
                 val radioOptions: List<String> = listOf("Male", "Female", "Other")

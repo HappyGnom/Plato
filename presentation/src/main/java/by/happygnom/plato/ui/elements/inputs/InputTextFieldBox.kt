@@ -25,8 +25,9 @@ import by.happygnom.plato.ui.theme.Teal2
 fun InputTextFieldBox(
     text: String,
     onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
     label: String,
+    modifier: Modifier = Modifier,
+    isLabelAlwaysShown: Boolean = true,
     hint: String = "",
     error: String? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -54,10 +55,10 @@ fun InputTextFieldBox(
         }
 
         Text(
-            text = if (text != "") " $label " else "",
+            text = if (text != "" || isLabelAlwaysShown) " $label " else "",
             style = MaterialTheme.typography.body2.copy(Grey1),
             modifier = Modifier
-                .padding(start = 16.dp)
+                .padding(start = 8.dp)
                 .align(Alignment.TopStart)
                 .background(MaterialTheme.colors.surface),
             color = if (error != null) GradeRed else Grey1

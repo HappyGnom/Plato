@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
@@ -30,6 +31,7 @@ import by.happygnom.plato.ui.elements.LoadingIndicator
 import by.happygnom.plato.ui.elements.TagsList
 import by.happygnom.plato.ui.elements.button.AddFloatingActionButton
 import by.happygnom.plato.ui.elements.button.LabeledIconButton
+import by.happygnom.plato.ui.navigation.ArgNames
 import by.happygnom.plato.ui.navigation.RoutesScreen
 import by.happygnom.plato.ui.theme.*
 import by.happygnom.plato.util.toFormattedDateString
@@ -42,6 +44,12 @@ fun RoutesListScreen(
     viewModel: RoutesListViewModel,
     navController: NavController,
 ) {
+    navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>(ArgNames.SHOULD_UPDATE)
+        ?.observe(LocalLifecycleOwner.current) {
+            viewModel.loadRoutes(true)
+            navController.currentBackStackEntry?.savedStateHandle?.remove<Boolean>(ArgNames.SHOULD_UPDATE)
+        }
+
     Scaffold(
         topBar = {
             val routesText = stringResource(id = R.string.all_set) +
@@ -229,7 +237,7 @@ fun RouteCard(
                     Spacer(modifier = Modifier.width(8.dp))
 
                     TagsList(
-                        tags = route.tags,
+                        tags = route.tags.map{it.value},
                         modifier = Modifier.weight(1f)
                     )
 

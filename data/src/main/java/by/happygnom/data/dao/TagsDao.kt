@@ -16,7 +16,7 @@ interface TagsDao {
     @Query("SELECT count(*) from tag")
     fun count(): Long
 
-    @Query("SELECT * FROM tag WHERE tag.id==:tagId LIMIT 1")
+    @Query("SELECT * FROM tag WHERE tag.tagId==:tagId LIMIT 1")
     fun getById(tagId: Long): TagEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

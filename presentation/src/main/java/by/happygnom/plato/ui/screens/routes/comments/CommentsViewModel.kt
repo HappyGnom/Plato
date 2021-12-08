@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import by.happygnom.domain.data_interface.repository.CommentsRepository
 import by.happygnom.domain.model.Comment
 import by.happygnom.domain.usecase.GetCommentsUseCase
+import by.happygnom.plato.ui.navigation.ArgNames
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -16,7 +17,7 @@ class CommentsViewModel @Inject constructor(
     savedState: SavedStateHandle
 ) : ViewModel() {
 
-    private val routeId = savedState.get<Long>("route_id") ?: -1
+    private val routeId = savedState.get<Long>(ArgNames.ROUTE_ID) ?: -1
 
     private val _comments = MutableLiveData<List<Comment>>()
     val comments: LiveData<List<Comment>> = _comments
