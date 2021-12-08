@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserViewModel @Inject constructor() : ViewModel() {
-    private val _routes = MutableLiveData<List<Route>>(listOf())
-    val routes: LiveData<List<Route>> = _routes
+//    private val _routes = MutableLiveData<List<Route>>(listOf())
+//    val routes: LiveData<List<Route>> = _routes
 
 }

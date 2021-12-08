@@ -101,6 +101,7 @@ class SignUpDetailsViewModel @Inject constructor(
             nickname.value,
             sex,
             startDate.value!!,
+            null,
             null
         )
         registerUseCase.user = user

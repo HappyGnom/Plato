@@ -56,6 +56,7 @@ class UserRepositoryImpl(
                 user.pictureUrl,
                 user.sex,
                 user.startDate.time / DateUtils.SECOND_IN_MILLIS,
+                user.photo
             )
         )
     }
@@ -70,6 +71,7 @@ class UserRepositoryImpl(
                 user.pictureUrl,
                 user.sex,
                 user.startDate.time / DateUtils.SECOND_IN_MILLIS,
+                user.photo
             )
         )
     }

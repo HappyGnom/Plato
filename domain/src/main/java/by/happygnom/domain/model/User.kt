@@ -9,5 +9,6 @@ data class User(
     val nickname: String?,
     val sex: Int,
     val startDate: Date,
-    val pictureUrl: String?
+    val pictureUrl: String?,
+    val photo: String?
 )

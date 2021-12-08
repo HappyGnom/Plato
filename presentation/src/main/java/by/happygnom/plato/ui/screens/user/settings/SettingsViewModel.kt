@@ -1,5 +1,6 @@
 package by.happygnom.plato.ui.screens.user.settings
 
+import android.graphics.drawable.BitmapDrawable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,18 +14,26 @@ import by.happygnom.plato.model.InputValidator
 import by.happygnom.plato.ui.screens.auth.signup_details.Sex
 import by.happygnom.plato.ui.screens.auth.signup_details.SignUpErrors
 import by.happygnom.plato.util.Event
+import by.happygnom.plato.util.toBase64
+import coil.ImageLoader
+import coil.request.ImageRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.ktor.util.*
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val imageLoader: ImageLoader,
+    private val imageRequestBuilder: ImageRequest.Builder
 ) : ViewModel() {
 
     val user: User? = AuthenticatedUser.get()
+    var updatePhoto: Boolean = false
+    var photo64: String? = user?.photo
 
     private val _saved = MutableLiveData<Event<Boolean>>()
     val saved: LiveData<Event<Boolean>> = _saved
@@ -79,6 +88,19 @@ class SettingsViewModel @Inject constructor(
 
     fun setPhotoUrl(url: String?) {
         _photoUrl.value = url
+        updatePhoto = true
+
+        val imageRequest = imageRequestBuilder
+            .data(url)
+//            .placeholder(R.drawable.placeholder_route)
+//            .error(R.drawable.placeholder_route)
+            .target { result ->
+                val base64 = (result as BitmapDrawable?)?.bitmap?.toBase64()
+                photo64 = base64
+            }
+            .build()
+
+        imageLoader.enqueue(imageRequest)
     }
 
     private val _errors = MutableLiveData<SignUpErrors?>(null)
@@ -113,6 +135,7 @@ class SettingsViewModel @Inject constructor(
             errors
     }
 
+    @OptIn(InternalAPI::class)
     fun updateUser() {
         val updateUseCase = UpdateUserUseCase(userRepository)
         val sex = calculateSex()
@@ -123,7 +146,8 @@ class SettingsViewModel @Inject constructor(
             nickname.value,
             sex,
             startDate.value!!,
-            photoUrl.value,
+            if (updatePhoto) null else user?.pictureUrl,
+            photo64,
             )
         updateUseCase.user = user
 

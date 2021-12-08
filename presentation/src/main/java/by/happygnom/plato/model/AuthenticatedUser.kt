@@ -1,6 +1,5 @@
 package by.happygnom.plato.model
 
-import by.happygnom.data.repository.UserRepositoryImpl
 import by.happygnom.domain.data_interface.repository.UserRepository
 import by.happygnom.domain.model.User
 import by.happygnom.domain.usecase.GetUserUseCase

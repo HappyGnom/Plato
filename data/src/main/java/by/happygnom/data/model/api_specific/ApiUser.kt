@@ -25,6 +25,8 @@ data class ApiUser(
     val sex: Int,
     @SerialName("startDateTimestamp")
     val startDateTimestamp: Long,
+    @SerialName("photoBase64")
+    val photo: String?,
     @SerialName("likedRouteIds")
     val likedIds: List<Long>? = null,
     @SerialName("favoriteRouteIds")
@@ -40,5 +42,6 @@ data class ApiUser(
         pictureUrl,
         sex,
         startDateTimestamp,
+        photo
     )
 }
