@@ -1,33 +1,46 @@
 package by.happygnom.plato.ui.screens.user.settings
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import by.happygnom.domain.model.Route
 import by.happygnom.plato.R
 import by.happygnom.plato.ui.elements.LabeledLogo
 import by.happygnom.plato.ui.elements.RadioButtonHorizontal
 import by.happygnom.plato.ui.elements.button.DatePickerButton
 import by.happygnom.plato.ui.elements.button.TealFilledButton
 import by.happygnom.plato.ui.elements.inputs.InputTextFieldBox
+import by.happygnom.plato.ui.navigation.RoutesScreen
 import by.happygnom.plato.ui.navigation.UserScreen
+import by.happygnom.plato.ui.screens.routes.details.RouteDetailsScreenContent
+import by.happygnom.plato.ui.screens.routes.details.Toolbar
 import by.happygnom.plato.ui.screens.user.profile.UserViewModel
+import by.happygnom.plato.ui.theme.Teal1
+import by.happygnom.plato.ui.theme.White
+import by.happygnom.plato.util.GallerySelect
 import by.happygnom.plato.util.showDatePickerDialog
 import by.happygnom.plato.util.toFormattedDateString
+import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.statusBarsPadding
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import me.onebone.toolbar.*
 import java.util.*
 
 @Composable
@@ -35,6 +48,129 @@ fun SettingsScreen(
     viewModel: SettingsViewModel,
     navController: NavController
 ) {
+
+    val photoUrl by viewModel.photoUrl.observeAsState()
+    val saved by viewModel.saved.observeAsState()
+
+    saved?.getContentIfNotHandled()?.let {
+        navController.navigate(UserScreen.Profile.route)
+    }
+
+    val toolbarState = rememberCollapsingToolbarScaffoldState()
+
+    CollapsingToolbarScaffold(
+        state = toolbarState,
+        scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
+        modifier = Modifier.fillMaxSize(),
+        toolbarModifier = Modifier
+            .background(Teal1)
+            .fillMaxWidth(),
+        toolbar = {
+            Toolbar(viewModel,navController, toolbarState, photoUrl)
+        },
+        body = {
+            SettingsScreenContent(viewModel)
+        }
+    )
+}
+
+
+@Composable
+fun CollapsingToolbarScope.Toolbar(
+    viewModel: SettingsViewModel,
+    navController: NavController,
+    toolbarState: CollapsingToolbarScaffoldState,
+    photoUrl: String?
+) {
+    var showGallerySelect by remember { mutableStateOf(false) }
+    if (showGallerySelect) {
+        GallerySelect(
+            onImageUri = { uri ->
+                showGallerySelect = false
+                if (uri != null) viewModel.setPhotoUrl(uri.toString())
+            }
+        )
+    }
+
+    Image(
+        painter = rememberImagePainter(
+            data = photoUrl,
+            builder = {
+                placeholder(R.drawable.placeholder_avatar)
+                error(R.drawable.placeholder_avatar)
+                fallback(R.drawable.placeholder_avatar)
+            }
+        ),
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        alignment = Alignment.Center,
+        modifier = Modifier
+            .aspectRatio(1f)
+            .parallax(0.2f)
+            .graphicsLayer {
+                // change alpha of Image as the toolbar expands
+                alpha = toolbarState.toolbarState.progress
+            }
+    )
+
+    IconButton(
+        onClick = { navController.popBackStack() },
+        modifier = Modifier
+            .padding(10.dp)
+            .clip(CircleShape)
+            .background(Teal1)
+            .padding(6.dp)
+            .size(24.dp)
+            .road(
+                whenCollapsed = Alignment.TopStart,
+                whenExpanded = Alignment.TopStart
+            )
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_back),
+            contentDescription = "Back",
+            tint = White
+        )
+    }
+
+    IconButton(
+        onClick = { showGallerySelect = true },
+        modifier = Modifier
+            .padding(10.dp)
+            .clip(CircleShape)
+            .background(Teal1)
+            .padding(6.dp)
+            .size(24.dp)
+            .road(
+                whenCollapsed = Alignment.TopEnd,
+                whenExpanded = Alignment.TopEnd
+            )
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_edit),
+            contentDescription = "Edit",
+            tint = White
+        )
+    }
+
+    Text(
+        text = stringResource(R.string.edit_my_profile),
+        style = MaterialTheme.typography.h3.copy(White),
+        modifier = Modifier
+            .padding(56.dp, 16.dp, 16.dp, 16.dp)
+            .clip(CircleShape)
+            .background(Teal1)
+            .padding(4.dp)
+            .road(
+                whenCollapsed = Alignment.CenterStart,
+                whenExpanded = Alignment.BottomEnd
+            )
+    )
+}
+
+@Composable
+fun SettingsScreenContent(viewModel: SettingsViewModel) {
+
     val context = LocalContext.current
 
     val errors by viewModel.errors.observeAsState()
@@ -44,39 +180,24 @@ fun SettingsScreen(
     val startDate by viewModel.startDate.observeAsState(null)
     val sex by viewModel.sex.observeAsState("Male")
 
-    val saved by viewModel.saved.observeAsState()
-
-    saved?.getContentIfNotHandled()?.let {
-        navController.navigate(UserScreen.Profile.route)
-    }
-
-    Box(modifier = Modifier.fillMaxSize(1f).verticalScroll(rememberScrollState())) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize(1f)
+            .verticalScroll(rememberScrollState())
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize(1f)
                 .statusBarsPadding()
         ) {
 
-            Divider(
-                Modifier
-                    .fillMaxWidth(1f)
-                    .width(1.dp)
-            )
-
             Column(
                 modifier = Modifier
                     .fillMaxSize(1f)
-                    .padding(40.dp),
+                    .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                LabeledLogo()
-
-                Text(
-                    text = stringResource(R.string.profile_info_label),
-                    modifier = Modifier.padding(top = 16.dp),
-                    style = MaterialTheme.typography.h2
-                )
                 InputTextFieldBox(
                     text = name,
                     onValueChange = viewModel::setName,

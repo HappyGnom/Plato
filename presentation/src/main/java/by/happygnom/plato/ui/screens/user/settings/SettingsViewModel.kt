@@ -7,6 +7,7 @@ import by.happygnom.domain.data_interface.repository.UserRepository
 import by.happygnom.domain.model.User
 import by.happygnom.domain.usecase.GetUserUseCase
 import by.happygnom.domain.usecase.UpdateUserUseCase
+import by.happygnom.plato.R
 import by.happygnom.plato.model.AuthenticatedUser
 import by.happygnom.plato.model.InputValidator
 import by.happygnom.plato.ui.screens.auth.signup_details.Sex
@@ -43,6 +44,9 @@ class SettingsViewModel @Inject constructor(
     private val _sex = MutableLiveData(sexToString(user?.sex) ?: "Male")
     val sex: LiveData<String> = _sex
 
+    private val _photoUrl = MutableLiveData(user?.pictureUrl)
+    val photoUrl: LiveData<String?> = _photoUrl
+
     private fun sexToString(sex: Int?): String? {
         return when (sex) {
             0 -> "Male"
@@ -69,8 +73,12 @@ class SettingsViewModel @Inject constructor(
         _startDate.value = date
     }
 
-    fun setSex(sex: String?) {
+    fun setSex(sex: String) {
         _sex.value = sex
+    }
+
+    fun setPhotoUrl(url: String?) {
+        _photoUrl.value = url
     }
 
     private val _errors = MutableLiveData<SignUpErrors?>(null)
@@ -115,8 +123,7 @@ class SettingsViewModel @Inject constructor(
             nickname.value,
             sex,
             startDate.value!!,
-            null,
-
+            photoUrl.value,
             )
         updateUseCase.user = user
 

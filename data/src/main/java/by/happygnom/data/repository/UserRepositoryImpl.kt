@@ -18,7 +18,7 @@ class UserRepositoryImpl(
 ) : UserRepository {
 
     override suspend fun getUser(firebaseUid: String, forceUpdate: Boolean): User? {
-        return userDao.ensureIsNotEmpty(firebaseUid).getUserById(firebaseUid)?.toDomain()
+        return userDao.ensureIsNotEmpty(firebaseUid, forceUpdate).getUserById(firebaseUid)?.toDomain()
     }
 
     private suspend fun UserDao.ensureIsNotEmpty(id: String, forceUpdate: Boolean = false) = apply {

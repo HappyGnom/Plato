@@ -114,5 +114,6 @@
     
     <string name="web_client_id">234486982554-jln61fhsjcp6496m922mhu955pip0d4c.apps.googleusercontent.com</string>
     <string name="my_profile">MyProfile</string>
+    <string name="edit_my_profile">Edit my profile</string>
 
 </resources>
