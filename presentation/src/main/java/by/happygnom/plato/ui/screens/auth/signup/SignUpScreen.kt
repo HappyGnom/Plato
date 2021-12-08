@@ -92,10 +92,7 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
                 if (account != null) {
                     viewModel.firebaseAuthWithGoogle(account.idToken!!)
                     coroutineScope.launch {
-                        viewModel.signIn(
-                            email = account.email,
-                            displayName = account.displayName,
-                        )
+                        viewModel.signIn()
                     }
                 }
             } catch (e: ApiException) {

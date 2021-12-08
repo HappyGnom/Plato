@@ -5,9 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import by.happygnom.domain.data_interface.repository.UserRepository
-import by.happygnom.domain.model.User
-import by.happygnom.domain.usecase.PublishCommentUseCase
+import by.happygnom.plato.util.Event
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -15,7 +13,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
-import by.happygnom.plato.util.Event
 
 @HiltViewModel
 class AuthViewModel @Inject constructor() : ViewModel() {
@@ -72,7 +69,7 @@ class AuthViewModel @Inject constructor() : ViewModel() {
             _loading.value = false
         }
 
-    fun signIn(email: String, displayName: String) {
+    fun signIn() {
         _isSignedIn.value = Event(true)
         _loading.value = false
     }

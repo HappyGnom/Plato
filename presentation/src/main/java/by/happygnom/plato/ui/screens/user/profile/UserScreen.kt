@@ -2,9 +2,11 @@ package by.happygnom.plato.ui.screens.user.profile
 
 import android.content.Intent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -12,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -29,6 +32,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import by.happygnom.plato.ui.navigation.UserScreen
+import by.happygnom.plato.ui.theme.Grey1
+import by.happygnom.plato.ui.theme.Grey5
 
 
 @Composable
@@ -59,33 +64,48 @@ fun UserScreenContent() {
 
     val mUser = FirebaseAuth.getInstance().currentUser
 
-    Column(modifier = Modifier.padding(top = 32.dp)) {
-        Row(horizontalArrangement = Arrangement.SpaceBetween) {
+    Column(modifier = Modifier.padding(top = 8.dp)) {
+        Row(modifier = Modifier.height(120.dp)) {
             Image(
                 painter = painterResource(R.drawable.placeholder_avatar),
                 contentDescription = "avatar",
                 modifier = Modifier
-                    .fillMaxWidth(0.4f)
-                    .padding(start = 24.dp, top = 40.dp)
+                    .padding(start = 24.dp)
+                    .width(120.dp)
+                    .height(120.dp)
+
                     .border(width = 1.dp, color = Teal1, CircleShape)
                     .clip(CircleShape)
             )
 
+            Spacer(modifier = Modifier.width(32.dp))
+
             Column(
-//                modifier = Modifier.fillMaxWidth(0.6f),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .fillMaxHeight(1f),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Katerinka Zhevniak",
-                    style = MaterialTheme.typography.h2
+                    text = "Katerinka",
+                    style = MaterialTheme.typography.h3
                 )
-                Text(text = "Zhevniak", style = MaterialTheme.typography.h2)
-                Text(text = "Name", style = MaterialTheme.typography.h2)
+                Text(text = "Zhevniak", style = MaterialTheme.typography.h3)
+                Text(text = "(Nickname)", style = MaterialTheme.typography.body1)
 
             }
         }
 
-        TealStrokeButton(text = "SignOut", onClick = {
+        Divider(
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .fillMaxWidth(1f)
+            ,
+            color = Grey1
+        )
+
+        TealStrokeButton(modifier = Modifier.padding(top = 8.dp), text = "SignOut", onClick = {
             val gso =
                 GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestIdToken(webClientId)

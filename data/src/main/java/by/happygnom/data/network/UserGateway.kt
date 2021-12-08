@@ -8,16 +8,12 @@ import io.ktor.client.request.*
 
 class UserGateway(private val client: HttpClient) {
 
-//    suspend fun getAllUsers(): List<UserEntity> {
-//        return client.get("${BuildConfig.API_ADRESS}/User")
-//    }
-
     suspend fun registerUser(user: UserEntity) {
         return client.get("${BuildConfig.API_ADRESS}/User/Register?user=$user")
     }
 
-    suspend fun getUserById(idToken: String): UserEntity {
-        return client.get("${BuildConfig.API_ADRESS}/User/$idToken")
+    suspend fun getUserById(id: String): UserEntity {
+        return client.get("${BuildConfig.API_ADRESS}/User/$id")
     }
 
 }

@@ -92,30 +92,19 @@ class SignUpDetailsViewModel @Inject constructor(
             errors
     }
 
-    private fun setUserIdToken() {
-        val mUser = Firebase.auth.currentUser
-        mUser!!.getIdToken(true)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    idToken = task.result.token
-                } else {
-                    // Handle error -> task.getException();
-                }
-            }
-    }
-
-
     fun registerUser() {
         val registerUseCase = RegisterUseCase(userRepository)
         val sex = calculateSex()
-        setUserIdToken()
         val user = User(
-            idToken!!,
+            Firebase.auth.currentUser?.uid!!,
             name.value!!,
             surname.value!!,
             nickname.value,
             sex,
-            (startDate.value!!.time / DateUtils.SECOND_IN_MILLIS),
+            startDate.value!!,
+            null,
+            null,
+            null,
             null
         )
         registerUseCase.user = user

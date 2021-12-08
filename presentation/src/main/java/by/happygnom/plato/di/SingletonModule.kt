@@ -3,6 +3,7 @@ package by.happygnom.plato.di
 import android.content.Context
 import androidx.room.Room
 import by.happygnom.data.database.RoutesDatabase
+import by.happygnom.data.database.UserDatabase
 import by.happygnom.data.network.CommentsGateway
 import by.happygnom.data.network.RoutesGateway
 import by.happygnom.data.network.UserGateway
@@ -58,7 +59,12 @@ class SingletonModule {
     @Provides
     fun provideUserRepository(@ApplicationContext context: Context): UserRepository {
         val userGateway = UserGateway(ktorHttpClient)
+        val userDb = Room.databaseBuilder(
+            context,
+            UserDatabase::class.java,
+            "user"
+        ).build()
 
-        return UserRepositoryImpl(userGateway)
+        return UserRepositoryImpl(userDb.userDao, userGateway)
     }
 }
