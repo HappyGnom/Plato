@@ -1,14 +1,14 @@
 package by.happygnom.data.network
 
 import by.happygnom.data.BuildConfig
-import by.happygnom.data.model.CommentEntity
+import by.happygnom.data.model.api_specific.ApiComment
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 
 class CommentsGateway(private val client: HttpClient) {
 
-    suspend fun getComments(routeId: Long, count: Long): List<CommentEntity> {
+    suspend fun getComments(routeId: Long, count: Long): List<ApiComment> {
         return client.get("${BuildConfig.API_ADRESS}/Route/$routeId/Comments?count=$count")
     }
 

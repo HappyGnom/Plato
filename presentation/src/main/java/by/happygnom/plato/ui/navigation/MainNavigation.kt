@@ -42,24 +42,24 @@ sealed class RoutesScreen(
 ) {
     object List : RoutesScreen("main/routes/list")
     object Filter : RoutesScreen("main/routes/list/filters")
-    object RouteDetails : RoutesScreen("main/routes/list/{route_id}") {
+    object RouteDetails : RoutesScreen("main/routes/list/{${ArgNames.ROUTE_ID}}") {
         fun createRoute(routeId: Long) = "main/routes/list/$routeId"
     }
 
-    object Comments : RoutesScreen("main/routes/list/{route_id}/comments") {
+    object Comments : RoutesScreen("main/routes/list/{${ArgNames.ROUTE_ID}}/comments") {
         fun createRoute(routeId: Long) = "main/routes/list/$routeId/comments"
     }
 
-    object AddComment : RoutesScreen("main/routes/list/{route_id}/add-comment") {
+    object AddComment : RoutesScreen("main/routes/list/{${ArgNames.ROUTE_ID}}/add-comment") {
         fun createRoute(routeId: Long) = "main/routes/list/$routeId/add-comment"
     }
 
-    object Editor : RoutesScreen("main/routes/list/edit?existing_route_id={existing_route_id}") {
+    object Editor : RoutesScreen("main/routes/list/edit?${ArgNames.EXISTING_ROUTE_ID}={${ArgNames.EXISTING_ROUTE_ID}}") {
         fun createRoute(existingRouteId: Long?) =
             if (existingRouteId != null)
-                "main/routes/list/edit?existing_route_id=$existingRouteId"
+                "main/routes/list/edit?${ArgNames.EXISTING_ROUTE_ID}=$existingRouteId"
             else
-                "main/routes/list/edit?existing_route_id=-1"
+                "main/routes/list/edit?${ArgNames.EXISTING_ROUTE_ID}=-1"
     }
 }
 
@@ -132,7 +132,7 @@ fun NavGraphBuilder.addRoutesGraph(
 
         composable(
             RoutesScreen.RouteDetails.route,
-            arguments = listOf(navArgument("route_id") { type = NavType.LongType })
+            arguments = listOf(navArgument(ArgNames.ROUTE_ID) { type = NavType.LongType })
         ) {
             RouteDetailsScreen(
                 viewModel = hiltViewModel(),
@@ -142,7 +142,7 @@ fun NavGraphBuilder.addRoutesGraph(
 
         composable(
             RoutesScreen.Comments.route,
-            arguments = listOf(navArgument("route_id") { type = NavType.LongType })
+            arguments = listOf(navArgument(ArgNames.ROUTE_ID) { type = NavType.LongType })
         ) {
             CommentsScreen(
                 viewModel = hiltViewModel(),
@@ -152,7 +152,7 @@ fun NavGraphBuilder.addRoutesGraph(
 
         composable(
             RoutesScreen.AddComment.route,
-            arguments = listOf(navArgument("route_id") { type = NavType.LongType })
+            arguments = listOf(navArgument(ArgNames.ROUTE_ID) { type = NavType.LongType })
         ) {
             AddCommentScreen(
                 viewModel = hiltViewModel(),
@@ -162,7 +162,7 @@ fun NavGraphBuilder.addRoutesGraph(
 
         composable(
             RoutesScreen.Editor.route,
-            arguments = listOf(navArgument("existing_route_id") { type = NavType.LongType })
+            arguments = listOf(navArgument(ArgNames.EXISTING_ROUTE_ID) { type = NavType.LongType })
         ) {
             RouteEditorScreen(
                 viewModel = hiltViewModel(),

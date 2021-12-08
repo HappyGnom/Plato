@@ -14,6 +14,7 @@ import by.happygnom.plato.R
 import by.happygnom.plato.ui.elements.DefaultToolbar
 import by.happygnom.plato.ui.elements.LoadingIndicator
 import by.happygnom.plato.ui.elements.inputs.InputTextField
+import by.happygnom.plato.ui.navigation.ArgNames
 import by.happygnom.plato.ui.theme.Grey1
 import by.happygnom.plato.ui.theme.Grey2
 import by.happygnom.plato.ui.theme.Teal1
@@ -57,6 +58,7 @@ fun AddCommentScreenContent(
     val sendButtonEnabled = commentContent.isNotBlank()
 
     commentPublished?.getContentIfNotHandled()?.let {
+        navController.previousBackStackEntry?.savedStateHandle?.set(ArgNames.SHOULD_UPDATE, true)
         navController.popBackStack()
     }
 

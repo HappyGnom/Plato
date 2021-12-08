@@ -17,10 +17,7 @@ import androidx.navigation.NavController
 import by.happygnom.plato.R
 import by.happygnom.plato.model.GradeLevels
 import by.happygnom.plato.ui.elements.DefaultToolbar
-import by.happygnom.plato.ui.elements.button.GreyFilledButton
-import by.happygnom.plato.ui.elements.button.PinkFilledButton
-import by.happygnom.plato.ui.elements.button.TealFilledButton
-import by.happygnom.plato.ui.elements.button.TealStrokeButton
+import by.happygnom.plato.ui.elements.button.*
 import by.happygnom.plato.ui.elements.inputs.InputTextFieldBox
 import by.happygnom.plato.ui.elements.inputs.QuantitySelector
 import by.happygnom.plato.ui.elements.inputs.SimpleTextDropDown
@@ -144,102 +141,50 @@ fun RoutesFilterScreenContent(
                 ),
                 selectedOption = setterName,
                 onOptionChanged = viewModel::setSetterName,
-                modifier = Modifier.fillMaxWidth(0.8f).padding(horizontal = 16.dp),
                 addUnspecifiedOption = true,
-                label = stringResource(id = R.string.setter_name)
+                label = stringResource(id = R.string.setter_name),
+                modifier = Modifier.fillMaxWidth(),
             )
 
-        Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+        DatePickerButton(
+            text = if (setDateFrom == null) "" else setDateFrom!!.toFormattedDateString(),
+            hint = stringResource(id = R.string.select_date),
+            label = stringResource(R.string.set_date_from),
+            isLabelAlwaysShown = true,
+            onClick = {
+                val initialCalendar = Calendar.getInstance()
+                setDateFrom?.let { initialCalendar.time = it }
+
+                showDatePickerDialog(context, initialCalendar) { calendar ->
+                    viewModel.setSetDateFrom(calendar.time)
+                }
+            },
+            //error = errors?.setDateErrorId?.let { stringResource(id = it) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        ) {
-            Text(
-                text = stringResource(id = R.string.set_date_from),
-                style = MaterialTheme.typography.body2
-            )
+                .padding(horizontal = 16.dp),
+            onClear = { viewModel.clearSetDateFrom() }
+        )
 
-            val setDateText = if (setDateFrom == null)
-                stringResource(id = R.string.unspecified)
-            else
-                setDateFrom!!.toFormattedDateString()
+        DatePickerButton(
+            text = if (setDateTo == null) "" else setDateTo!!.toFormattedDateString(),
+            hint = stringResource(id = R.string.select_date),
+            label = stringResource(R.string.set_date_to),
+            isLabelAlwaysShown = true,
+            onClick = {
+                val initialCalendar = Calendar.getInstance()
+                setDateTo?.let { initialCalendar.time = it }
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TealStrokeButton(
-                    text = setDateText,
-                    onClick = {
-                        val initialCalendar = Calendar.getInstance()
-                        setDateFrom?.let { initialCalendar.time = it }
-
-                        showDatePickerDialog(context, initialCalendar) { calendar ->
-                            viewModel.setSetDateFrom(calendar.time)
-                        }
-                    },
-                )
-
-                if (setDateFrom != null)
-                    IconButton(
-                        onClick = { viewModel.clearSetDateFrom() },
-                        modifier = Modifier.size(24.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_close),
-                            contentDescription = null,
-                            tint = Grey1
-                        )
-                    }
-            }
-        }
-
-        Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+                showDatePickerDialog(context, initialCalendar) { calendar ->
+                    viewModel.setSetDateTo(calendar.time)
+                }
+            },
+//                error = errors?.setDateErrorId?.let { stringResource(id = it) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        ) {
-            Text(
-                text = stringResource(id = R.string.set_date_to),
-                style = MaterialTheme.typography.body2
-            )
-
-            val setDateText = if (setDateTo == null)
-                stringResource(id = R.string.unspecified)
-            else
-                setDateTo!!.toFormattedDateString()
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TealStrokeButton(
-                    text = setDateText,
-                    onClick = {
-                        val initialCalendar = Calendar.getInstance()
-                        setDateTo?.let { initialCalendar.time = it }
-
-                        showDatePickerDialog(context, initialCalendar) { calendar ->
-                            viewModel.setSetDateTo(calendar.time)
-                        }
-                    },
-                )
-
-                if (setDateTo != null)
-                    IconButton(
-                        onClick = { viewModel.clearSetDateTo() },
-                        modifier = Modifier.size(24.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_close),
-                            contentDescription = null,
-                            tint = Grey1
-                        )
-                    }
-            }
-        }
+                .padding(horizontal = 16.dp),
+            onClear = { viewModel.clearSetDateTo() }
+        )
 
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -263,6 +208,7 @@ fun RoutesFilterScreenContent(
             text = tags,
             onValueChange = viewModel::setTags,
             label = stringResource(id = R.string.tags_list),
+            isLabelAlwaysShown = true,
             hint = stringResource(id = R.string.tags),
 //            error = errors?.tagsErrorId?.let { stringResource(id = it) },
             modifier = Modifier

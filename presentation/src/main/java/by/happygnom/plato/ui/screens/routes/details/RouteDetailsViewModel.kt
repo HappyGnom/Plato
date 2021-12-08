@@ -10,6 +10,7 @@ import by.happygnom.domain.model.Comment
 import by.happygnom.domain.model.Route
 import by.happygnom.domain.usecase.GetCommentsUseCase
 import by.happygnom.domain.usecase.GetRouteByIdUseCase
+import by.happygnom.plato.ui.navigation.ArgNames
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -20,7 +21,7 @@ class RouteDetailsViewModel @Inject constructor(
     savedState: SavedStateHandle
 ) : ViewModel() {
 
-    private val routeId = savedState.get<Long>("route_id") ?: -1
+    private val routeId = savedState.get<Long>(ArgNames.ROUTE_ID) ?: -1
 
     private val _route = MutableLiveData<Route>()
     val route: LiveData<Route> = _route
@@ -68,7 +69,7 @@ class RouteDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun loadLatestComments() {
+    fun loadLatestComments() {
         val getCommentsUseCase = GetCommentsUseCase(commentsRepository)
         getCommentsUseCase.inputRouteId = routeId
         getCommentsUseCase.inputCount = 3

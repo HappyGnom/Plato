@@ -1,4 +1,4 @@
-package by.happygnom.data.model
+package by.happygnom.data.model.api_specific
 
 import android.text.format.DateUtils
 import by.happygnom.domain.model.Comment
@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 import java.util.*
 
 @Serializable
-data class CommentEntity(
+data class ApiComment(
     @SerialName("id")
     val id: Long,
     @SerialName("message")

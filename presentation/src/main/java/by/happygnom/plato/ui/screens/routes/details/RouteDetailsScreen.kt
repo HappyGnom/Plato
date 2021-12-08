@@ -8,7 +8,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -17,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -33,6 +33,7 @@ import by.happygnom.plato.ui.elements.TagsList
 import by.happygnom.plato.ui.elements.button.StrokeImageButton
 import by.happygnom.plato.ui.elements.button.SwitchableIconButton
 import by.happygnom.plato.ui.elements.button.TealTextButton
+import by.happygnom.plato.ui.navigation.ArgNames
 import by.happygnom.plato.ui.navigation.RoutesScreen
 import by.happygnom.plato.ui.theme.Grey1
 import by.happygnom.plato.ui.theme.Grey3
@@ -50,6 +51,12 @@ fun RouteDetailsScreen(
     viewModel: RouteDetailsViewModel,
     navController: NavController,
 ) {
+    navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>(ArgNames.SHOULD_UPDATE)
+        ?.observe(LocalLifecycleOwner.current) {
+            viewModel.loadRouteDetails(true)
+            navController.currentBackStackEntry?.savedStateHandle?.remove<Boolean>(ArgNames.SHOULD_UPDATE)
+        }
+
     val route by viewModel.route.observeAsState(null)
     val isLoading by viewModel.isLoading.observeAsState(false)
 
@@ -96,27 +103,26 @@ fun CollapsingToolbarScope.Toolbar(
     route: Route?,
     gradeName: String?
 ) {
-//    if (route != null)
-        Image(
-            painter = rememberImagePainter(
-                data = route?.pictureUrl,
-                builder = {
-                    placeholder(R.drawable.placeholder_route)
-                    error(R.drawable.placeholder_route)
-                    fallback(R.drawable.placeholder_route)
-                }
-            ),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            alignment = Alignment.Center,
-            modifier = Modifier
-                .aspectRatio(1f)
-                .parallax(0.2f)
-                .graphicsLayer {
-                    // change alpha of Image as the toolbar expands
-                    alpha = toolbarState.toolbarState.progress
-                }
-        )
+    Image(
+        painter = rememberImagePainter(
+            data = route?.pictureUrl,
+            builder = {
+                placeholder(R.drawable.placeholder_route)
+                error(R.drawable.placeholder_route)
+                fallback(R.drawable.placeholder_route)
+            }
+        ),
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        alignment = Alignment.Center,
+        modifier = Modifier
+            .aspectRatio(1f)
+            .parallax(0.2f)
+            .graphicsLayer {
+                // change alpha of Image as the toolbar expands
+                alpha = toolbarState.toolbarState.progress
+            }
+    )
 
     IconButton(
         onClick = { navController.popBackStack() },
@@ -231,7 +237,7 @@ fun RouteDetails(
                 .padding(16.dp)
         ) {
             TagsList(
-                tags = route.tags,
+                tags = route.tags.map { it.value },
                 textStyle = MaterialTheme.typography.body1,
                 modifier = Modifier.weight(1f)
             )

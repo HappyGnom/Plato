@@ -25,12 +25,13 @@ import by.happygnom.plato.R
 import by.happygnom.plato.model.GradeLevels
 import by.happygnom.plato.ui.elements.DefaultToolbar
 import by.happygnom.plato.ui.elements.ErrorText
+import by.happygnom.plato.ui.elements.button.DatePickerButton
 import by.happygnom.plato.ui.elements.button.GreyFilledButton
 import by.happygnom.plato.ui.elements.button.PinkFilledButton
 import by.happygnom.plato.ui.elements.button.TealFilledButton
-import by.happygnom.plato.ui.elements.button.TealStrokeButton
 import by.happygnom.plato.ui.elements.inputs.InputTextFieldBox
 import by.happygnom.plato.ui.elements.inputs.QuantitySelector
+import by.happygnom.plato.ui.navigation.ArgNames
 import by.happygnom.plato.ui.theme.ButtonShape
 import by.happygnom.plato.ui.theme.Grey1
 import by.happygnom.plato.ui.theme.Pink1
@@ -45,6 +46,12 @@ fun RouteEditorScreen(
 ) {
     val existingRouteId by viewModel.existingRouteId.observeAsState(null)
     val isLoading by viewModel.isLoading.observeAsState(false)
+    val isDone by viewModel.isDone.observeAsState()
+
+    isDone?.getContentIfNotHandled()?.let {
+        navController.previousBackStackEntry?.savedStateHandle?.set(ArgNames.SHOULD_UPDATE, true)
+        navController.popBackStack()
+    }
 
     Scaffold(
         topBar = {
@@ -234,6 +241,7 @@ fun RouteEditorScreenContent(
             text = holdsColor,
             onValueChange = viewModel::setHoldsColor,
             label = stringResource(id = R.string.holds_color),
+            isLabelAlwaysShown = true,
             hint = stringResource(id = R.string.color),
             error = errors?.holdsColorErrorId?.let { stringResource(id = it) },
             modifier = Modifier
@@ -245,6 +253,7 @@ fun RouteEditorScreenContent(
             text = setterName,
             onValueChange = viewModel::setSetterName,
             label = stringResource(id = R.string.set_by),
+            isLabelAlwaysShown = true,
             hint = stringResource(id = R.string.name),
             error = errors?.setterNameErrorId?.let { stringResource(id = it) },
             modifier = Modifier
@@ -256,6 +265,7 @@ fun RouteEditorScreenContent(
             text = tags,
             onValueChange = viewModel::setTags,
             label = stringResource(id = R.string.tags_list),
+            isLabelAlwaysShown = true,
             hint = stringResource(id = R.string.tags),
             error = errors?.tagsErrorId?.let { stringResource(id = it) },
             modifier = Modifier
@@ -263,36 +273,25 @@ fun RouteEditorScreenContent(
                 .padding(horizontal = 16.dp)
         )
 
-        Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+        DatePickerButton(
+            text = if (setDate == null) "" else setDate!!.toFormattedDateString(),
+            hint = stringResource(id = R.string.select_date),
+            label = stringResource(R.string.set_date),
+            isLabelAlwaysShown = true,
+            onClick = {
+                val initialCalendar = Calendar.getInstance()
+                setDate?.let { initialCalendar.time = it }
+
+                showDatePickerDialog(context, initialCalendar) { calendar ->
+                    viewModel.setSetDate(calendar.time)
+                }
+            },
+            error = errors?.setDateErrorId?.let { stringResource(id = it) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        ) {
-            Text(
-                text = stringResource(id = R.string.set_date),
-                style = MaterialTheme.typography.body2
-            )
-
-            val setDateText = if (setDate == null)
-                stringResource(id = R.string.select_date)
-            else
-                setDate!!.toFormattedDateString()
-
-            TealStrokeButton(
-                text = setDateText,
-                onClick = {
-                    val initialCalendar = Calendar.getInstance()
-                    setDate?.let { initialCalendar.time = it }
-
-                    showDatePickerDialog(context, initialCalendar) { calendar ->
-                        viewModel.setSetDate(calendar.time)
-                    }
-                },
-            )
-
-            ErrorText(errorId = errors?.setDateErrorId)
-        }
+                .padding(horizontal = 16.dp),
+            onClear = { viewModel.setSetDate(null) }
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -317,7 +316,7 @@ fun RouteEditorScreenContent(
 
             TealFilledButton(
                 text = stringResource(id = R.string.confirm),
-                onClick = { viewModel.validateInput() },
+                onClick = viewModel::saveRoute,
                 modifier = Modifier.weight(1f)
             )
         }

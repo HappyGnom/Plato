@@ -58,7 +58,7 @@ object InputValidator {
     @StringRes
     fun getTagsErrorIdOrNull(input: String): Int? {
         return when {
-            input.split(",").any { it.isBlank() } -> R.string.error_blank_tags
+//            input.split(",").any { it.isBlank() } -> R.string.error_blank_tags
             else -> null
         }
     }

@@ -1,14 +1,21 @@
 package by.happygnom.plato.ui.screens.routes.route_editor
 
 import android.graphics.drawable.BitmapDrawable
+import android.text.format.DateUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import by.happygnom.data.model.requests.CreateRouteRequestImpl
+import by.happygnom.data.model.requests.UpdateRouteRequestImpl
 import by.happygnom.domain.data_interface.repository.RoutesRepository
+import by.happygnom.domain.usecase.CreateRouteUseCase
 import by.happygnom.domain.usecase.GetRouteByIdUseCase
+import by.happygnom.domain.usecase.UpdateRouteUseCase
 import by.happygnom.plato.model.GradeLevels
 import by.happygnom.plato.model.InputValidator
+import by.happygnom.plato.ui.navigation.ArgNames
+import by.happygnom.plato.util.Event
 import by.happygnom.plato.util.toBase64
 import coil.ImageLoader
 import coil.request.ImageRequest
@@ -27,11 +34,20 @@ class RouteEditorViewModel @Inject constructor(
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> = _isLoading
 
+    private val _isDone = MutableLiveData<Event<Boolean>>()
+    val isDone: LiveData<Event<Boolean>> = _isDone
+
     private val _existingRouteId = MutableLiveData<Long?>(null)
     val existingRouteId: LiveData<Long?> = _existingRouteId
 
     private val _pictureBase64 = MutableLiveData<String?>(null)
     val pictureBase64: LiveData<String?> = _pictureBase64
+
+    private val _pictureUrl = MutableLiveData<String?>(null)
+    val pictureUrl: LiveData<String?> = _pictureUrl
+
+    private val _isPictureUpdated = MutableLiveData<Boolean>(false)
+    val isPictureUpdated: LiveData<Boolean> = _isPictureUpdated
 
     private val _gradeLevel = MutableLiveData(0)
     val gradeLevel: LiveData<Int> = _gradeLevel
@@ -52,7 +68,7 @@ class RouteEditorViewModel @Inject constructor(
     val errors: LiveData<RouteEditorErrors?> = _errors
 
     init {
-        val routeId = savedState.get<Long>("existing_route_id")
+        val routeId = savedState.get<Long>(ArgNames.EXISTING_ROUTE_ID)
         if (routeId != null && routeId >= 0)
             loadRoute(routeId)
     }
@@ -65,12 +81,13 @@ class RouteEditorViewModel @Inject constructor(
         getRouteByIdUseCase.executeAsync {
             onSuccess { route ->
                 _existingRouteId.value = route.id
+                _pictureUrl.value = route.pictureUrl
                 route.pictureUrl?.let { setPicture(it) }
                 _gradeLevel.value = route.gradeLevel
                 _holdsColor.value = route.holdsColor
                 _setterName.value = route.setterName
                 _setDate.value = route.setDate
-                _tags.value = route.tags.joinToString()
+                _tags.value = route.tags.map { it.value }.joinToString()
             }
             onFailure {
                 it
@@ -95,6 +112,10 @@ class RouteEditorViewModel @Inject constructor(
         imageLoader.enqueue(imageRequest)
     }
 
+    fun setPictureUpdated(value: Boolean) {
+        _isPictureUpdated.value = value
+    }
+
     fun setGradeLevel(gradeLevel: Int) {
         if (gradeLevel < GradeLevels.LOWEST_GRADE || gradeLevel > GradeLevels.HIGHEST_GRADE)
             return
@@ -110,7 +131,7 @@ class RouteEditorViewModel @Inject constructor(
         _setterName.value = name
     }
 
-    fun setSetDate(date: Date) {
+    fun setSetDate(date: Date?) {
         _setDate.value = date
     }
 
@@ -118,8 +139,80 @@ class RouteEditorViewModel @Inject constructor(
         _tags.value = tags
     }
 
-    fun validateInput() {
+    fun saveRoute() {
+        val validInput = validateInput()
+        if (!validInput) return
+
+        if (existingRouteId.value == null)
+            createRoute()
+        else
+            updateRoute()
+    }
+
+    private fun createRoute() {
+        val createRouteUseCase = CreateRouteUseCase(routesRepository)
+
+        createRouteUseCase.inputCreateRouteRequest = CreateRouteRequestImpl(
+            gradeLevel.value!!,
+            holdsColor.value!!,
+            setDate.value!!.time / DateUtils.SECOND_IN_MILLIS,
+            setterName.value!!,
+            null,
+            pictureBase64.value!!,
+            null
+        )
+        _isLoading.value = true
+
+        createRouteUseCase.executeAsync {
+            onSuccess {
+                _isDone.value = Event(true)
+            }
+            onFailure {
+                it
+            }
+            onComplete {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    private fun updateRoute() {
+        val updateRouteUseCase = UpdateRouteUseCase(routesRepository)
+
+        val newPictureUrl = if (!isPictureUpdated.value!!) null
+        else _pictureUrl.value
+
+        updateRouteUseCase.inputUpdateRouteRequest = UpdateRouteRequestImpl(
+            existingRouteId.value!!,
+            gradeLevel.value!!,
+            holdsColor.value!!,
+            setDate.value!!.time / DateUtils.SECOND_IN_MILLIS,
+            setterName.value!!,
+            newPictureUrl,
+            pictureBase64.value!!,
+            null
+        )
+        _isLoading.value = true
+
+        updateRouteUseCase.executeAsync {
+            onSuccess {
+                _isDone.value = Event(true)
+            }
+            onFailure {
+                it
+            }
+            onComplete {
+                _isLoading.value = false
+            }
+        }
+    }
+
+
+    private fun validateInput(): Boolean {
+        val errors = getInputErrorsOrNull()
         _errors.value = getInputErrorsOrNull()
+
+        return errors == null
     }
 
     private fun getInputErrorsOrNull(): RouteEditorErrors? {

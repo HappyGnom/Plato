@@ -5,19 +5,17 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.material.ripple.LocalRippleTheme
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import by.happygnom.plato.R
-import by.happygnom.plato.ui.elements.ColoredRippleTheme
 import by.happygnom.plato.ui.elements.ErrorText
 import by.happygnom.plato.ui.theme.*
 
@@ -27,24 +25,29 @@ fun DatePickerButton(
     modifier: Modifier = Modifier,
     hint: String = "",
     label: String = "",
+    isLabelAlwaysShown: Boolean = false,
     error: String? = null,
     onClick: () -> Unit,
-    onEmpty: () -> Unit
+    onClear: () -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
     val colors = ButtonDefaults.buttonColors(
         backgroundColor = Grey3, contentColor = BlackNero,
         disabledBackgroundColor = Grey3, disabledContentColor = Grey2
     )
-    val focusManager = LocalFocusManager.current
+
+    val border = if(error==null)
+        BorderStroke(1.dp, colors.backgroundColor(enabled = false).value)
+    else
+        BorderStroke(1.dp, Pink1)
 
     val iconId = when (text) {
         "" -> R.drawable.ic_arrow_down
         else -> R.drawable.ic_close
     }
 
-
     Column(modifier = modifier) {
-        Box() {
+        Box {
             OutlinedButton(
                 onClick = {
                     focusManager.clearFocus()
@@ -55,10 +58,9 @@ fun DatePickerButton(
                     .height(IntrinsicSize.Min),
                 shape = ButtonShape,
                 enabled = true,
-                border = BorderStroke(1.dp, colors.backgroundColor(enabled = false).value),
+                border = border,
 //                colors = colors
             ) {
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(1f)
@@ -84,22 +86,24 @@ fun DatePickerButton(
                             .clickable {
                                 when (text) {
                                     "" -> onClick()
-                                    else -> onEmpty()
+                                    else -> onClear()
                                 }
                             },
                     )
                 }
             }
+
             Text(
-                text = if (text != "") " $label " else "",
+                text = if (text != "" || isLabelAlwaysShown) " $label " else "",
                 style = MaterialTheme.typography.body2.copy(Grey1),
                 modifier = Modifier
-                    .padding(start = 16.dp)
+                    .padding(start = 8.dp)
                     .align(Alignment.TopStart)
                     .background(MaterialTheme.colors.surface),
                 color = if (error != null) Pink1 else Grey1
             )
         }
+
         ErrorText(error = error)
     }
 }
