@@ -33,7 +33,8 @@ fun InputTextFieldBox(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     enableVisibilityToggle: Boolean = false,
-    singleLine: Boolean = true
+    singleLine: Boolean = true,
+    enabled: Boolean = true
 ) {
     Box(modifier = modifier) {
         Column {
@@ -48,7 +49,8 @@ fun InputTextFieldBox(
                 keyboardOptions = keyboardOptions,
                 keyboardActions = keyboardActions,
                 enableVisibilityToggle = enableVisibilityToggle,
-                singleLine = singleLine
+                singleLine = singleLine,
+                enabled = enabled
             )
 
             ErrorText(error = error)

@@ -2,8 +2,10 @@ package by.happygnom.plato.ui.screens.auth.getStarted
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -23,6 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import by.happygnom.plato.R
 import by.happygnom.plato.ui.elements.LabeledLogo
+import by.happygnom.plato.ui.elements.button.TealFilledButton
+import by.happygnom.plato.ui.navigation.AuthenticationScreen
 import by.happygnom.plato.ui.theme.Grey5
 import by.happygnom.plato.ui.theme.Teal1
 import by.happygnom.plato.ui.theme.Teal2
@@ -79,31 +83,53 @@ fun GetStartedScreen(viewModel: GetStartedViewModel, navController: NavControlle
 
             // Display 10 items
             HorizontalPager(
-                count = 4,
+                count = 3,
                 state = pagerState,
+//                itemSpacing = 32.dp,
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxSize(),
-                contentPadding = PaddingValues(32.dp)
+                    .fillMaxSize(1f),
+//                contentPadding = PaddingValues(32.dp)
             ) { page ->
 
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
-                        .fillMaxSize()
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(1f)
                 ) {
-                    Text(
-                        text = page.toString(),
-                    )
+                    Box(
+                        modifier = Modifier
+//                            .border(1.dp, Teal1, RoundedCornerShape(4.dp))
+                            .fillMaxSize(1f)
+                    ) {
+                        Image(
+                            painter = BitmapPainter(
+                                ImageBitmap.imageResource(
+                                    when (page) {
+                                        0 -> R.drawable.start_1
+                                        1 -> R.drawable.start_2
+                                        else -> R.drawable.start_3
+                                    }
+                                )
+                            ),
+                            contentDescription = "",
+                            modifier = Modifier
+//                                .padding(8.dp)
+                                .padding(bottom = 64.dp)
+                                .fillMaxSize(1f)
+//                                .border(1.dp, Teal1, RoundedCornerShape(4.dp))
 
-                    Image(
-                        painter = BitmapPainter(ImageBitmap.imageResource(id = R.drawable.auth_background_faded)),
-                        contentDescription = "",
-//                        modifier = Modifier.fillMaxSize()
                         )
+                    }
+
+                    if (page == 2) {
+                        TealFilledButton(text = "Sign up", onClick = {
+                            navController.navigate(AuthenticationScreen.SignUp.route)
+                        }, modifier = Modifier.align(Alignment.BottomCenter))
+                    }
 
                 }
-            }
 
+            }
             HorizontalPagerIndicator(
                 pagerState = pagerState,
                 modifier = Modifier
@@ -112,7 +138,6 @@ fun GetStartedScreen(viewModel: GetStartedViewModel, navController: NavControlle
                 inactiveColor = Teal1,
                 spacing = 16.dp
             )
-
         }
 
 

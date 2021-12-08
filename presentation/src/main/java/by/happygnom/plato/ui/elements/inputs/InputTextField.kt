@@ -26,7 +26,8 @@ fun InputTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     enableVisibilityToggle: Boolean = false,
-    singleLine: Boolean = true
+    singleLine: Boolean = true,
+    enabled: Boolean = true
 ) {
     var passwordIsShown by remember { mutableStateOf(false) }
 
@@ -80,6 +81,7 @@ fun InputTextField(
                         tint = Grey2
                     )
                 }
-        }
+        },
+        enabled = enabled
     )
 }
