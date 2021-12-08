@@ -26,6 +26,12 @@ fun AddCommentScreen(
     viewModel: AddCommentViewModel,
     navController: NavController,
 ) {
+    val commentPublished by viewModel.commentPublished.observeAsState()
+    commentPublished?.getContentIfNotHandled()?.let {
+        navController.previousBackStackEntry?.savedStateHandle?.set(ArgNames.SHOULD_UPDATE, true)
+        navController.popBackStack()
+    }
+
     Scaffold(
         topBar = {
             DefaultToolbar(
@@ -37,7 +43,6 @@ fun AddCommentScreen(
     ) {
         AddCommentScreenContent(
             viewModel = viewModel,
-            navController = navController,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
@@ -48,19 +53,12 @@ fun AddCommentScreen(
 @Composable
 fun AddCommentScreenContent(
     viewModel: AddCommentViewModel,
-    navController: NavController,
     modifier: Modifier = Modifier,
 ) {
     val commentContent by viewModel.commentContent.observeAsState("")
     val isLoading by viewModel.isLoading.observeAsState(false)
-    val commentPublished by viewModel.commentPublished.observeAsState()
 
     val sendButtonEnabled = commentContent.isNotBlank()
-
-    commentPublished?.getContentIfNotHandled()?.let {
-        navController.previousBackStackEntry?.savedStateHandle?.set(ArgNames.SHOULD_UPDATE, true)
-        navController.popBackStack()
-    }
 
     SwipeRefresh(
         state = rememberSwipeRefreshState(isLoading),

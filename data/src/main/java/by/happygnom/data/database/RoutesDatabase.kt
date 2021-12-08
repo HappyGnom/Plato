@@ -13,7 +13,7 @@ import by.happygnom.data.model.cross_refs.RouteTagsCrossRef
         RouteEntity::class, RouteTagsCrossRef::class, TagEntity::class,
         RouteLikeEntity::class, RouteBookmarkEntity::class, RouteSentEntity::class
     ],
-    version = 2
+    version = 3
 )
 abstract class RoutesDatabase : RoomDatabase() {
     abstract val routeInteractionsDao: RouteInteractionsDao

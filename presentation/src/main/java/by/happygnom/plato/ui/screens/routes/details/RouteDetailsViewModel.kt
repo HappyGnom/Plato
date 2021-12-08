@@ -8,8 +8,7 @@ import by.happygnom.domain.data_interface.repository.CommentsRepository
 import by.happygnom.domain.data_interface.repository.RoutesRepository
 import by.happygnom.domain.model.Comment
 import by.happygnom.domain.model.Route
-import by.happygnom.domain.usecase.GetCommentsUseCase
-import by.happygnom.domain.usecase.GetRouteByIdUseCase
+import by.happygnom.domain.usecase.*
 import by.happygnom.plato.ui.navigation.ArgNames
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -35,18 +34,25 @@ class RouteDetailsViewModel @Inject constructor(
     private val _isLiked = MutableLiveData(false)
     val isLiked: LiveData<Boolean> = _isLiked
 
-    private val _isProjected = MutableLiveData(false)
-    val isProjected: LiveData<Boolean> = _isProjected
+    private val _manualLikesCountChange = MutableLiveData(0)
+    val manualLikesCountChange: LiveData<Int> = _manualLikesCountChange
+
+    private val _isBookmarked = MutableLiveData(false)
+    val isBookmarked: LiveData<Boolean> = _isBookmarked
 
     private val _isSent = MutableLiveData(false)
     val isSent: LiveData<Boolean> = _isSent
+
+    private val _manualSendsCountChange = MutableLiveData(0)
+    val manualSendsCountChange: LiveData<Int> = _manualSendsCountChange
 
     init {
         loadRouteDetails()
     }
 
-    fun loadRouteDetails(forceUpdate: Boolean = false){
+    fun loadRouteDetails(forceUpdate: Boolean = false) {
         loadRoute(forceUpdate)
+        loadRouteInteractions()
         loadLatestComments()
     }
 
@@ -69,7 +75,30 @@ class RouteDetailsViewModel @Inject constructor(
         }
     }
 
-    fun loadLatestComments() {
+    private fun loadRouteInteractions() {
+        val getRouteBookmarkUseCase = GetRouteInteractionsUseCase(routesRepository)
+        getRouteBookmarkUseCase.inputRouteId = routeId
+        _isLoading.value = true
+
+        getRouteBookmarkUseCase.executeAsync {
+            onSuccess {
+                _isLiked.value = it.isLiked
+                _isBookmarked.value = it.isBookmarked
+                _isSent.value = it.isSent
+
+                _manualLikesCountChange.value = 0
+                _manualSendsCountChange.value = 0
+            }
+            onFailure {
+                it
+            }
+            onComplete {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    private fun loadLatestComments() {
         val getCommentsUseCase = GetCommentsUseCase(commentsRepository)
         getCommentsUseCase.inputRouteId = routeId
         getCommentsUseCase.inputCount = 3
@@ -88,15 +117,32 @@ class RouteDetailsViewModel @Inject constructor(
         }
     }
 
-    fun setLiked(value: Boolean) {
-        _isLiked.value = value
+    fun setLiked(isLiked: Boolean) {
+        _isLiked.value = isLiked
+        _manualLikesCountChange.value = _manualLikesCountChange.value!! + if (isLiked) 1 else -1
+
+        val setLikeUseCase = SetRouteLikeUseCase(routesRepository)
+        setLikeUseCase.inputRouteId = routeId
+        setLikeUseCase.isLiked = isLiked
+        setLikeUseCase.executeAsync {}
     }
 
-    fun setProjected(value: Boolean) {
-        _isProjected.value = value
+    fun setBookmarked(isBookmarked: Boolean) {
+        _isBookmarked.value = isBookmarked
+
+        val setBookmarkedUseCase = SetRouteBookmarkUseCase(routesRepository)
+        setBookmarkedUseCase.inputRouteId = routeId
+        setBookmarkedUseCase.isBookmarked = isBookmarked
+        setBookmarkedUseCase.executeAsync {}
     }
 
-    fun setSent(value: Boolean) {
-        _isSent.value = value
+    fun setSent(isSent: Boolean) {
+        _isSent.value = isSent
+        _manualSendsCountChange.value = _manualSendsCountChange.value!! + if (isSent) 1 else -1
+
+        val setSentUseCase = SetRouteSentUseCase(routesRepository)
+        setSentUseCase.inputRouteId = routeId
+        setSentUseCase.isSent = isSent
+        setSentUseCase.executeAsync {}
     }
 }

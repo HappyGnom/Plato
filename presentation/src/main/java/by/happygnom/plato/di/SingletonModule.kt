@@ -3,6 +3,7 @@ package by.happygnom.plato.di
 import android.content.Context
 import androidx.room.Room
 import by.happygnom.data.database.RoutesDatabase
+import by.happygnom.data.database.UsersDatabase
 import by.happygnom.data.network.*
 import by.happygnom.data.repository.CommentsRepositoryImpl
 import by.happygnom.data.repository.RoutesRepositoryImpl
@@ -49,17 +50,30 @@ class SingletonModule {
     }
 
     @Provides
-    fun provideRoutesRepository(
-        @ApplicationContext context: Context,
-        ktorClient: HttpClient
-    ): RoutesRepository {
-        val routesGateway = RoutesGateway(ktorClient)
-
-        val routesDatabase = Room.databaseBuilder(
+    fun provideRoutesDatabase(@ApplicationContext context: Context): RoutesDatabase {
+        return Room.databaseBuilder(
             context,
             RoutesDatabase::class.java,
             "RoutesDb"
         ).build()
+    }
+
+    @Provides
+    fun provideUsersDatabase(@ApplicationContext context: Context): UsersDatabase {
+        return Room.databaseBuilder(
+            context,
+            UsersDatabase::class.java,
+            "UsersDB"
+        ).build()
+    }
+
+    @Provides
+    fun provideRoutesRepository(
+        @ApplicationContext context: Context,
+        routesDatabase: RoutesDatabase,
+        ktorClient: HttpClient
+    ): RoutesRepository {
+        val routesGateway = RoutesGateway(ktorClient)
 
         return RoutesRepositoryImpl(
             routesGateway,
@@ -71,19 +85,13 @@ class SingletonModule {
     @Provides
     fun provideTagsRepository(
         @ApplicationContext context: Context,
+        routesDatabase: RoutesDatabase,
         ktorClient: HttpClient
     ): TagsRepository {
         val tagsGateway = TagsGateway(ktorClient)
 
-        val routesDatabase = Room.databaseBuilder(
-            context,
-            RoutesDatabase::class.java,
-            "RoutesDb"
-        ).build()
-
         return TagsRepositoryImpl(tagsGateway, routesDatabase.tagsDao)
     }
-
 
     @Provides
     fun provideCommentsRepository(
@@ -96,14 +104,18 @@ class SingletonModule {
     }
 
     @Provides
-    fun provideUserRepository(@ApplicationContext context: Context): UserRepository {
-        val userGateway = UserGateway(ktorHttpClient)
-        val userDb = Room.databaseBuilder(
-            context,
-            UserDatabase::class.java,
-            "user"
-        ).build()
+    fun provideUserRepository(
+        @ApplicationContext context: Context,
+        routesDatabase: RoutesDatabase,
+        usersDatabase: UsersDatabase,
+        ktorClient: HttpClient
+    ): UserRepository {
+        val userGateway = UserGateway(ktorClient)
 
-        return UserRepositoryImpl(userDb.userDao, userGateway)
+        return UserRepositoryImpl(
+            usersDatabase.userDao,
+            routesDatabase.routeInteractionsDao,
+            userGateway
+        )
     }
 }

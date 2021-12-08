@@ -13,7 +13,7 @@ data class RoutesFilter(
     val includeTakenDown: Boolean
 ) {
     enum class Category {
-        SENT, PROJECTED, LIKED
+        SENT, BOOKMARKED, LIKED
     }
 
     companion object {
@@ -30,54 +30,51 @@ data class RoutesFilter(
         private var tags: MutableList<String> = mutableListOf()
         private var includeTakenDown: Boolean = false
 
-        fun setCategory(category: Category) {
+        fun setCategory(category: Category?) = apply {
             this.category = category
         }
 
-        fun setGradeLevelFrom(gradeLevel: Int) {
+        fun setGradeLevelFrom(gradeLevel: Int?) = apply {
             this.gradeLevelFrom = gradeLevel
         }
 
-        fun setGradeLevelTo(gradeLevel: Int) {
+        fun setGradeLevelTo(gradeLevel: Int?) = apply {
             this.gradeLevelTo = gradeLevel
         }
 
-        fun setSetterName(name: String) {
+        fun setSetterName(name: String?) = apply {
             this.setterName = name
         }
 
-        fun setDateFrom(date: Date) {
+        fun setDateFrom(date: Date?) = apply {
             this.setDateFrom = date
         }
 
-        fun setDateTo(date: Date) {
+        fun setDateTo(date: Date?) = apply {
             this.setDateTo = date
         }
 
-        fun addTags(tags: List<String>) {
+        fun addTags(tags: List<String>) = apply {
             this.tags.addAll(tags)
         }
 
-        fun addTags(vararg tags: String) {
+        fun addTags(vararg tags: String) = apply {
             this.tags.addAll(tags)
         }
 
-        fun setIncludeTakenDown(includeTakenDown: Boolean) {
+        fun setIncludeTakenDown(includeTakenDown: Boolean) = apply {
             this.includeTakenDown = includeTakenDown
         }
 
-        fun build(): RoutesFilter {
-            return RoutesFilter(
-                category = category,
-                gradeLevelFrom = gradeLevelFrom,
-                gradeLevelTo = gradeLevelTo,
-                setterName = setterName,
-                setDateFrom = setDateFrom,
-                setDateTo = setDateTo,
-                tags = tags,
-                includeTakenDown = includeTakenDown
-            )
-        }
-
+        fun build() = RoutesFilter(
+            category = category,
+            gradeLevelFrom = gradeLevelFrom,
+            gradeLevelTo = gradeLevelTo,
+            setterName = setterName,
+            setDateFrom = setDateFrom,
+            setDateTo = setDateTo,
+            tags = tags,
+            includeTakenDown = includeTakenDown
+        )
     }
 }

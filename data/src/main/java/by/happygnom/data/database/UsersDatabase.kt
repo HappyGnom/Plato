@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import by.happygnom.data.dao.UserDao
 import by.happygnom.data.model.UserEntity
 
-@Database(entities = [UserEntity::class], version = 1)
-abstract class UserDatabase : RoomDatabase(){
+@Database(entities = [UserEntity::class], version = 2)
+abstract class UsersDatabase : RoomDatabase() {
     abstract val userDao: UserDao
 }

@@ -14,9 +14,10 @@
     <string name="set_by_template">By %s</string>
 
     <string name="all_set">All set</string>
-    <string name="projected">Projected</string>
+    <string name="bookmarked">Bookmarked</string>
     <string name="sent">Sent</string>
     <string name="liked">Liked</string>
+    <string name="filtered">Filtered</string>
     <string name="no_routes">No routes found. Change your filter settings</string>
 
     <string name="failed_to_load_route">Failed to load route data</string>

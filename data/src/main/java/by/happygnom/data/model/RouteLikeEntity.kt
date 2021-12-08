@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey
         entity = RouteEntity::class,
         parentColumns = arrayOf("routeId"),
         childColumns = arrayOf("routeId"),
-        onDelete = ForeignKey.CASCADE
+        onDelete = ForeignKey.NO_ACTION
     )]
 )
 data class RouteLikeEntity(

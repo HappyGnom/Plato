@@ -23,6 +23,7 @@ import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import by.happygnom.domain.model.Route
+import by.happygnom.domain.model.RoutesFilter
 import by.happygnom.plato.R
 import by.happygnom.plato.model.GradeLevels
 import by.happygnom.plato.ui.elements.Card
@@ -50,9 +51,11 @@ fun RoutesListScreen(
             navController.currentBackStackEntry?.savedStateHandle?.remove<Boolean>(ArgNames.SHOULD_UPDATE)
         }
 
+    val displayedRoutesNameId by viewModel.displayedRoutesNameId.observeAsState(R.string.all_set)
+
     Scaffold(
         topBar = {
-            val routesText = stringResource(id = R.string.all_set) +
+            val routesText = stringResource(id = displayedRoutesNameId) +
                     " " +
                     stringResource(id = R.string.routes).toLowerCase(Locale.current)
 
@@ -108,25 +111,60 @@ fun RoutesListScreenContent(
                     LabeledIconButton(
                         text = stringResource(id = R.string.all_set),
                         iconPainter = painterResource(id = R.drawable.ic_path),
-                        onClick = { /*TODO*/ }
+                        onClick = {
+                            viewModel.setRoutesFilterAndFetch(
+                                RoutesFilter.Default,
+                                R.string.all_set
+                            )
+                        }
                     )
 
                     LabeledIconButton(
-                        text = stringResource(id = R.string.projected),
+                        text = stringResource(id = R.string.bookmarked),
                         iconPainter = painterResource(id = R.drawable.ic_bookmark),
-                        onClick = { /*TODO*/ }
+                        onClick = {
+                            val projectedRoutesFilter = RoutesFilter.Builder()
+                                .setCategory(RoutesFilter.Category.BOOKMARKED)
+                                .setIncludeTakenDown(true)
+                                .build()
+
+                            viewModel.setRoutesFilterAndFetch(
+                                projectedRoutesFilter,
+                                R.string.bookmarked
+                            )
+                        }
                     )
 
                     LabeledIconButton(
                         text = stringResource(id = R.string.sent),
                         iconPainter = painterResource(id = R.drawable.ic_arm),
-                        onClick = { /*TODO*/ }
+                        onClick = {
+                            val sentRoutesFilter = RoutesFilter.Builder()
+                                .setCategory(RoutesFilter.Category.SENT)
+                                .setIncludeTakenDown(true)
+                                .build()
+
+                            viewModel.setRoutesFilterAndFetch(
+                                sentRoutesFilter,
+                                R.string.sent
+                            )
+                        }
                     )
 
                     LabeledIconButton(
                         text = stringResource(id = R.string.liked),
                         iconPainter = painterResource(id = R.drawable.ic_like),
-                        onClick = { /*TODO*/ }
+                        onClick = {
+                            val likedRoutesFilter = RoutesFilter.Builder()
+                                .setCategory(RoutesFilter.Category.LIKED)
+                                .setIncludeTakenDown(true)
+                                .build()
+
+                            viewModel.setRoutesFilterAndFetch(
+                                likedRoutesFilter,
+                                R.string.liked
+                            )
+                        }
                     )
                 }
             }
@@ -237,7 +275,7 @@ fun RouteCard(
                     Spacer(modifier = Modifier.width(8.dp))
 
                     TagsList(
-                        tags = route.tags.map{it.value},
+                        tags = route.tags.map { it.value },
                         modifier = Modifier.weight(1f)
                     )
 

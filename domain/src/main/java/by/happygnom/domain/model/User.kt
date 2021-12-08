@@ -9,8 +9,5 @@ data class User(
     val nickname: String?,
     val sex: Int,
     val startDate: Date,
-    val pictureUrl: String?,
-    val liked: List<Long>?,
-    val sent: List<Long>?,
-    val favorite: List<Long>?
+    val pictureUrl: String?
 )

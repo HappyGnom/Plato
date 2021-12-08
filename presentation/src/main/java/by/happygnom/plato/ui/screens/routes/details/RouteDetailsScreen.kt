@@ -225,8 +225,14 @@ fun RouteDetails(
     val resources = LocalContext.current.resources
 
     val isLiked by viewModel.isLiked.observeAsState(false)
-    val isProjected by viewModel.isProjected.observeAsState(false)
+    val isBookmarked by viewModel.isBookmarked.observeAsState(false)
     val isSent by viewModel.isSent.observeAsState(false)
+
+    val manualLikesCountChange by viewModel.manualLikesCountChange.observeAsState(0)
+    val manualSendsCountChange by viewModel.manualSendsCountChange.observeAsState(0)
+
+    val displayLikesCount = route.likesCount + manualLikesCountChange
+    val displaySendsCount = route.sendsCount + manualSendsCountChange
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         Row(
@@ -253,8 +259,8 @@ fun RouteDetails(
             SwitchableIconButton(
                 activeIconResId = R.drawable.ic_bookmark_filled,
                 disabledIconResId = R.drawable.ic_bookmark,
-                isActive = isProjected,
-                onActiveStateChanged = viewModel::setProjected,
+                isActive = isBookmarked,
+                onActiveStateChanged = viewModel::setBookmarked,
                 modifier = Modifier.size(24.dp)
             )
 
@@ -271,14 +277,14 @@ fun RouteDetails(
             ) {
                 Text(
                     text = resources.getQuantityString(
-                        R.plurals.likes, route.likesCount, route.likesCount
+                        R.plurals.likes, displayLikesCount, displayLikesCount
                     ),
                     style = MaterialTheme.typography.caption.copy(Grey1)
                 )
 
                 Text(
                     text = resources.getQuantityString(
-                        R.plurals.sends, route.sendsCount, route.sendsCount
+                        R.plurals.sends, displaySendsCount, displaySendsCount
                     ),
                     style = MaterialTheme.typography.caption.copy(Grey1)
                 )
