@@ -298,7 +298,7 @@ fun RouteEditorScreenContent(
         if (existingRouteId != null)
             PinkFilledButton(
                 text = stringResource(id = R.string.take_down),
-                onClick = { /*TODO*/ },
+                onClick = viewModel::takeDownRoute,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)

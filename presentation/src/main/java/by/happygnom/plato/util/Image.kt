@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory
 import android.util.Base64
 import java.io.ByteArrayOutputStream
 
-
 fun Bitmap.toBase64(): String {
     val byteArray = this.toByteArray()
     return Base64.encodeToString(byteArray, Base64.DEFAULT)

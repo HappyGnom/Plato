@@ -18,16 +18,20 @@ class RoutesGateway(private val client: HttpClient) {
         return client.get("${BuildConfig.API_ADRESS}/Route/$routeId")
     }
 
-    suspend fun createRoute(request: CreateRouteRequestImpl) : HttpResponse {
+    suspend fun createRoute(request: CreateRouteRequestImpl): HttpResponse {
         return client.post("${BuildConfig.API_ADRESS}/Route") {
             body = request
         }
     }
 
-    suspend fun updateRoute(request: UpdateRouteRequestImpl) : HttpResponse  {
+    suspend fun updateRoute(request: UpdateRouteRequestImpl): HttpResponse {
         return client.put("${BuildConfig.API_ADRESS}/Route/${request.routeId}") {
             body = request
         }
+    }
+
+    suspend fun takeDownRoute(routeId: Long): HttpResponse {
+        return client.post("${BuildConfig.API_ADRESS}/Route/${routeId}/TakeDown")
     }
 
     suspend fun setRouteLike(routeId: Long, isLiked: Boolean): HttpResponse {

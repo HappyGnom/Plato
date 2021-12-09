@@ -89,6 +89,9 @@
     <string name="unspecified">Unspecified</string>
     <string name="clear_all">Clear all</string>
 
+    <string name="latest_news">Latest news</string>
+    <string name="no_news">No news found. Please, come in later. Something great is coming!</string>
+
     <string name="plato_wide_text">P L A T O</string>
 
     <string name="nickname">Nickname</string>

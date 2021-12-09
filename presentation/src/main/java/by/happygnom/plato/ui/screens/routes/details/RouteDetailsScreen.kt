@@ -25,6 +25,7 @@ import androidx.navigation.NavController
 import by.happygnom.domain.model.Comment
 import by.happygnom.domain.model.Route
 import by.happygnom.plato.R
+import by.happygnom.plato.model.AuthenticatedUser
 import by.happygnom.plato.model.GradeLevels
 import by.happygnom.plato.ui.elements.AddCommentButton
 import by.happygnom.plato.ui.elements.Comment
@@ -144,7 +145,7 @@ fun CollapsingToolbarScope.Toolbar(
         )
     }
 
-    if (route != null)
+    if (route != null && AuthenticatedUser.isAdmin)
         IconButton(
             onClick = { navController.navigate(RoutesScreen.Editor.createRoute(route.id)) },
             modifier = Modifier
@@ -199,10 +200,6 @@ fun RouteDetailsScreenContent(
                 modifier = Modifier.padding(16.dp)
             )
         else -> {
-//            LaunchedEffect(key1 = "Open image", block = {
-//                toolbarState.toolbarState.expand(100)
-//            })
-
             RouteDetails(
                 viewModel = viewModel,
                 navController = navController,
@@ -371,7 +368,7 @@ fun RouteInfo(
         stringResource(id = R.string.set_by) to route.setterName,
         stringResource(id = R.string.set_date) to route.setDate.toFormattedDateString(),
         stringResource(id = R.string.status) to statusString,
-        stringResource(id = R.string.tags) to route.tags.joinToString()
+        stringResource(id = R.string.tags) to route.tags.joinToString { it.value }
     )
 
     Column(
@@ -439,7 +436,7 @@ fun LatestComments(
         ) {
             AddCommentButton(
                 onClick = { navController.navigate(RoutesScreen.AddComment.createRoute(route.id)) },
-                userImageUrl = "https://i.imgur.com/SWyt4bv.jpeg",
+                userImageUrl = AuthenticatedUser.get()?.pictureUrl,
                 modifier = Modifier.fillMaxWidth()
             )
 

@@ -2,17 +2,12 @@ package by.happygnom.plato.di
 
 import android.content.Context
 import androidx.room.Room
+import by.happygnom.data.database.NewsDatabase
 import by.happygnom.data.database.RoutesDatabase
 import by.happygnom.data.database.UsersDatabase
 import by.happygnom.data.network.*
-import by.happygnom.data.repository.CommentsRepositoryImpl
-import by.happygnom.data.repository.RoutesRepositoryImpl
-import by.happygnom.data.repository.TagsRepositoryImpl
-import by.happygnom.data.repository.UserRepositoryImpl
-import by.happygnom.domain.data_interface.repository.CommentsRepository
-import by.happygnom.domain.data_interface.repository.RoutesRepository
-import by.happygnom.domain.data_interface.repository.TagsRepository
-import by.happygnom.domain.data_interface.repository.UserRepository
+import by.happygnom.data.repository.*
+import by.happygnom.domain.data_interface.repository.*
 import by.happygnom.domain.model.User
 import by.happygnom.domain.usecase.GetUserUseCase
 import coil.ImageLoader
@@ -69,9 +64,18 @@ class SingletonModule {
         ).build()
     }
 
+
+    @Provides
+    fun provideNewsDatabase(@ApplicationContext context: Context): NewsDatabase {
+        return Room.databaseBuilder(
+            context,
+            NewsDatabase::class.java,
+            "NewsDB"
+        ).build()
+    }
+
     @Provides
     fun provideRoutesRepository(
-        @ApplicationContext context: Context,
         routesDatabase: RoutesDatabase,
         ktorClient: HttpClient
     ): RoutesRepository {
@@ -86,7 +90,6 @@ class SingletonModule {
 
     @Provides
     fun provideTagsRepository(
-        @ApplicationContext context: Context,
         routesDatabase: RoutesDatabase,
         ktorClient: HttpClient
     ): TagsRepository {
@@ -97,7 +100,6 @@ class SingletonModule {
 
     @Provides
     fun provideCommentsRepository(
-        @ApplicationContext context: Context,
         ktorClient: HttpClient
     ): CommentsRepository {
         val commentsGateway = CommentsGateway(ktorClient)
@@ -107,7 +109,6 @@ class SingletonModule {
 
     @Provides
     fun provideUserRepository(
-        @ApplicationContext context: Context,
         routesDatabase: RoutesDatabase,
         usersDatabase: UsersDatabase,
         ktorClient: HttpClient
@@ -119,5 +120,15 @@ class SingletonModule {
             routesDatabase.routeInteractionsDao,
             userGateway
         )
+    }
+
+    @Provides
+    fun provideNewsRepository(
+        newsDatabase: NewsDatabase,
+        ktorClient: HttpClient
+    ): NewsRepository {
+        val newsGateway = NewsGateway(ktorClient)
+
+        return NewsRepositoryImpl(newsGateway, newsDatabase.newsDao)
     }
 }

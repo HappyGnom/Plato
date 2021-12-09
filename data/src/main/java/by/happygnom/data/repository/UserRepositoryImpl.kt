@@ -55,7 +55,7 @@ class UserRepositoryImpl(
                 user.nickname,
                 user.pictureUrl,
                 user.sex,
-                user.startDate.time / DateUtils.SECOND_IN_MILLIS,
+                user.startDate?.let { it.time / DateUtils.SECOND_IN_MILLIS},
                 user.photo
             )
         )
@@ -70,7 +70,7 @@ class UserRepositoryImpl(
                 user.nickname,
                 user.pictureUrl,
                 user.sex,
-                user.startDate.time / DateUtils.SECOND_IN_MILLIS,
+                user.startDate?.let { it.time / DateUtils.SECOND_IN_MILLIS },
                 user.photo
             )
         )

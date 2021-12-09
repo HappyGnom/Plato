@@ -25,6 +25,7 @@ import androidx.navigation.NavController
 import by.happygnom.domain.model.Route
 import by.happygnom.domain.model.RoutesFilter
 import by.happygnom.plato.R
+import by.happygnom.plato.model.AuthenticatedUser
 import by.happygnom.plato.model.GradeLevels
 import by.happygnom.plato.ui.elements.Card
 import by.happygnom.plato.ui.elements.DefaultToolbar
@@ -66,11 +67,12 @@ fun RoutesListScreen(
             )
         },
         floatingActionButton = {
-            AddFloatingActionButton(
-                onClick = {
-                    navController.navigate(RoutesScreen.Editor.createRoute(null))
-                }
-            )
+            if (AuthenticatedUser.isAdmin)
+                AddFloatingActionButton(
+                    onClick = {
+                        navController.navigate(RoutesScreen.Editor.createRoute(null))
+                    }
+                )
         }) {
         RoutesListScreenContent(
             viewModel = viewModel,

@@ -32,6 +32,10 @@ class RoutesRepositoryImpl(
         routesGateway.updateRoute(request as UpdateRouteRequestImpl)
     }
 
+    override suspend fun takeDownRoute(routeId: Long) {
+        routesGateway.takeDownRoute(routeId)
+    }
+
     override suspend fun getAllRoutes(forceUpdate: Boolean): List<Route> {
         return routesDao.ensureIsNotEmpty(forceUpdate).getAll().map { it.toDomain() }
     }

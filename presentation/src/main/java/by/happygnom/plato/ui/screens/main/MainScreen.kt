@@ -30,7 +30,7 @@ fun MainScreen(viewModel: MainViewModel) {
 
     val bottomNavigationItems = listOf(
         MainScreen.Routes,
-        MainScreen.Stats,
+//        MainScreen.Stats,
         MainScreen.News,
         MainScreen.User
     )

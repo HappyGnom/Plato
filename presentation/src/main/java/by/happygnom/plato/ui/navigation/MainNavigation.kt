@@ -9,7 +9,8 @@ import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import by.happygnom.plato.R
-import by.happygnom.plato.ui.screens.news.NewsScreen
+import by.happygnom.plato.ui.screens.news.details.NewsDetailsScreen
+import by.happygnom.plato.ui.screens.news.list.NewsListScreen
 import by.happygnom.plato.ui.screens.routes.add_comment.AddCommentScreen
 import by.happygnom.plato.ui.screens.routes.comments.CommentsScreen
 import by.happygnom.plato.ui.screens.routes.details.RouteDetailsScreen
@@ -19,7 +20,6 @@ import by.happygnom.plato.ui.screens.routes.route_editor.RouteEditorScreen
 import by.happygnom.plato.ui.screens.stats.StatsScreen
 import by.happygnom.plato.ui.screens.user.profile.UserScreen
 import by.happygnom.plato.ui.screens.user.settings.SettingsScreen
-import java.util.*
 
 sealed class Screen(val route: String) {
     //    object Authorization : Screen("authorization")
@@ -41,7 +41,9 @@ sealed class RoutesScreen(
     val route: String,
 ) {
     object List : RoutesScreen("main/routes/list")
+
     object Filter : RoutesScreen("main/routes/list/filters")
+
     object RouteDetails : RoutesScreen("main/routes/list/{${ArgNames.ROUTE_ID}}") {
         fun createRoute(routeId: Long) = "main/routes/list/$routeId"
     }
@@ -54,12 +56,32 @@ sealed class RoutesScreen(
         fun createRoute(routeId: Long) = "main/routes/list/$routeId/add-comment"
     }
 
-    object Editor : RoutesScreen("main/routes/list/edit?${ArgNames.EXISTING_ROUTE_ID}={${ArgNames.EXISTING_ROUTE_ID}}") {
+    object Editor :
+        RoutesScreen("main/routes/list/edit?${ArgNames.EXISTING_ROUTE_ID}={${ArgNames.EXISTING_ROUTE_ID}}") {
         fun createRoute(existingRouteId: Long?) =
             if (existingRouteId != null)
                 "main/routes/list/edit?${ArgNames.EXISTING_ROUTE_ID}=$existingRouteId"
             else
                 "main/routes/list/edit?${ArgNames.EXISTING_ROUTE_ID}=-1"
+    }
+}
+
+sealed class NewsScreen(
+    val route: String
+) {
+    object List : NewsScreen("main/news/list")
+
+    object NewsDetails : NewsScreen("main/news/list/{${ArgNames.NEWS_ID}}") {
+        fun createRoute(newsId: Long) = "main/news/list/$newsId"
+    }
+
+    object Editor :
+        NewsScreen("main/news/list/edit?${ArgNames.EXISTING_NEWS_ID}={${ArgNames.EXISTING_NEWS_ID}}") {
+        fun createRoute(existingNewsId: Long?) =
+            if (existingNewsId != null)
+                "main/news/list/edit?${ArgNames.EXISTING_NEWS_ID}=$existingNewsId"
+            else
+                "main/news/list/edit?${ArgNames.EXISTING_NEWS_ID}=-1"
     }
 }
 
@@ -95,9 +117,7 @@ fun NavGraphBuilder.addMainGraph(
             StatsScreen(viewModel = hiltViewModel(), navController = navController)
         }
 
-        composable(MainScreen.News.route) {
-            NewsScreen(viewModel = hiltViewModel(), navController = navController)
-        }
+        addNewsGraph(navController)
 
         addUserGraph(navController)
     }
@@ -161,7 +181,9 @@ fun NavGraphBuilder.addRoutesGraph(
 
         composable(
             RoutesScreen.Editor.route,
-            arguments = listOf(navArgument(ArgNames.EXISTING_ROUTE_ID) { type = NavType.LongType })
+            arguments = listOf(navArgument(ArgNames.EXISTING_ROUTE_ID) {
+                type = NavType.LongType
+            })
         ) {
             RouteEditorScreen(
                 viewModel = hiltViewModel(),
@@ -170,3 +192,21 @@ fun NavGraphBuilder.addRoutesGraph(
         }
     }
 }
+
+fun NavGraphBuilder.addNewsGraph(
+    navController: NavController
+) {
+    navigation(route = MainScreen.News.route, startDestination = NewsScreen.List.route) {
+        composable(NewsScreen.List.route) {
+            NewsListScreen(viewModel = hiltViewModel(), navController = navController)
+        }
+
+        composable(
+            NewsScreen.NewsDetails.route,
+            arguments = listOf(navArgument(ArgNames.NEWS_ID) { type = NavType.LongType })
+        ) {
+            NewsDetailsScreen(viewModel = hiltViewModel(), navController = navController)
+        }
+    }
+}
+

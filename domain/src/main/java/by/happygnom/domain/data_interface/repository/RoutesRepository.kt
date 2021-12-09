@@ -11,9 +11,14 @@ interface RoutesRepository {
 
     suspend fun updateRoute(request: UpdateRouteRequest)
 
+    suspend fun takeDownRoute(routeId: Long)
+
     suspend fun getAllRoutes(forceUpdate: Boolean = false): List<Route>
 
-    suspend fun getFilteredRoutes(routesFilter: RoutesFilter, forceUpdate: Boolean = false): List<Route>
+    suspend fun getFilteredRoutes(
+        routesFilter: RoutesFilter,
+        forceUpdate: Boolean = false
+    ): List<Route>
 
     suspend fun getRouteById(routeId: Long, forceUpdate: Boolean = false): Route?
 
@@ -21,15 +26,15 @@ interface RoutesRepository {
 
     suspend fun setRouteLike(routeId: Long, isLiked: Boolean)
 
-    suspend fun getIsRouteLiked(routeId: Long) : Boolean
+    suspend fun getIsRouteLiked(routeId: Long): Boolean
 
     suspend fun setRouteSent(routeId: Long, isSent: Boolean)
 
-    suspend fun getIsRouteSent(routeId: Long) : Boolean
+    suspend fun getIsRouteSent(routeId: Long): Boolean
 
     suspend fun setRouteBookmark(routeId: Long, isBookmarked: Boolean)
 
-    suspend fun getIsRouteBookmarked(routeId: Long) : Boolean
+    suspend fun getIsRouteBookmarked(routeId: Long): Boolean
 
     suspend fun getRoutesetters(): List<String>
 }

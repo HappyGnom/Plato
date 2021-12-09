@@ -1,6 +1,5 @@
 package by.happygnom.domain.usecase
 
-import by.happygnom.domain.data_interface.model.CreateRouteRequest
 import by.happygnom.domain.data_interface.model.UpdateRouteRequest
 import by.happygnom.domain.data_interface.repository.RoutesRepository
 

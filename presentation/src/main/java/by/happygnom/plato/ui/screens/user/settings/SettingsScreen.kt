@@ -48,7 +48,6 @@ fun SettingsScreen(
     viewModel: SettingsViewModel,
     navController: NavController
 ) {
-
     val photoUrl by viewModel.photoUrl.observeAsState()
     val saved by viewModel.saved.observeAsState()
 

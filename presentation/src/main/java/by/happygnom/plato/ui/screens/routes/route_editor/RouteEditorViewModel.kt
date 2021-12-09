@@ -11,6 +11,7 @@ import by.happygnom.data.model.requests.UpdateRouteRequestImpl
 import by.happygnom.domain.data_interface.repository.RoutesRepository
 import by.happygnom.domain.usecase.CreateRouteUseCase
 import by.happygnom.domain.usecase.GetRouteByIdUseCase
+import by.happygnom.domain.usecase.TakeDownRouteUseCase
 import by.happygnom.domain.usecase.UpdateRouteUseCase
 import by.happygnom.plato.model.GradeLevels
 import by.happygnom.plato.model.InputValidator
@@ -139,6 +140,25 @@ class RouteEditorViewModel @Inject constructor(
         _tags.value = tags
     }
 
+    fun takeDownRoute() {
+        val takeDownRouteUseCase = TakeDownRouteUseCase(routesRepository)
+        takeDownRouteUseCase.inputRouteId = existingRouteId.value!!
+
+        _isLoading.value = true
+
+        takeDownRouteUseCase.executeAsync {
+            onSuccess {
+                _isDone.value = Event(true)
+            }
+            onFailure {
+                it
+            }
+            onComplete {
+                _isLoading.value = false
+            }
+        }
+    }
+
     fun saveRoute() {
         val validInput = validateInput()
         if (!validInput) return
@@ -206,7 +226,6 @@ class RouteEditorViewModel @Inject constructor(
             }
         }
     }
-
 
     private fun validateInput(): Boolean {
         val errors = getInputErrorsOrNull()

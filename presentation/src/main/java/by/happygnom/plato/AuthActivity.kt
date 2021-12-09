@@ -29,13 +29,6 @@ class AuthActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-//        val options = FirebaseOptions.builder()
-//            .setCredentials(GoogleCredentials.getApplicationDefault())
-//            .build()
-//
-//        FirebaseApp.initializeApp(options)
-
-
         setContent {
             PlatoTheme {
                 ProvideWindowInsets {

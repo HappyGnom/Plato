@@ -15,7 +15,7 @@ data class UserEntity(
     val nickname: String?,
     val pictureUrl: String?,
     val sex: Int,
-    val startDateTimestamp: Long,
+    val startDateTimestamp: Long?,
     val photo: String?
 ) {
     fun toDomain() = User(
@@ -24,7 +24,7 @@ data class UserEntity(
         surname,
         nickname,
         sex,
-        Date(startDateTimestamp * DateUtils.SECOND_IN_MILLIS),
+        startDateTimestamp?.let { Date(it * DateUtils.SECOND_IN_MILLIS) },
         pictureUrl,
         photo
     )
