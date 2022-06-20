@@ -11,7 +11,6 @@ import androidx.compose.ui.res.stringResource
 import by.happygnom.plato.R
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
-
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun GallerySelect(onImageUri: (Uri?) -> Unit) {

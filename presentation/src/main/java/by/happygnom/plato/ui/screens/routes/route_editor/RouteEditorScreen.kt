@@ -9,7 +9,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
@@ -23,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import by.happygnom.plato.R
 import by.happygnom.plato.model.GradeLevels
+import by.happygnom.plato.navigation.ArgNames
 import by.happygnom.plato.ui.elements.DefaultToolbar
 import by.happygnom.plato.ui.elements.ErrorText
 import by.happygnom.plato.ui.elements.button.DatePickerButton
@@ -31,7 +31,6 @@ import by.happygnom.plato.ui.elements.button.PinkFilledButton
 import by.happygnom.plato.ui.elements.button.TealFilledButton
 import by.happygnom.plato.ui.elements.inputs.InputTextFieldBox
 import by.happygnom.plato.ui.elements.inputs.QuantitySelector
-import by.happygnom.plato.ui.navigation.ArgNames
 import by.happygnom.plato.ui.theme.ButtonShape
 import by.happygnom.plato.ui.theme.Grey1
 import by.happygnom.plato.ui.theme.Pink1
@@ -89,7 +88,6 @@ fun RouteEditorScreen(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun RouteEditorScreenContent(
     viewModel: RouteEditorViewModel,

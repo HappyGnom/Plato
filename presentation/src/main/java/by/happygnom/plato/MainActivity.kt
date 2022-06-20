@@ -21,9 +21,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
-    private lateinit var mGoogleSignInClient: GoogleSignInClient
-
     @Inject
     lateinit var userRepository: UserRepository
 

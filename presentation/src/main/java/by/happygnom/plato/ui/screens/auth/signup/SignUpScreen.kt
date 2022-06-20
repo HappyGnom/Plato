@@ -31,13 +31,12 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import by.happygnom.plato.MainActivity
 import by.happygnom.plato.R
 import by.happygnom.plato.ui.elements.LabeledLogo
 import by.happygnom.plato.ui.elements.button.StrokeImageButton
 import by.happygnom.plato.ui.elements.button.TealFilledButton
 import by.happygnom.plato.ui.elements.inputs.InputTextField
-import by.happygnom.plato.ui.navigation.AuthenticationScreen
+import by.happygnom.plato.navigation.AuthenticationScreen
 import by.happygnom.plato.ui.screens.auth.main.AuthViewModel
 import by.happygnom.plato.ui.theme.*
 import com.google.accompanist.insets.statusBarsPadding
@@ -49,7 +48,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
-import by.happygnom.plato.util.*
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 @Composable
@@ -68,11 +66,6 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
 
     val context = LocalContext.current
-
-    fun updateUI() {
-        val intent = Intent(context, MainActivity::class.java)
-        context.startActivity(intent)
-    }
 
     isSignedIn?.getContentIfNotHandled()?.let {
         navController.navigate(AuthenticationScreen.SignUpDetails.route)

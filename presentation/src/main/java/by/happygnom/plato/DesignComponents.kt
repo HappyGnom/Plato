@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import by.happygnom.plato.ui.elements.TagsList
 import by.happygnom.plato.ui.elements.button.*
 import by.happygnom.plato.ui.elements.inputs.InputTextField
 import by.happygnom.plato.ui.elements.inputs.QuantitySelector
@@ -31,6 +32,8 @@ fun DesignComponents() {
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            TagsList(tags = listOf("Strength", "Dynamic", "Crimp", "Tricky"), displayMax = 2)
+
             Text(text = "Buttons", style = MaterialTheme.typography.h1.copy(Teal1))
 
             Row(

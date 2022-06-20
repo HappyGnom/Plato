@@ -15,7 +15,8 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
-        buildConfigField "String", "API_ADRESS", '"https://plato.azurewebsites.net/api"'
+//        buildConfigField "String", "API_ADRESS", '"https://plato.azurewebsites.net/api"'
+        buildConfigField "String", "API_ADRESS", '"http://10.0.2.2:5239/api"'
     }
 
     buildTypes {
@@ -35,6 +36,7 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    namespace 'by.happygnom.data'
 }
 
 dependencies {

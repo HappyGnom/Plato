@@ -2,9 +2,7 @@ package by.happygnom.plato.ui.screens.auth.login
 
 import android.content.ContentValues.TAG
 import android.content.Intent
-import android.content.Intent.getIntent
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -35,7 +33,7 @@ import by.happygnom.plato.ui.elements.LabeledLogo
 import by.happygnom.plato.ui.elements.button.StrokeImageButton
 import by.happygnom.plato.ui.elements.button.TealFilledButton
 import by.happygnom.plato.ui.elements.inputs.InputTextField
-import by.happygnom.plato.ui.navigation.AuthenticationScreen
+import by.happygnom.plato.navigation.AuthenticationScreen
 import by.happygnom.plato.ui.screens.auth.main.AuthViewModel
 import by.happygnom.plato.ui.theme.*
 import com.google.accompanist.insets.statusBarsPadding
@@ -43,7 +41,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase

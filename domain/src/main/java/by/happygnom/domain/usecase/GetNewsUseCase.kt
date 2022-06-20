@@ -8,8 +8,9 @@ class GetNewsUseCase(private val newsRepository: NewsRepository) :
 
     //var inputCount: Long = 0
     var inputForceUpdate: Boolean = false
+    var inputOnlyPublished: Boolean = true
 
     override suspend fun performTask(): List<News> {
-        return newsRepository.getNews(inputForceUpdate)
+        return newsRepository.getAllNews(inputForceUpdate, inputOnlyPublished)
     }
 }

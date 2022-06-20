@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import by.happygnom.domain.data_interface.repository.NewsRepository
 import by.happygnom.domain.model.News
 import by.happygnom.domain.usecase.GetNewsByIdUseCase
-import by.happygnom.plato.ui.navigation.ArgNames
+import by.happygnom.plato.navigation.ArgNames
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

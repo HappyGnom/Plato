@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
-import by.happygnom.plato.ui.navigation.AuthNavigation
-import by.happygnom.plato.ui.navigation.addAuthGraph
+import by.happygnom.plato.navigation.AuthNavigation
+import by.happygnom.plato.navigation.addAuthGraph
 import by.happygnom.plato.ui.theme.PlatoTheme
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.systemuicontroller.rememberSystemUiController

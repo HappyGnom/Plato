@@ -1,39 +1,24 @@
 package by.happygnom.plato.ui.screens.auth.getStarted
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.KeyboardArrowLeft
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.res.imageResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import by.happygnom.plato.R
 import by.happygnom.plato.ui.elements.LabeledLogo
 import by.happygnom.plato.ui.elements.button.TealFilledButton
-import by.happygnom.plato.ui.navigation.AuthenticationScreen
-import by.happygnom.plato.ui.theme.Grey5
+import by.happygnom.plato.navigation.AuthenticationScreen
 import by.happygnom.plato.ui.theme.Teal1
-import by.happygnom.plato.ui.theme.Teal2
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.pager.*
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable

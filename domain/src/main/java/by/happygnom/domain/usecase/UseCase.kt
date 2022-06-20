@@ -6,7 +6,7 @@ import java.util.concurrent.CancellationException
 import kotlin.coroutines.CoroutineContext
 import kotlin.system.measureTimeMillis
 
-internal typealias CompletionBlock<T> = UseCase.Request<T>.() -> Unit
+typealias CompletionBlock<T> = UseCase.Request<T>.() -> Unit
 
 abstract class UseCase<T> constructor(
     private val tag: String,

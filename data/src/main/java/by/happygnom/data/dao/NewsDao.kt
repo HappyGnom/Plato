@@ -1,9 +1,6 @@
 package by.happygnom.data.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import by.happygnom.data.model.NewsEntity
 
 @Dao
@@ -20,4 +17,7 @@ interface NewsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNews(news: List<NewsEntity>)
+
+    @Query("DELETE FROM news")
+    suspend fun clearNews()
 }

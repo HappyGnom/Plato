@@ -19,18 +19,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import by.happygnom.domain.model.Route
 import by.happygnom.plato.R
-import by.happygnom.plato.ui.elements.LabeledLogo
 import by.happygnom.plato.ui.elements.RadioButtonHorizontal
 import by.happygnom.plato.ui.elements.button.DatePickerButton
 import by.happygnom.plato.ui.elements.button.TealFilledButton
 import by.happygnom.plato.ui.elements.inputs.InputTextFieldBox
-import by.happygnom.plato.ui.navigation.RoutesScreen
-import by.happygnom.plato.ui.navigation.UserScreen
-import by.happygnom.plato.ui.screens.routes.details.RouteDetailsScreenContent
-import by.happygnom.plato.ui.screens.routes.details.Toolbar
-import by.happygnom.plato.ui.screens.user.profile.UserViewModel
+import by.happygnom.plato.navigation.UserScreen
 import by.happygnom.plato.ui.theme.Teal1
 import by.happygnom.plato.ui.theme.White
 import by.happygnom.plato.util.GallerySelect
@@ -38,8 +32,6 @@ import by.happygnom.plato.util.showDatePickerDialog
 import by.happygnom.plato.util.toFormattedDateString
 import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.statusBarsPadding
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import me.onebone.toolbar.*
 import java.util.*
 

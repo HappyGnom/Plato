@@ -9,7 +9,7 @@ import by.happygnom.domain.data_interface.repository.RoutesRepository
 import by.happygnom.domain.model.Comment
 import by.happygnom.domain.model.Route
 import by.happygnom.domain.usecase.*
-import by.happygnom.plato.ui.navigation.ArgNames
+import by.happygnom.plato.navigation.ArgNames
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

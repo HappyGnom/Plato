@@ -15,7 +15,7 @@ import by.happygnom.domain.usecase.TakeDownRouteUseCase
 import by.happygnom.domain.usecase.UpdateRouteUseCase
 import by.happygnom.plato.model.GradeLevels
 import by.happygnom.plato.model.InputValidator
-import by.happygnom.plato.ui.navigation.ArgNames
+import by.happygnom.plato.navigation.ArgNames
 import by.happygnom.plato.util.Event
 import by.happygnom.plato.util.toBase64
 import coil.ImageLoader
@@ -102,8 +102,6 @@ class RouteEditorViewModel @Inject constructor(
     fun setPicture(pictureUri: String) {
         val imageRequest = imageRequestBuilder
             .data(pictureUri)
-//            .placeholder(R.drawable.placeholder_route)
-//            .error(R.drawable.placeholder_route)
             .target { result ->
                 val base64 = (result as BitmapDrawable?)?.bitmap?.toBase64()
                 _pictureBase64.value = base64
@@ -238,7 +236,7 @@ class RouteEditorViewModel @Inject constructor(
         val pictureErrorId = InputValidator.getPictureBase64ErrorIdOrNull(pictureBase64.value)
         val holdsColorErrorId = InputValidator.getHoldsColorErrorIdOrNull(holdsColor.value ?: "")
         val setterNameErrorId = InputValidator.getFullNameErrorIdOrNull(setterName.value ?: "")
-        val setDateErrorId = InputValidator.getDateErrorIdOrNull(setDate.value)
+        val setDateErrorId = InputValidator.getRouteDateErrorIdOrNull(setDate.value)
         val tagsErrorId = InputValidator.getTagsErrorIdOrNull(tags.value ?: "")
 
         val errors = RouteEditorErrors(

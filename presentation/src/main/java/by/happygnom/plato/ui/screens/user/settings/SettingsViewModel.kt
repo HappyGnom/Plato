@@ -6,9 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import by.happygnom.domain.data_interface.repository.UserRepository
 import by.happygnom.domain.model.User
-import by.happygnom.domain.usecase.GetUserUseCase
 import by.happygnom.domain.usecase.UpdateUserUseCase
-import by.happygnom.plato.R
 import by.happygnom.plato.model.AuthenticatedUser
 import by.happygnom.plato.model.InputValidator
 import by.happygnom.plato.ui.screens.auth.signup_details.Sex
@@ -114,7 +112,7 @@ class SettingsViewModel @Inject constructor(
         val nameErrorId = InputValidator.getFullNameErrorIdOrNull(name.value ?: "")
         val surnameErrorId = InputValidator.getFullNameErrorIdOrNull(surname.value ?: "")
         val nicknameErrorId = InputValidator.getNicknameErrorIdOrNull(nickname.value ?: "")
-        val startDateErrorId = InputValidator.getDateErrorIdOrNull(startDate.value)
+        val startDateErrorId = InputValidator.getRouteDateErrorIdOrNull(startDate.value)
 
         val errors = SignUpErrors(
             nameErrorId,

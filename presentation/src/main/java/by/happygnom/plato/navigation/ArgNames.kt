@@ -1,4 +1,4 @@
-package by.happygnom.plato.ui.navigation
+package by.happygnom.plato.navigation
 
 object ArgNames {
     const val ROUTE_ID = "route_id"

@@ -12,6 +12,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
@@ -20,14 +23,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import by.happygnom.domain.model.News
 import by.happygnom.plato.R
+import by.happygnom.plato.model.AuthenticatedUser
+import by.happygnom.plato.navigation.ArgNames
+import by.happygnom.plato.navigation.NewsScreen
 import by.happygnom.plato.ui.elements.Card
 import by.happygnom.plato.ui.elements.DefaultToolbar
 import by.happygnom.plato.ui.elements.LoadingIndicator
-import by.happygnom.plato.ui.navigation.ArgNames
-import by.happygnom.plato.ui.navigation.NewsScreen
-import by.happygnom.plato.ui.theme.Grey1
-import by.happygnom.plato.ui.theme.Grey2
-import by.happygnom.plato.ui.theme.White
+import by.happygnom.plato.ui.elements.button.AddFloatingActionButton
+import by.happygnom.plato.ui.theme.*
 import by.happygnom.plato.util.toFormattedDateTimeString
 import coil.compose.rememberImagePainter
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -47,18 +50,17 @@ fun NewsListScreen(
     Scaffold(
         topBar = {
             DefaultToolbar(
-                text = stringResource(id = R.string.latest_news),
-//                endIconId = R.drawable.ic_filter,
-//                onEndIconClick = { navController.navigate(RoutesScreen.Filter.route) }
+                text = stringResource(id = R.string.latest_news)
             )
         },
-//        floatingActionButton = {
-//            AddFloatingActionButton(
-//                onClick = {
-//                    navController.navigate(RoutesScreen.Editor.createRoute(null))
-//                }
-//            )
-//        }
+        floatingActionButton = {
+            if (AuthenticatedUser.isAdmin)
+                AddFloatingActionButton(
+                    onClick = {
+                        navController.navigate(NewsScreen.Editor.createRoute(null))
+                    }
+                )
+        }
     ) {
         NewsListScreenContent(
             viewModel = viewModel,
@@ -69,7 +71,6 @@ fun NewsListScreen(
         )
     }
 }
-
 
 @Composable
 fun NewsListScreenContent(
@@ -90,7 +91,7 @@ fun NewsListScreenContent(
             contentPadding = PaddingValues(16.dp, 16.dp, 16.dp, 88.dp),
             modifier = modifier
         ) {
-            if (latestNews.isNullOrEmpty())
+            if (latestNews.isEmpty())
                 item {
                     Text(
                         text = stringResource(id = R.string.no_news),
@@ -120,29 +121,49 @@ fun NewsCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val blackAndWhiteMatrix = ColorMatrix().apply { setToSaturation(0f) }
+
+    val cardColor = if (news.isPublished) White else Grey5
+    val imageFilter = if (news.isPublished)
+        null
+    else
+        ColorFilter.colorMatrix(blackAndWhiteMatrix)
+
     Card(
         modifier = modifier,
-        color = White,
+        color = cardColor,
         contentPadding = PaddingValues(0.dp),
         onClick = onClick
     ) {
         Column {
-            Image(
-                painter = rememberImagePainter(
-                    data = news.pictureUrl,
-                    builder = {
-                        placeholder(R.drawable.placeholder_plato)
-                        error(R.drawable.placeholder_plato)
-                        fallback(R.drawable.placeholder_plato)
-                    }
-                ),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                alignment = Alignment.Center,
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp),
-            )
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = rememberImagePainter(
+                        data = news.pictureUrl,
+                        builder = {
+                            placeholder(R.drawable.placeholder_plato)
+                            error(R.drawable.placeholder_plato)
+                            fallback(R.drawable.placeholder_plato)
+                        }
+                    ),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.Center,
+                    colorFilter = imageFilter,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                if(!news.isPublished)
+                Text(
+                    text = stringResource(id = R.string.unpublished),
+                    style = MaterialTheme.typography.h1.copy(color = Pink1),
+                )
+            }
 
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -156,7 +177,7 @@ fun NewsCard(
                 )
 
                 Text(
-                    text = news.publishTime.toFormattedDateTimeString(),
+                    text = news.publishDateTime.toFormattedDateTimeString(),
                     style = MaterialTheme.typography.body2.copy(Grey1),
                     maxLines = 1
                 )

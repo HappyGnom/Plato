@@ -1,6 +1,5 @@
 package by.happygnom.plato.ui.screens.auth.signup_details
 
-import android.text.format.DateUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -70,7 +69,7 @@ class SignUpDetailsViewModel @Inject constructor(
         val nameErrorId = InputValidator.getFullNameErrorIdOrNull(name.value ?: "")
         val surnameErrorId = InputValidator.getFullNameErrorIdOrNull(surname.value ?: "")
         val nicknameErrorId = InputValidator.getNicknameErrorIdOrNull(nickname.value ?: "")
-        val startDateErrorId = InputValidator.getDateErrorIdOrNull(startDate.value)
+        val startDateErrorId = InputValidator.getRouteDateErrorIdOrNull(startDate.value)
 
         val errors = SignUpErrors(
             nameErrorId,

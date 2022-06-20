@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import by.happygnom.domain.data_interface.repository.CommentsRepository
 import by.happygnom.domain.model.Comment
 import by.happygnom.domain.usecase.GetCommentsUseCase
-import by.happygnom.plato.ui.navigation.ArgNames
+import by.happygnom.plato.navigation.ArgNames
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

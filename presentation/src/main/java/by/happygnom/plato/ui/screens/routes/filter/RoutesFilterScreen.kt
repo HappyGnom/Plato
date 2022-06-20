@@ -28,7 +28,7 @@ import by.happygnom.plato.ui.elements.inputs.InputTextFieldBox
 import by.happygnom.plato.ui.elements.inputs.QuantitySelector
 import by.happygnom.plato.ui.elements.inputs.SimpleTextDropDown
 import by.happygnom.plato.ui.elements.inputs.TealCheckbox
-import by.happygnom.plato.ui.navigation.ArgNames
+import by.happygnom.plato.navigation.ArgNames
 import by.happygnom.plato.util.showDatePickerDialog
 import by.happygnom.plato.util.toFormattedDateString
 import java.util.*

@@ -14,10 +14,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import by.happygnom.plato.R
+import by.happygnom.plato.model.AuthenticatedUser
+import by.happygnom.plato.navigation.ArgNames
+import by.happygnom.plato.navigation.NewsScreen
 import by.happygnom.plato.ui.elements.DefaultToolbar
 import by.happygnom.plato.ui.elements.LoadingIndicator
 import by.happygnom.plato.ui.theme.CardShape
@@ -34,12 +38,20 @@ fun NewsDetailsScreen(
     viewModel: NewsDetailsViewModel,
     navController: NavController
 ) {
+    navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>(ArgNames.SHOULD_UPDATE)
+        ?.observe(LocalLifecycleOwner.current) {
+            viewModel.loadNews(true)
+            navController.currentBackStackEntry?.savedStateHandle?.remove<Boolean>(ArgNames.SHOULD_UPDATE)
+        }
+
     Scaffold(
         topBar = {
             DefaultToolbar(
                 text = stringResource(id = R.string.news),
                 startIconId = R.drawable.ic_back,
-                onStartIconClick = { navController.popBackStack() }
+                endIconId = if (AuthenticatedUser.isAdmin) R.drawable.ic_edit else null,
+                onStartIconClick = { navController.popBackStack() },
+                onEndIconClick = { navController.navigate(NewsScreen.Editor.createRoute(viewModel.news.value?.id)) }
             )
         }
     ) {
@@ -88,7 +100,7 @@ fun NewsDetailsScreenContent(
                     )
 
                     Text(
-                        text = news!!.publishTime.toFormattedDateTimeString(),
+                        text = news!!.publishDateTime.toFormattedDateTimeString(),
                         style = MaterialTheme.typography.caption.copy(Grey2),
                         modifier = Modifier.fillMaxWidth()
                     )

@@ -1,11 +1,8 @@
 package by.happygnom.plato.model
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.core.text.isDigitsOnly
 import by.happygnom.plato.R
-import java.time.LocalDate
 import java.util.*
 
 object InputValidator {
@@ -46,7 +43,7 @@ object InputValidator {
     }
 
     @StringRes
-    fun getDateErrorIdOrNull(input: Date?): Int? {
+    fun getRouteDateErrorIdOrNull(input: Date?): Int? {
         return when {
             input == null -> R.string.error_date_not_set
             input.after(Calendar.getInstance().time) -> (R.string.error_after_current_date)
@@ -55,9 +52,41 @@ object InputValidator {
     }
 
     @StringRes
+    fun getNewsDateErrorIdOrNull(input: Date?): Int? {
+        return when {
+            input == null -> R.string.error_date_not_set
+            else -> null
+        }
+    }
+
+    @StringRes
+    fun getNewsTimeErrorIdOrNull(input: Date?): Int? {
+        return when {
+            input == null -> R.string.error_time_not_set
+            else -> null
+        }
+    }
+
+    @StringRes
     fun getTagsErrorIdOrNull(input: String): Int? {
         return when {
 //            input.split(",").any { it.isBlank() } -> R.string.error_blank_tags
+            else -> null
+        }
+    }
+
+    @StringRes
+    fun getNewsHeaderErrorIdOrNull(input: String): Int? {
+        return when {
+            input.isBlank() -> R.string.error_field_blank
+            else -> null
+        }
+    }
+
+    @StringRes
+    fun getNewsTextErrorIdOrNull(input: String): Int? {
+        return when {
+            input.isBlank() -> R.string.error_field_blank
             else -> null
         }
     }

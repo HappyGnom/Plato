@@ -34,8 +34,8 @@ import by.happygnom.plato.ui.elements.TagsList
 import by.happygnom.plato.ui.elements.button.StrokeImageButton
 import by.happygnom.plato.ui.elements.button.SwitchableIconButton
 import by.happygnom.plato.ui.elements.button.TealTextButton
-import by.happygnom.plato.ui.navigation.ArgNames
-import by.happygnom.plato.ui.navigation.RoutesScreen
+import by.happygnom.plato.navigation.ArgNames
+import by.happygnom.plato.navigation.RoutesScreen
 import by.happygnom.plato.ui.theme.Grey1
 import by.happygnom.plato.ui.theme.Grey3
 import by.happygnom.plato.ui.theme.Teal1
@@ -181,7 +181,6 @@ fun CollapsingToolbarScope.Toolbar(
     )
 }
 
-@OptIn(ExperimentalToolbarApi::class)
 @Composable
 fun RouteDetailsScreenContent(
     viewModel: RouteDetailsViewModel,

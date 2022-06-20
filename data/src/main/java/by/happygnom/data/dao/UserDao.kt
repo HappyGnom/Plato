@@ -10,6 +10,7 @@ import by.happygnom.domain.model.User
 
 @Dao
 interface UserDao {
+
     @Query("SELECT * FROM user WHERE user.id==:id LIMIT 1")
     suspend fun getUserById(id: String): UserEntity?
 

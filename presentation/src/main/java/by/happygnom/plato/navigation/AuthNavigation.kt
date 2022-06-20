@@ -1,4 +1,4 @@
-package by.happygnom.plato.ui.navigation
+package by.happygnom.plato.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

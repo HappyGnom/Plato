@@ -5,23 +5,16 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -30,19 +23,15 @@ import by.happygnom.plato.R
 import by.happygnom.plato.model.AuthenticatedUser
 import by.happygnom.plato.ui.elements.DefaultToolbar
 import by.happygnom.plato.ui.elements.button.TealFilledButton
-import by.happygnom.plato.ui.elements.button.TealStrokeButton
 import by.happygnom.plato.ui.elements.inputs.InputTextFieldBox
-import by.happygnom.plato.ui.navigation.RoutesScreen
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import by.happygnom.plato.ui.navigation.UserScreen
+import by.happygnom.plato.navigation.UserScreen
 import by.happygnom.plato.ui.theme.*
 import by.happygnom.plato.util.toFormattedDateString
 import coil.compose.rememberImagePainter
-import me.onebone.toolbar.ScrollStrategy
 
 
 @Composable

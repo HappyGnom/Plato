@@ -14,11 +14,10 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import by.happygnom.plato.ui.navigation.MainNavigation
-import by.happygnom.plato.ui.navigation.MainScreen
-import by.happygnom.plato.ui.navigation.addMainGraph
+import by.happygnom.plato.navigation.MainNavigation
+import by.happygnom.plato.navigation.MainScreen
+import by.happygnom.plato.navigation.addMainGraph
 import by.happygnom.plato.ui.theme.*
-import by.happygnom.plato.ui.theme.Grey1
 
 @Composable
 fun MainScreen(viewModel: MainViewModel) {

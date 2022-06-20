@@ -33,8 +33,8 @@ import by.happygnom.plato.ui.elements.LoadingIndicator
 import by.happygnom.plato.ui.elements.TagsList
 import by.happygnom.plato.ui.elements.button.AddFloatingActionButton
 import by.happygnom.plato.ui.elements.button.LabeledIconButton
-import by.happygnom.plato.ui.navigation.ArgNames
-import by.happygnom.plato.ui.navigation.RoutesScreen
+import by.happygnom.plato.navigation.ArgNames
+import by.happygnom.plato.navigation.RoutesScreen
 import by.happygnom.plato.ui.theme.*
 import by.happygnom.plato.util.toFormattedDateString
 import coil.compose.rememberImagePainter

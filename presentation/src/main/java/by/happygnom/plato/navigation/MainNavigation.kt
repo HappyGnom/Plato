@@ -1,4 +1,4 @@
-package by.happygnom.plato.ui.navigation
+package by.happygnom.plato.navigation
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import by.happygnom.plato.R
 import by.happygnom.plato.ui.screens.news.details.NewsDetailsScreen
 import by.happygnom.plato.ui.screens.news.list.NewsListScreen
+import by.happygnom.plato.ui.screens.news.news_editor.NewsEditorScreen
 import by.happygnom.plato.ui.screens.routes.add_comment.AddCommentScreen
 import by.happygnom.plato.ui.screens.routes.comments.CommentsScreen
 import by.happygnom.plato.ui.screens.routes.details.RouteDetailsScreen
@@ -75,8 +76,7 @@ sealed class NewsScreen(
         fun createRoute(newsId: Long) = "main/news/list/$newsId"
     }
 
-    object Editor :
-        NewsScreen("main/news/list/edit?${ArgNames.EXISTING_NEWS_ID}={${ArgNames.EXISTING_NEWS_ID}}") {
+    object Editor : NewsScreen("main/news/list/edit?${ArgNames.EXISTING_NEWS_ID}={${ArgNames.EXISTING_NEWS_ID}}") {
         fun createRoute(existingNewsId: Long?) =
             if (existingNewsId != null)
                 "main/news/list/edit?${ArgNames.EXISTING_NEWS_ID}=$existingNewsId"
@@ -206,6 +206,18 @@ fun NavGraphBuilder.addNewsGraph(
             arguments = listOf(navArgument(ArgNames.NEWS_ID) { type = NavType.LongType })
         ) {
             NewsDetailsScreen(viewModel = hiltViewModel(), navController = navController)
+        }
+
+        composable(
+            NewsScreen.Editor.route,
+            arguments = listOf(navArgument(ArgNames.EXISTING_NEWS_ID) {
+                type = NavType.LongType
+            })
+        ) {
+            NewsEditorScreen(
+                viewModel = hiltViewModel(),
+                navController = navController,
+            )
         }
     }
 }

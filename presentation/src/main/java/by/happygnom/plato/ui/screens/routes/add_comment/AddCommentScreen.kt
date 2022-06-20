@@ -14,7 +14,7 @@ import by.happygnom.plato.R
 import by.happygnom.plato.ui.elements.DefaultToolbar
 import by.happygnom.plato.ui.elements.LoadingIndicator
 import by.happygnom.plato.ui.elements.inputs.InputTextField
-import by.happygnom.plato.ui.navigation.ArgNames
+import by.happygnom.plato.navigation.ArgNames
 import by.happygnom.plato.ui.theme.Grey1
 import by.happygnom.plato.ui.theme.Grey2
 import by.happygnom.plato.ui.theme.Teal1
